@@ -1,0 +1,46 @@
+
+  .container {
+    background-color: var(--bgSoft);
+    padding: 40px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    gap: 90px;
+    width: 100%;
+  }
+  
+  .list:hover {
+    background-color: rgb(249, 224, 191);
+    border: 2px solid #8d9bbb;
+  }
+  
+  .list {
+    background-color: 8d9bbb;
+    padding: 25px;
+    border-radius: 10px;
+    border: 2px dotted;
+  }
+  
+  .texts {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .number {
+    font-size: 24px;
+    font-weight: 500;
+  }
+  
+  .detail {
+    font-size: 14px;
+    font-weight: 300;
+  }
+  
+  .positive {
+    color: lime;
+  }
+  
+  .negative {
+    color: red;
+  }

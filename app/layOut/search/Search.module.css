@@ -1,0 +1,24 @@
+.container {
+    padding: 20px;
+    border-radius: 100px;
+    background-color: var(--bgSoft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #f2f2f8;
+    padding: 10px;
+    border-radius: 10px;
+  }
+  
+  .input {
+    background-color: transparent;
+    border-color: #7197c9;
+    border: none;
+    color: var(--text);
+  }
