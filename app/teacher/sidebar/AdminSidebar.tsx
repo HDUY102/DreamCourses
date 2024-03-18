@@ -25,12 +25,12 @@ const menuItems = [
     list: [
       {
         title: "Trang Chủ",   
-        path: "/admin",
+        path: "/teacher",
         icon: <MdDashboard />,
       },
       {
         title: "Quản lý tài khoản giảng viên",
-        path: "/admin/teacherManage",
+        path: "/teacher/teacherManage",
         icon: <MdSwitchAccount/>,
       },
       {
