@@ -76,7 +76,7 @@ const Register = () => {
         {/* Page Header END */}
       </div>
       <p className="text-center mt-20 text-emerald-800"><b>DREAM LEARNING</b></p>
-      <p className="text-center mt-2">Đăng ký tài khoản Dream Learning <br></br>để kết nối với Dream Learning</p>
+      <p className="text-center mt-2 text-gray-500">Đăng ký tài khoản Dream Learning <br></br>để kết nối với Dream Learning</p>
       <div className="flex justify-center">
         <div className="flex justify-center mt-8 border border-y-2 border-x-2 rounded-lg w-[400px]">
           <Form {...form}>

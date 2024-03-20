@@ -1,61 +1,52 @@
+// "use server"
+"use client"
 import React from "react";
-import styles from "@/app/teacher/sidebar/AdminSidebar.module.css";
+import styles from "@/app/admin/sidebar/AdminSidebar.module.css";
 import {
   MdLogout,
   MdDashboard,
+  MdAnalytics,
+  MdOutlineSettings,
+  MdSwitchAccount,   
   MdSupervisedUserCircle,
   MdShoppingBag,
   MdAttachMoney,
   MdWork,
-  MdAnalytics,
   MdPeople,
-  MdOutlineSettings,
   MdHelpCenter,
   MdListAlt,
   MdCalendarMonth,
   MdEmojiPeople,
-  MdSwitchAccount   
 } from "react-icons/md";
 import MenuLink from "./menuLink/MenuLink";
-// import { signOut } from '@/auth';
+import { signOut } from 'next-auth/react';
+import { useRouter } from "next/navigation";
+import Cookies from 'js-cookie';
+// import { cookies } from "next/headers";
+
+const handleLogout = () =>{
+  // const router = useRouter();
+  Cookies.remove("dctoken")
+  // router.push("/login")
+}
 
 const menuItems = [
   {
-    title: "Pages",
+    title: "Quản lý",
     list: [
       {
         title: "Trang Chủ",   
-        path: "/teacher",
+        path: "/admin",
         icon: <MdDashboard />,
       },
       {
-        title: "Quản lý tài khoản giảng viên",
-        path: "/teacher/teacherManage",
+        title: "Tài Khoản Giảng Viên",
+        path: "/admin/teacherManage",
         icon: <MdSwitchAccount/>,
       },
       {
-        title: "Kho bài giảng",
+        title: "Thống Kê",
         path: "/dashboard/courses",
-        icon: <MdListAlt />,
-      },
-    ],
-  },
-  {
-    title: "Analytics",
-    list: [
-      {
-        title: "Feedback",
-        path: "/dashboard/feedback",
-        icon: <MdWork />,
-      },
-      {
-        title: "Messages",
-        path: "/dashboard/messages",
-        icon: <MdPeople />,
-      },
-      {
-        title: "Reports",
-        path: "/dashboard/reports",
         icon: <MdAnalytics />,
       },
     ],
@@ -64,19 +55,20 @@ const menuItems = [
     title: "User",
     list: [
       {
-        title: "Settings",
+        title: "Cài Đặt",
         path: "/dashboard/settings",
         icon: <MdOutlineSettings />,
       },
       {
-        title: "Help",
-        path: "/dashboard/help",
-        icon: <MdHelpCenter />,
-      },
+        title: "Đăng Xuất",
+        path: "/login",
+        icon: <MdLogout />,
+        onClick: handleLogout()
+      }
     ],
   },
 ];
-const Sidebar = async () => {
+const Sidebar =  () => {
   return (
     <div className={styles.container}>
         <div className={styles.userDetail}>
@@ -94,17 +86,23 @@ const Sidebar = async () => {
             ))}
           </ul>
         </div>
-      <form
-      // action={async () => {
-      //   "use server";
-      //   await signOut();
-      // }}
+      {/* <form 
+      action={async () => {
+        "use server";
+        await signOut();
+      }}
       >
         <button className={styles.logout}>
           <MdLogout />
           Logout
         </button>
-      </form>
+      </form> */}
+      {/* <form onSubmit={handleLogout}>
+        <button type="submit" className={styles.logout}>
+          <MdLogout />
+          Logout
+        </button>
+      </form> */}
     </div>
   );
 };

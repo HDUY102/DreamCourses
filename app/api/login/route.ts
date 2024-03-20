@@ -10,17 +10,19 @@ export async function POST(request:NextRequest) {
     })
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
-      .setExpirationTime("420s") 
+      // .setExpirationTime("5s") 
       .sign(getJwtSecretKey());
     const response = NextResponse.json(
-      { success: true },
+     { success: true },
       { status: 200, headers: { "content-type": "application/json" } }
     );
     response.cookies.set({
-      name: "token",
+      maxAge: 10,
+      name: "dctoken",
       value: token,
       path: "/",
     });
+    // response.cookies.delete('dctoken')
     return response;
   }
   return NextResponse.json({ success: false });

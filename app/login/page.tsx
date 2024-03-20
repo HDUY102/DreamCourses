@@ -53,10 +53,10 @@ const Login = () => {
       });
       const { success } = await res.json();
       if (success) { 
-        router.push("/admin");
+        router.push('/admin');
         router.refresh();
       } else {
-        alert("Login failed");
+        alert("Đăng Nhập Thất Bại");
       }
   };
 
@@ -78,7 +78,7 @@ const Login = () => {
         {/* Page Header END */}
       </div>
       <p className="text-center mt-20 text-emerald-800"><b>DREAM LEARNING</b></p>
-      <p className="text-center mt-2">Đăng nhập tài khoản Dream Learning <br></br>để kết nối với Dream Learning</p>
+      <p className="text-center mt-2 text-gray-500">Đăng nhập tài khoản Dream Learning <br></br>để kết nối với Dream Learning</p>
       <div className="flex justify-center">
         <div className="flex justify-center mt-8 border border-y-2 border-x-2 w-[400px]">
           <Form {...form}>

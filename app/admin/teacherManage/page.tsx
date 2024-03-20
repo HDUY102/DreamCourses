@@ -3,8 +3,8 @@ import React, { useEffect } from "react";
 import { FaPlusCircle, FaFile } from "react-icons/fa";
 import Link from "next/link";
 import ListTeacher from "./ListTeacher";
-import Sidebar from "@/app/teacher/sidebar/AdminSidebar";
-import styles from "@/app/teacher/dashboard.module.css";
+import Sidebar from "@/app/admin/sidebar/AdminSidebar";
+import styles from "@/app/admin/dashboard.module.css";
 import { useTeacherStore } from "@/app/lib/hooks/useTeacherStore";
 
 const TeacherManagePage = () => {

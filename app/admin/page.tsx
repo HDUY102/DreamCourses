@@ -1,10 +1,15 @@
 import React from "react";
-import Sidebar from "@/app/teacher/sidebar/AdminSidebar";
-import styles from "@/app/teacher/dashboard.module.css";
+import Sidebar from "@/app/admin/sidebar/AdminSidebar";
+import styles from "@/app/admin/dashboard.module.css";
 import Search from "@/app/layOut/search/Search";
 import LayoutCard from "@/app/layOut/layoutCard/LayoutCard";
 import Chart from "@/app/layOut/chart/Chart";
+import { cookies } from 'next/headers'
+
 const page = () => {
+  const cookieStore = cookies()
+  const theme = cookieStore.get('dctoken')
+  // console.log("dctoken="+theme)
   return (
     <div className={styles.container}>
       <div className={styles.menu}>
