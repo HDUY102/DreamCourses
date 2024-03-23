@@ -19,7 +19,6 @@ import Image from "next/image";
 import logo from "@/app/img/logo.png";
 import { useRouter } from "next/navigation";
 import { PasswordInput } from "@/components/ui/password-input";
-
 const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
@@ -52,8 +51,8 @@ const Login = () => {
         body: JSON.stringify({ username, password }),
       });
       const { success } = await res.json();
-      if (success) { 
-        router.push('/admin');
+      if (success) {
+        router.push("/admin");
         router.refresh();
       } else {
         alert("Đăng Nhập Thất Bại");

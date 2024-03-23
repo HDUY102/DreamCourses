@@ -38,11 +38,12 @@ export const useTeacherStore = create<State & Actions>((set, get) => ({
       const response = await fetch("http://localhost:3000/api/teacher", {
         cache: "no-store",
       });
-      const data = await response.json();
       set({
-        teachers: data,
+        teachers: await response.json(),
         isLoadingTeachers: false,
       });
-    } catch (error) {}
+    } catch (error) {
+      // set(() => ({ loading: false, hasErrors: true }));
+    }
   },
 }));

@@ -3,7 +3,6 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button"
 import Link from "next/link";
 import { useState } from "react";
-import clsx from "clsx";
 import HeaderNav from "./components/HeaderNav";
 export default function Home() {
   return (

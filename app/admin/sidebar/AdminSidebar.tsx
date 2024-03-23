@@ -1,6 +1,6 @@
 // "use server"
 "use client"
-import React from "react";
+import React, { useState } from "react";
 import styles from "@/app/admin/sidebar/AdminSidebar.module.css";
 import {
   MdLogout,
@@ -46,8 +46,15 @@ const menuItems = [
       },
       {
         title: "Thống Kê",
-        path: "/dashboard/courses",
+        path: "",
+        button: "Thống ke",
         icon: <MdAnalytics />,
+        submenu: true,
+        subMenuItems: [
+          { title: "Doanh Thu", path:"/statisticsManage/doanhthu"},
+          { title: "Doanh ", path:"/statisticsManage/doanhthu"},
+          { title: " Thu", path:"/statisticsManage/doanhthu"},
+        ]
       },
     ],
   },
@@ -69,6 +76,11 @@ const menuItems = [
   },
 ];
 const Sidebar =  () => {
+  const [showStatsDropdown, setShowStatsDropdown] = useState(false); // State để theo dõi trạng thái của dropdown
+
+  const toggleStatsDropdown = () => {
+    setShowStatsDropdown(!showStatsDropdown); // Hàm xử lý sự kiện để mở hoặc đóng dropdown
+  };
   return (
     <div className={styles.container}>
         <div className={styles.userDetail}>
@@ -86,6 +98,16 @@ const Sidebar =  () => {
             ))}
           </ul>
         </div>
+        {/* <div className={styles.dropdown}>
+        <span className={styles.cat} onClick={toggleStatsDropdown}>Thống Kê</span>
+        {showStatsDropdown && menuItems[0].list[2].submenu && (
+          <ul className={styles.submenu}>
+            {menuItems[0].list[2].subMenuItems.map((item:any) => (
+              <MenuLink item={item} key={item.title} />
+            ))}
+          </ul>
+        )}
+      </div> */}
       {/* <form 
       action={async () => {
         "use server";

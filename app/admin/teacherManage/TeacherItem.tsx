@@ -8,17 +8,11 @@ const TeacherItem = ({ teacher, onDelete }: { teacher: any; onDelete: (id: numbe
     }
   };
 
-  const roleMapping  : Record<number, string> ={
-    2: "Người dùng",
-    3: "Giảng viên"
-  };
-
   return (
     <table className=" w-[100%]">
       <tbody>
         <tr className='border-b-2 table table-fixed'>
           <td>{teacher.username}</td>
-          <td>{teacher.password}</td>
           {/* <td>{teacher.date}</td> */}
           <td>{teacher.date?.toString()}</td>
           {/* <td dangerouslySetInnerHTML={{ __html: teacher.Content }}></td> */}
