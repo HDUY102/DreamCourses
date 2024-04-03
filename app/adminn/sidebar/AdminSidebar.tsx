@@ -72,11 +72,6 @@ const AdminSidebar = () => {
     {
       list: [
         {
-          title: "Cài Đặt",
-          path: "/dashboard/settings",
-          icon: <MdOutlineSettings />,
-        },
-        {
           title: "Đăng Xuất",
           path: "/login",
           icon: <MdLogout />,

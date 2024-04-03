@@ -23,7 +23,7 @@ const TeacherManagePage = () => {
         <div className="ml-8 max-w-[80%] justify-end">
           <div className="flex justify-between mt-8">
             <h1 className="mt-2 ml-4 font-bold">QUẢN LÝ GIẢNG VIÊN</h1>
-            <Link href={"/teacher/teacherManage/addAccountTeacher"}>
+            <Link href={"/adminn/teacherManage/addAccountTeacher"}>
               <button className="bg-sky-800 text-white rounded-lg p-2 mr-3 hover:text-white hover:border hover:bg-red-500  flex items-center ">
                 <FaPlusCircle />
                 Tạo tài khoản giảng viên

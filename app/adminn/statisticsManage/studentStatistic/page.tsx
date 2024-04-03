@@ -80,7 +80,12 @@ import BarChartStudent from "@/app/adminn/statisticsManage/studentStatistic/BarC
 export default function studentStatistic(){
   return(
     <div className={styles.container}>
-      <BarChartStudent/>
+      <div className={styles.menu}>
+        <Sidebar />
+      </div>
+      <div className={styles.contentmenu}>
+        <BarChartStudent/>
+      </div>
     </div>
   )
 }

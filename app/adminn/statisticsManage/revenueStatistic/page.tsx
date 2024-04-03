@@ -1,7 +1,7 @@
 import React from 'react'
 import Sidebar from "@/app/adminn/sidebar/AdminSidebar";
 import styles from "@/app/adminn/dashboard.module.css";
-import Chart from "@/app/layOut/chart/Chart";
+import LineChartRevenue from './LineChartRevenue';
 
 const revenueStatistic = () => {
   return (
@@ -10,8 +10,7 @@ const revenueStatistic = () => {
         <Sidebar />
       </div>
       <div className={styles.contentmenu}>
-        <Chart />
-
+        <LineChartRevenue/>
       </div>
     </div>
   )

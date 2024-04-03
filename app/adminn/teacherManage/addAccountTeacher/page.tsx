@@ -26,7 +26,7 @@ const AddAccountTeacher = () => {
   const router = useRouter();
 
   const onSubmit = async (value: z.infer<typeof RegisterSchema>) => {
-    const respone = await fetch("http://localhost:3000/api/addAccountTeacher", {
+    const respone = await fetch("http://localhost:3000/api/teacher/addAccountTeacher", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -38,7 +38,7 @@ const AddAccountTeacher = () => {
     });
     if (respone.ok) {
       alert("Đăng ký thành công");
-      router.push("/admin/teacherManage");
+      router.push("/adminn/teacherManage");
     } else {
       console.error("Error during registration:", respone.statusText);
     }
