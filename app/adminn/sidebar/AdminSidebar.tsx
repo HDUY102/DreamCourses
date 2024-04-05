@@ -64,7 +64,7 @@ const AdminSidebar = () => {
           ),
           submenu: [
             { title: "Thống kê doanh thu", path: "/adminn/statisticsManage/revenueStatistic",icon: <MdMonetizationOn /> },
-            { title: "Thống kê học sinh", path: "/adminn/statisticsManage/studentStatistic",icon: <MdGroups /> },
+            { title: "Thống kê học viên", path: "/adminn/statisticsManage/studentStatistic",icon: <MdGroups /> },
           ]
         },
       ],

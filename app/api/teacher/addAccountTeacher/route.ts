@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma/client";
-import RegisterSchema from "@/app/api/register/RegisterSchema";
 import { hash } from "bcrypt";
 
 export async function POST(request: NextRequest) {
