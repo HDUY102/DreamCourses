@@ -26,15 +26,8 @@ export const PriceForm = () => {
 
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
-      <div className="font-medium flex items-center justify-between">
-        Course price
-      </div>
-      <p
-        className={cn(
-          "text-sm mt-2 text-slate-500 italic"
-          //   !initialData.price && "text-slate-500 italic"
-        )}
-      ></p>
+      <div className="font-medium flex items-center justify-between"> Course price </div>
+      <p className={cn("text-sm mt-2 text-slate-500 italic")}></p>
       <Form {...form}>
         <form className="space-y-4 mt-4">
           <FormField
@@ -45,7 +38,8 @@ export const PriceForm = () => {
                 <FormControl>
                   <Input
                     type="number"
-                    step="0.01"
+                    step="1000"
+                    min="0"
                     disabled={isSubmitting}
                     placeholder="Nhập giá cho khóa học của bạn"
                     {...field}

@@ -1,61 +1,73 @@
-import React from "react";
+"use client"
+import React, {useState} from "react";
 import styles from "@/app/teacher/sidebar/TeacherSidebar.module.css";
 import {
   MdLogout,
   MdDashboard,
-  MdSupervisedUserCircle,
-  MdShoppingBag,
-  MdAttachMoney,
-  MdWork,
-  MdAnalytics,
-  MdPeople,
   MdOutlineSettings,
-  MdHelpCenter,
-  MdListAlt,
-  MdCalendarMonth,
-  MdEmojiPeople,
+  MdArrowDropDownCircle,
+  MdArrowDropUp,
   MdMenuBook ,
+  MdGroups,
+  MdMonetizationOn,
 } from "react-icons/md";
 import MenuLink from "./menuLink/MenuLink";
 // import { signOut } from '@/auth';
 
-const menuItems = [
-  {
-    list: [
-      {
-        title: "Trang Chủ",
-        path: "/teacher",
-        icon: <MdDashboard />,
-      },
-      {
-        title: "Quản lý khóa học",
-        path: "/teacher/course",
-        icon: <MdMenuBook  />,
-      },
-      {
-        title: "Quản lý thống kê",
-        path: "/teacher/statistic",
-        icon: <MdAnalytics />,
-      },
-    ],
-  },
-  {
-    list: [
-      {
-        title: "Cài Đặt",
-        path: "/teacher/settings",
-        icon: <MdOutlineSettings />,
-      },
-      {
-        title: "Đăng Xuất",
-        path: "/login",
-        icon: <MdLogout />,
-        // onClick: handleLogout(),
-      },
-    ],
-  },
-];
-const Sidebar = async () => {
+const TeacherSidebar = () => {
+  const [showStatsDropdown, setShowStatsDropdown] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const toggleStatsDropdown = () => {
+    setShowStatsDropdown(!showStatsDropdown);
+    setIsDropdownOpen(!isDropdownOpen); 
+  };
+
+  const menuItems = [
+    {
+      list: [
+        {
+          title: "Trang Chủ",
+          path: "/teacher",
+          icon: <MdDashboard />,
+        },
+        {
+          title: "Quản lý khóa học",
+          path: "/teacher/course",
+          icon: <MdMenuBook  />,
+        },
+        {
+          title: "Thống Kê",
+          path: "",
+          icon: (
+            <span>
+              {/* <MdAnalytics /> */}
+              {isDropdownOpen ? <MdArrowDropUp /> : <MdArrowDropDownCircle  />}
+            </span>
+          ),
+          submenu: [
+            { title: "Thống kê doanh thu", path: "/teacher/statisticsManage/revenueStatistic",icon: <MdMonetizationOn /> },
+            { title: "Thống kê số học viên", path: "/teacher/statisticsManage/studentStatistic",icon: <MdGroups /> },
+          ]
+        },
+      ],
+    },
+    {
+      list: [
+        {
+          title: "Cài Đặt",
+          path: "/teacher/settings",
+          icon: <MdOutlineSettings />,
+        },
+        {
+          title: "Đăng Xuất",
+          path: "/login",
+          icon: <MdLogout />,
+          // onClick: handleLogout(),
+        },
+      ],
+    },
+  ];
+
   return (
     <div className={styles.container}>
       <div className={styles.userDetail}>
@@ -65,8 +77,23 @@ const Sidebar = async () => {
         <ul className={styles.list}>
           {menuItems.map((cat) => (
             <li>
-              {cat.list.map((item) => (
-                <MenuLink item={item} key={item.title} />
+                {cat.list.map((item) => (
+                  <React.Fragment key={item.title}>
+                  {item.title === "Thống Kê" ? (
+                    <div onClick={toggleStatsDropdown}>
+                      <MenuLink item={item} key={item.title} />
+                      {showStatsDropdown && (
+                        <ul className={styles.cat}>
+                          {item.submenu.map((subitem:any) => (
+                            <MenuLink item={subitem} key={subitem.title} />
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ) : (
+                    <MenuLink item={item} key={item.title} />
+                  )}
+                </React.Fragment>
               ))}
             </li>
           ))}
@@ -87,4 +114,4 @@ const Sidebar = async () => {
   );
 };
 
-export default Sidebar;
+export default TeacherSidebar;

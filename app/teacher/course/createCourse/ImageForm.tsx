@@ -25,11 +25,6 @@ export const ImageForm = () => {
       <div className="flex items-center justify-center h-60 bg-slate-200 rounded-md">
         <ImageIcon className="h-10 w-10 text-slate-500" />
       </div>
-      <div>
-        <div className="text-xs text-muted-foreground mt-4">
-          16:9 aspect ratio recommended
-        </div>
-      </div>
     </div>
   );
 };

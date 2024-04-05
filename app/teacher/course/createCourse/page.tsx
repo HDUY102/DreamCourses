@@ -21,11 +21,25 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useRouter } from "next/navigation";
+import { ToastContainer,toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+// import toast, { Toaster } from "react-hot-toast"
 
 const formSchema = z.object({
   price: z.coerce.number(),
 });
-const CourseManage = async () => {
+const CourseManage = () => {
+  const notify:any = () => toast.success("Thêm mới thành công!",{
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -38,12 +52,13 @@ const CourseManage = async () => {
       },
     });
     if (respone.ok) {
-      alert("Tạo Thành Công");
-      router.push("/teacher");
+      alert("Thêm Thành Công");
+      router.push("/teacher/course");
     } else {
       console.error("Error during Create:", respone.statusText);
     }
   };
+
 
   return (
     <div className="flex">
@@ -88,9 +103,10 @@ const CourseManage = async () => {
                       Hủy
                     </button>
                   </Link>
-                  <Button className="bg-sky-800 text-white rounded-lg mr-3 hover:text-white p-4  hover:bg-red-500 " variant="ghost">
+                  <Button onClick={notify} className="bg-sky-800 text-white rounded-lg mr-3 hover:text-white p-4  hover:bg-red-500 " variant="ghost">
                     Tạo
                   </Button>
+                  <ToastContainer />
                 </div>
           </form>
         </Form>

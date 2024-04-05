@@ -4,21 +4,11 @@ import styles from "@/app/adminn/sidebar/AdminSidebar.module.css";
 import {
   MdLogout,
   MdDashboard,
-  MdAnalytics,
-  MdOutlineSettings,
   MdSwitchAccount,
   MdGroups ,
   MdArrowDropDownCircle  ,
   MdArrowDropUp ,
-  MdSupervisedUserCircle,
-  MdShoppingBag,
   MdMonetizationOn ,
-  MdWork,
-  MdPeople,
-  MdHelpCenter,
-  MdListAlt,
-  MdCalendarMonth,
-  MdEmojiPeople,
 } from "react-icons/md";
 import MenuLink from "./menuLink/MenuLink";
 import { signOut } from "next-auth/react";
