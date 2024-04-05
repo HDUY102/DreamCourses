@@ -11,6 +11,7 @@ import { PriceForm } from "./PriceForm";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import Sidebar from "@/app/teacher/sidebar/TeacherSidebar";
 import {
   Form,
@@ -52,14 +53,8 @@ const CourseManage = async () => {
       <div className={styles.contentmenu}>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="flex items-center justify-between">
-              <div className="flex flex-row gap-y-2">
-                <h1 className="text-2xl font-medium">Tạo Mới</h1>
-                <Button className="text-xl ml-96 hover:bg-primary" variant="ghost">
-                  Tạo
-                </Button>
-              </div>
-            </div>
+              <h1 className="mt-2 ml-4 font-bold text-2xl">Tạo Mới Khóa Học</h1>
+                
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
               <div>
                 <div className="flex items-center gap-x-2">
@@ -87,6 +82,16 @@ const CourseManage = async () => {
                 </div>
               </div>
             </div>
+            <div className="flex justify-end mb-3">
+                  <Link href={"/teacher/course"}>
+                    <button className="bg-sky-800 text-white rounded-lg mr-1 hover:text-white p-2 hover:bg-red-500 ">
+                      Hủy
+                    </button>
+                  </Link>
+                  <Button className="bg-sky-800 text-white rounded-lg mr-3 hover:text-white p-4  hover:bg-red-500 " variant="ghost">
+                    Tạo
+                  </Button>
+                </div>
           </form>
         </Form>
       </div>

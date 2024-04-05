@@ -53,7 +53,7 @@ const CourseManage = () => {
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="">
               <div className="flex justify-between mt-8">
-                <h1 className="mt-2 ml-4 font-bold text-xl">QUẢN LÝ KHÓA HỌC</h1>
+                <h1 className="mt-2 ml-4 font-bold text-2xl">QUẢN LÝ KHÓA HỌC</h1>
                 <Link href={"/teacher/course/createCourse"}>
                   <button className="flex items-center bg-sky-800 text-white rounded-lg p-2 mr-3 hover:text-white hover:border hover:bg-red-500 ">
                     <FaPlusCircle />
