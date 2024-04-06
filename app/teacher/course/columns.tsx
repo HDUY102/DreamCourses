@@ -1,10 +1,14 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { courses } from "@prisma/client";
-import { ArrowUpDown, MoreHorizontal, Pencil, Trash } from "lucide-react";
+import { ArrowUpDown, Pencil, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import {cn} from "@/lib/utils"
+import ConfirmDelete from "@/app/components/ConfirmDelete";
+import { useState } from "react";
+import { toast, ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const columns: ColumnDef<courses>[] = [
   {
@@ -83,16 +87,49 @@ export const columns: ColumnDef<courses>[] = [
   {
     header: "Sửa đổi",
     id: "actions",
-    cell: ({ row }) => {
-      // const {id} = row.original;
+    cell: ({ row }  ) => {
+      const [isLoading, setLoading] = useState(false);
+      const notify:any = () => toast.success("Xóa khóa học thành công!",{
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+
+      const onDelete = async () =>{
+        try{
+          const courseId = row.original.idCourse;
+          setLoading(true)
+          const response = await fetch(`http://localhost:3000/api/courses/${courseId}`, {
+            method: 'DELETE',
+          });
+          if (response.ok) {
+            notify()
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
+          } else {
+            toast.error("Lỗi, xin thử lại");
+          }
+        }catch{
+          setLoading(false)
+        }
+      }
       return (
         <div className="flex">
           <Link href={`/teacher/course/createCourse`}>
             <Pencil className="h-4 w-4 hover:text-green-500 ml-2" />
           </Link>
-          <button>
-            <Trash className="h-4 w-4 hover:text-red-500 ml-2" />
-          </button>
+          <ConfirmDelete onConfirmDel={onDelete}>
+            <button disabled={isLoading}>
+              <Trash className="h-4 w-4 hover:text-red-500 ml-2" />
+            </button>
+          </ConfirmDelete>
+          <ToastContainer />
         </div>
       );
     },

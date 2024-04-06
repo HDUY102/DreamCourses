@@ -20,11 +20,21 @@ const CourseManage = async () => {
     }
   })
   // const { fetchDataCourses, isLoadingCourses } = useCourseStore();
-
+  // const { onDelete } = useCourseStore();
   // useEffect(() => {
   //   fetchDataCourses();
   // }, []);
-
+  const handleDelete = async (id: number) => {
+    const response = await fetch(`http://localhost:3000/api/courses/deldelCourse/${id}`, {
+      method: 'DELETE',
+    });
+    if (response.ok) {
+      alert("Xóa thành công");
+      window.location.reload();
+    } else {
+      console.error('Error deleting course:', response.statusText);
+    }
+  };
   return (
     <div className="flex ">
       <div className={styles.menu}>
@@ -41,7 +51,9 @@ const CourseManage = async () => {
           </Link>
         </div>
         <div>
-          <DataTable columns={columns} data={courses} />
+          {/* <DataTable columns={columns} data={courses} onDelete={handleDelete}/> */}
+          <DataTable columns={columns} data={courses}/>
+          {/* <DataTable columns={{...columns, onDelete }} data={courses} /> */}
           {/* {isLoadingCourses ? (
               <div className="text-center text-lg">Loading...</div>
             ) : (
