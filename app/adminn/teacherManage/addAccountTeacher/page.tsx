@@ -26,7 +26,7 @@ const AddAccountTeacher = () => {
   const router = useRouter();
 
   const onSubmit = async (value: z.infer<typeof RegisterSchema>) => {
-    const respone = await fetch("http://localhost:3000/api/teacher/addAccountTeacher", {
+    const respone = await fetch("http://localhost:3000/api/teacher", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
