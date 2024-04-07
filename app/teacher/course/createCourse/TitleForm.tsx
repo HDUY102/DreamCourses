@@ -12,14 +12,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-const formSchema = z.object({
-  title: z.string().min(1, {
-    message: "Title is required",
-  }),
+const titleSchema = z.object({
+  titleCourse: z.string(),
 });
 export const TitleForm = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof titleSchema>>({
+    resolver: zodResolver(titleSchema),
   });
   const { isSubmitting } = form.formState;
   return (
@@ -31,7 +29,7 @@ export const TitleForm = () => {
         <form className="space-y-4 mt-4">
           <FormField
             control={form.control}
-            name="title"
+            name="titleCourse"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
@@ -45,7 +43,6 @@ export const TitleForm = () => {
               </FormItem>
             )}
           />
-          <div className="flex items-center gap-x-2"></div>
         </form>
       </Form>
     </div>

@@ -15,35 +15,26 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 
-const formSchema = z.object({
-  description: z.string().min(1, {
-    message: "Description is required",
-  }),
+const introduceSchema = z.object({
+  introduce: z.string(),
 });
-const DiscriptionForm = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+const DescriptionForm = () => {
+  const form = useForm<z.infer<typeof introduceSchema>>({
+    resolver: zodResolver(introduceSchema),
   });
 
   const { isSubmitting } = form.formState;
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Course description
+        Giới thiệu khóa học
       </div>
-
-      <p
-        className={cn(
-          "text-sm mt-2"
-          //   !initialData.description && "text-slate-500 italic"
-        )}
-      ></p>
 
       <Form {...form}>
         <form className="space-y-4 mt-4">
           <FormField
             control={form.control}
-            name="description"
+            name="introduce"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
@@ -57,11 +48,10 @@ const DiscriptionForm = () => {
               </FormItem>
             )}
           />
-          <div className="flex items-center gap-x-2"></div>
         </form>
       </Form>
     </div>
   );
 };
 
-export default DiscriptionForm;
+export default DescriptionForm;

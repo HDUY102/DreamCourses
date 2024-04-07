@@ -1,13 +1,13 @@
 "use client";
 import React, { useState } from "react";
 import * as z from "zod";
-import TitleForm from "./TitleForm";
 import { LuLayoutDashboard } from "react-icons/lu";
 import styles from "@/app/teacher/Teacher.module.css";
-import DescriptionForm from "./DescriptionForm";
-import { ImageForm } from "./ImageForm";
-import { ChaptersForm } from "./ChapterForm";
-import { PriceForm } from "./PriceForm";
+import TitleForm from "../createCourse/TitleForm";
+import DescriptionForm from "../createCourse/DescriptionForm";
+import { ImageForm } from "../createCourse/ImageForm";
+import { ChaptersForm } from "../createCourse/ChapterForm";
+import { PriceForm } from "../createCourse/PriceForm";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -100,7 +100,7 @@ const CourseManage = () => {
               {isPublished ? "Không công khai" : "Công khai"}
             </Button>
           </div> */}
-          <h1 className="mt-2 ml-4 font-bold text-2xl">Tạo Mới Khóa Học</h1>
+          <h1 className="mt-2 ml-4 font-bold text-2xl">Cập Nhật Khóa Học</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
             <div>
               <div className="flex items-center gap-x-2">
@@ -108,7 +108,7 @@ const CourseManage = () => {
                 <h2 className="text-xl">Tùy chỉnh khóa học của bạn</h2>
               </div>
               <div {...form.register("titleCourse")}>
-                <TitleForm />
+                <TitleForm/>
                 {form.formState.errors.titleCourse && (
                   <p className="text-red-500 ml-4 mt-2 ">
                     {form.formState.errors.titleCourse.message}
@@ -156,7 +156,7 @@ const CourseManage = () => {
               className="bg-sky-800 text-white rounded-lg mr-3 hover:text-white p-4  hover:bg-red-500 "
               variant="ghost"
             >
-              Tạo
+              Cập nhật
             </Button>
             <ToastContainer />
           </div>

@@ -12,11 +12,11 @@ export async function POST(request: NextRequest) {
 
     const courses = await prisma.courses.create({
       data: {
-        idCourse: body.idCourse,
         titleCourse: body.titleCourse,
         price: body.price,
         introduce: body.introduce,
         // image: body.image,
+        isPublic: 0,
         teacherId: body.teacherId,
       },
     });
