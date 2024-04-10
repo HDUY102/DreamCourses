@@ -1,13 +1,13 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as z from "zod";
 import { LuLayoutDashboard } from "react-icons/lu";
 import styles from "@/app/teacher/Teacher.module.css";
-import TitleForm from "../createCourse/TitleForm";
-import DescriptionForm from "../createCourse/DescriptionForm";
-import { ImageForm } from "../createCourse/ImageForm";
-import { ChaptersForm } from "../createCourse/ChapterForm";
-import { PriceForm } from "../createCourse/PriceForm";
+import TitleForm from "../../createCourse/TitleForm";
+import DescriptionForm from "../../createCourse/DescriptionForm";
+import { ImageForm } from "../../createCourse/ImageForm";
+import { ChaptersForm } from "../../createCourse/ChapterForm";
+import { PriceForm } from "../../createCourse/PriceForm";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,25 +20,27 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import prisma from "@/prisma/client";
+import { useCourseStore } from "@/app/lib/hooks/useCourseStore";
 
-interface PublishedProps{
+interface PublishedProps {
   disabled: boolean;
-  isPublished: boolean
+  isPublished: boolean;
 }
 
 const formSchema = z.object({
-  price: z.coerce.number().refine((val) => val % 1000 === 0, {message: "Giá tiền là số nguyên chia hết cho 1000"}),
+  price: z.coerce.number().refine((val) => val % 1000 === 0, {message: "Giá tiền là số nguyên chia hết cho 1000",}),
   titleCourse: z.string().min(1, { message: "Tiêu đề không được bỏ trống" }),
   introduce: z.string().min(1, { message: "Lời giới thiệu không được bỏ trống" }),
 });
 
-const CourseManage = () => {
+const UpdateCourse = () => {
   const router = useRouter();
-  const notify: any = () =>toast.success("Thêm mới thành công!", {
+  const notify: any = () =>
+    toast.success("Cập nhật thành công!", {
       position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
@@ -47,11 +49,66 @@ const CourseManage = () => {
       draggable: true,
       progress: undefined,
       theme: "light",
-  });
+    });
+
+  const {setValue,formState: { errors }} = useForm();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
+  const { id } = useParams();
+  // const idCourse = Array.isArray(id) ? parseInt(id[0]) : parseInt(id as string);
+  const idCourse = parseInt(id as string);
+  // const course = useCourseStore.getState().getCourseById(idCourse)[0];
+  // console.log("Day r " + JSON.stringify(course));
+
+  // const test =useForm<z.infer<typeof formSchema>>({
+  //   resolver: zodResolver(formSchema),
+  //   defaultValues:{
+  //     titleCourse: course.titleCourse as string,
+  //     introduce: course.introduce as string,
+  //     price: course.price as number
+  //   }
+  // });
+  const [courseTest, setCourse] = useState<any>(null);
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/api/courses/${idCourse}`,{
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setCourse(data);
+          // Set giá trị của titleCourse và introduce vào form
+          setValue("titleCourse", data.titleCourse);
+          setValue("introduce", data.introduce);
+          console.log("title " + data.titleCourse + " intro " + data.introduce)
+        } else {
+          console.error("Error fetching course:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching course:", error);
+      }
+    };
+
+    fetchCourse();
+  }, [idCourse]);
+  
+  // useEffect(() => {
+  //   // useCourseStore.getState().fetchDataCourses();
+  //   if (course) {
+  //     setValue("titleCourse", course.titleCourse);
+  //     setValue("introduce", course.introduce);
+  //     setValue("price", course.price);
+  //     // setValue("price", userMapping[course.User_idUser]);
+  //     // setContent(course.Content || '');
+  //   }
+  // }, [idCourse]);
+
   const onSubmit = async (values: any) => {
     const formValues = {
       titleCourse: values.titleCourse,
@@ -61,13 +118,16 @@ const CourseManage = () => {
       teacherId: 13,
     };
     console.log(formValues);
-    const respone = await fetch("http://localhost:3000/api/courses", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formValues),
-    });
+    const respone = await fetch(
+      `http://localhost:3000/api/courses/${idCourse}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formValues),
+      }
+    );
 
     if (respone.ok) {
       notify();
@@ -107,8 +167,9 @@ const CourseManage = () => {
                 <LuLayoutDashboard className={styles.icon} />
                 <h2 className="text-xl">Tùy chỉnh khóa học của bạn</h2>
               </div>
-              <div {...form.register("titleCourse")}>
-                <TitleForm/>
+              {/* <div {...form.register("titleCourse")} defaultValue={course && course.titleCourse ? course.titleCourse : ""}> */}
+              <div {...form.register("titleCourse")} >
+                <TitleForm />
                 {form.formState.errors.titleCourse && (
                   <p className="text-red-500 ml-4 mt-2 ">
                     {form.formState.errors.titleCourse.message}
@@ -140,7 +201,11 @@ const CourseManage = () => {
                 </div>
                 <div {...form.register("price")}>
                   <PriceForm />
-                  {form.formState.errors.price && <p className="text-red-500 ml-4">{form.formState.errors.price.message}</p>}
+                  {form.formState.errors.price && (
+                    <p className="text-red-500 ml-4">
+                      {form.formState.errors.price.message}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -166,4 +231,4 @@ const CourseManage = () => {
   );
 };
 
-export default CourseManage;
+export default UpdateCourse;

@@ -121,7 +121,7 @@ export const columns: ColumnDef<courses>[] = [
       }
       return (
         <div className="flex">
-          <Link href={`/teacher/course/updateCourse`}>
+          <Link href={`/teacher/course/updateCourse/${row.original.idCourse}`}>
             <Pencil className="h-4 w-4 hover:text-green-500 ml-2" />
           </Link>
           <ConfirmDelete onConfirmDel={onDelete}>

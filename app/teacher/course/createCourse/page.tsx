@@ -36,7 +36,7 @@ const formSchema = z.object({
   introduce: z.string().min(1, { message: "Lời giới thiệu không được bỏ trống" }),
 });
 
-const CourseManage = () => {
+const CreateCourse = () => {
   const router = useRouter();
   const notify: any = () =>toast.success("Thêm mới thành công!", {
       position: "top-right",
@@ -166,4 +166,4 @@ const CourseManage = () => {
   );
 };
 
-export default CourseManage;
+export default CreateCourse;
