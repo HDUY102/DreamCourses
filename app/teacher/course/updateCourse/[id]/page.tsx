@@ -59,17 +59,7 @@ const UpdateCourse = () => {
   const { id } = useParams();
   // const idCourse = Array.isArray(id) ? parseInt(id[0]) : parseInt(id as string);
   const idCourse = parseInt(id as string);
-  // const course = useCourseStore.getState().getCourseById(idCourse)[0];
-  // console.log("Day r " + JSON.stringify(course));
 
-  // const test =useForm<z.infer<typeof formSchema>>({
-  //   resolver: zodResolver(formSchema),
-  //   defaultValues:{
-  //     titleCourse: course.titleCourse as string,
-  //     introduce: course.introduce as string,
-  //     price: course.price as number
-  //   }
-  // });
   const [courseTest, setCourse] = useState<any>(null);
   useEffect(() => {
     const fetchCourse = async () => {
@@ -83,10 +73,9 @@ const UpdateCourse = () => {
         if (response.ok) {
           const data = await response.json();
           setCourse(data);
-          // Set giá trị của titleCourse và introduce vào form
-          setValue("titleCourse", data.titleCourse);
-          setValue("introduce", data.introduce);
-          console.log("title " + data.titleCourse + " intro " + data.introduce)
+          form.setValue("titleCourse", data.titleCourse);
+          form.setValue("introduce", data.introduce);
+          form.setValue("price", data.price);
         } else {
           console.error("Error fetching course:", response.statusText);
         }
@@ -96,18 +85,7 @@ const UpdateCourse = () => {
     };
 
     fetchCourse();
-  }, [idCourse]);
-  
-  // useEffect(() => {
-  //   // useCourseStore.getState().fetchDataCourses();
-  //   if (course) {
-  //     setValue("titleCourse", course.titleCourse);
-  //     setValue("introduce", course.introduce);
-  //     setValue("price", course.price);
-  //     // setValue("price", userMapping[course.User_idUser]);
-  //     // setContent(course.Content || '');
-  //   }
-  // }, [idCourse]);
+  }, [idCourse, setValue]);
 
   const onSubmit = async (values: any) => {
     const formValues = {
@@ -167,7 +145,6 @@ const UpdateCourse = () => {
                 <LuLayoutDashboard className={styles.icon} />
                 <h2 className="text-xl">Tùy chỉnh khóa học của bạn</h2>
               </div>
-              {/* <div {...form.register("titleCourse")} defaultValue={course && course.titleCourse ? course.titleCourse : ""}> */}
               <div {...form.register("titleCourse")} >
                 <TitleForm />
                 {form.formState.errors.titleCourse && (
