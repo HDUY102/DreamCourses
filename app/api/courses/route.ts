@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
         price: body.price,
         introduce: body.introduce,
         // image: body.image,
-        isPublic: 0,
+        isPublic: body.isPublic,
         teacherId: body.teacherId,
       },
     });

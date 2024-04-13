@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import * as z from "zod";
-import { LuLayoutDashboard } from "react-icons/lu";
+import { LuLayoutDashboard, LuBookOpenCheck, LuBookOpen } from "react-icons/lu";
 import styles from "@/app/teacher/Teacher.module.css";
 import TitleForm from "../../createCourse/TitleForm";
 import DescriptionForm from "../../createCourse/DescriptionForm";
@@ -25,20 +25,25 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import prisma from "@/prisma/client";
 import { useCourseStore } from "@/app/lib/hooks/useCourseStore";
-
+import { motion } from "framer-motion";
 interface PublishedProps {
   disabled: boolean;
   isPublished: boolean;
 }
 
 const formSchema = z.object({
-  price: z.coerce.number().refine((val) => val % 1000 === 0, {message: "Giá tiền là số nguyên chia hết cho 1000",}),
+  price: z.coerce
+    .number()
+    .refine((val) => val % 1000 === 0, {
+      message: "Giá tiền là số nguyên chia hết cho 1000",
+    }),
   titleCourse: z.string().min(1, { message: "Tiêu đề không được bỏ trống" }),
-  introduce: z.string().min(1, { message: "Lời giới thiệu không được bỏ trống" }),
+  introduce: z
+    .string()
+    .min(1, { message: "Lời giới thiệu không được bỏ trống" }),
 });
 
 const UpdateCourse = () => {
-  const router = useRouter();
   const notify: any = () =>
     toast.success("Cập nhật thành công!", {
       position: "top-right",
@@ -51,31 +56,44 @@ const UpdateCourse = () => {
       theme: "light",
     });
 
-  const {setValue,formState: { errors }} = useForm();
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
-  const { id } = useParams();
-  // const idCourse = Array.isArray(id) ? parseInt(id[0]) : parseInt(id as string);
-  const idCourse = parseInt(id as string);
 
+  //state button published
+  const [isPublished, setIsLocked] = useState(true);
+  const toggleLock = () => {
+    setIsLocked(!isPublished);
+  };
+
+  // set value and funtion onSubmit
+  const router = useRouter();
+  const {
+    setValue,
+    formState: { errors },
+  } = useForm();
+  const { id } = useParams();
+  const idCourse = parseInt(id as string);
   const [courseTest, setCourse] = useState<any>(null);
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/courses/${idCourse}`,{
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
+        const response = await fetch(
+          `http://localhost:3000/api/courses/${idCourse}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
           }
-        });
+        );
         if (response.ok) {
           const data = await response.json();
           setCourse(data);
           form.setValue("titleCourse", data.titleCourse);
           form.setValue("introduce", data.introduce);
           form.setValue("price", data.price);
+          setIsLocked(data.isPublic)
         } else {
           console.error("Error fetching course:", response.statusText);
         }
@@ -88,11 +106,13 @@ const UpdateCourse = () => {
   }, [idCourse, setValue]);
 
   const onSubmit = async (values: any) => {
+    const isPublishValue = isPublished ? 1 : 0;
     const formValues = {
       titleCourse: values.titleCourse,
       price: values.price,
       introduce: values.introduce,
       // image: values.image,
+      isPublic: isPublishValue,
       teacherId: 13,
     };
     console.log(formValues);
@@ -127,17 +147,6 @@ const UpdateCourse = () => {
       </div>
       <div className={styles.contentmenu}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          {/* <div className="flex items-center gap-x-2">
-            <Button
-              onClick={onPublished}
-              // disabled={disabled}
-              size="sm"
-              // className="bg-sky-800 text-white rounded-lg mr-3 hover:text-white p-4  hover:bg-red-500 "
-              variant="outline"
-            >
-              {isPublished ? "Không công khai" : "Công khai"}
-            </Button>
-          </div> */}
           <h1 className="mt-2 ml-4 font-bold text-2xl">Cập Nhật Khóa Học</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
             <div>
@@ -145,7 +154,7 @@ const UpdateCourse = () => {
                 <LuLayoutDashboard className={styles.icon} />
                 <h2 className="text-xl">Tùy chỉnh khóa học của bạn</h2>
               </div>
-              <div {...form.register("titleCourse")} >
+              <div {...form.register("titleCourse")}>
                 <TitleForm />
                 {form.formState.errors.titleCourse && (
                   <p className="text-red-500 ml-4 mt-2 ">
@@ -163,7 +172,28 @@ const UpdateCourse = () => {
               </div>
               {/* <ImageForm /> */}
             </div>
-            <div className="space-y-6">
+            <div className="space-y-4 mt-4">
+              <div className="flex justify-end mr-4">
+                {isPublished ? (
+                  <button
+                    type="button"
+                    onClick={toggleLock}
+                    className="bg-green-400 text-white rounded-lg mr-2 text-sm p-2 flex items-center"
+                  >
+                    <LuBookOpenCheck className="mr-1 text-base" />
+                    Công khai
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={toggleLock}
+                    className="bg-red-400 text-white rounded-lg mr-2 p-2 text-sm flex items-center"
+                  >
+                    <LuBookOpen className="mr-1 text-base" />
+                    Không công khai
+                  </button>
+                )}
+              </div>
               <div>
                 <div className="flex items-center gap-x-2">
                   <LuLayoutDashboard className={styles.icon} />

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import * as z from "zod";
 import TitleForm from "./TitleForm";
-import { LuLayoutDashboard } from "react-icons/lu";
+import { LuLayoutDashboard, LuBookOpenCheck, LuBookOpen } from "react-icons/lu";
 import styles from "@/app/teacher/Teacher.module.css";
 import DescriptionForm from "./DescriptionForm";
 import { ImageForm } from "./ImageForm";
@@ -52,11 +52,18 @@ const CreateCourse = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
+  const [isPublished, setIsLocked] = useState(true);
+  const toggleLock = () => {
+    setIsLocked(!isPublished);
+  };
+
   const onSubmit = async (values: any) => {
+    const isPublishValue = isPublished ? 1 : 0;
     const formValues = {
       titleCourse: values.titleCourse,
       price: values.price,
       introduce: values.introduce,
+      isPublic: isPublishValue,
       // image: values.image,
       teacherId: 13,
     };
@@ -89,17 +96,6 @@ const CreateCourse = () => {
       </div>
       <div className={styles.contentmenu}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          {/* <div className="flex items-center gap-x-2">
-            <Button
-              onClick={onPublished}
-              // disabled={disabled}
-              size="sm"
-              // className="bg-sky-800 text-white rounded-lg mr-3 hover:text-white p-4  hover:bg-red-500 "
-              variant="outline"
-            >
-              {isPublished ? "Không công khai" : "Công khai"}
-            </Button>
-          </div> */}
           <h1 className="mt-2 ml-4 font-bold text-2xl">Tạo Mới Khóa Học</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
             <div>
@@ -126,6 +122,27 @@ const CreateCourse = () => {
               {/* <ImageForm /> */}
             </div>
             <div className="space-y-6">
+            <div className="flex justify-end mr-4">
+                {isPublished ? (
+                  <button
+                    type="button"
+                    onClick={toggleLock}
+                    className="bg-green-400 text-white rounded-lg mr-2 text-sm p-2 flex items-center"
+                  >
+                    <LuBookOpenCheck className="mr-1 text-base" />
+                    Công khai
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={toggleLock}
+                    className="bg-red-400 text-white rounded-lg mr-2 p-2 text-sm flex items-center"
+                  >
+                    <LuBookOpen className="mr-1 text-base" />
+                    Không công khai
+                  </button>
+                )}
+              </div>
               <div>
                 <div className="flex items-center gap-x-2">
                   <LuLayoutDashboard className={styles.icon} />
