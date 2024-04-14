@@ -23,12 +23,6 @@ import {
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import prisma from "@/prisma/client";
-
-interface PublishedProps{
-  disabled: boolean;
-  isPublished: boolean
-}
 
 const formSchema = z.object({
   price: z.coerce.number().refine((val) => val % 1000 === 0, {message: "Giá tiền là số nguyên chia hết cho 1000"}),
@@ -52,6 +46,7 @@ const CreateCourse = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
+
   const [isPublished, setIsLocked] = useState(true);
   const toggleLock = () => {
     setIsLocked(!isPublished);
@@ -119,7 +114,14 @@ const CreateCourse = () => {
                   </p>
                 )}
               </div>
-              {/* <ImageForm /> */}
+              <div {...form.register("introduce")}>
+                <ImageForm />
+                {/* {form.formState.errors.introduce && (
+                  <p className="text-red-500 ml-4">
+                    {form.formState.errors.introduce.message}
+                  </p>
+                )} */}
+              </div>
             </div>
             <div className="space-y-6">
             <div className="flex justify-end mr-4">
