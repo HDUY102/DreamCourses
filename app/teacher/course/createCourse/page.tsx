@@ -13,13 +13,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import Sidebar from "@/app/teacher/sidebar/TeacherSidebar";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -29,7 +22,6 @@ const formSchema = z.object({
   titleCourse: z.string().min(1, { message: "Tiêu đề không được bỏ trống" }),
   introduce: z.string().min(1, { message: "Lời giới thiệu không được bỏ trống" }),
 });
-
 const CreateCourse = () => {
   const router = useRouter();
   const notify: any = () =>toast.success("Thêm mới thành công!", {
@@ -52,6 +44,14 @@ const CreateCourse = () => {
     setIsLocked(!isPublished);
   };
 
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const handleImageUpload = (url: string) => {
+    console.log("this is url "+url)
+    if (url) {
+      setImageUrl(url);
+    }
+  };
+
   const onSubmit = async (values: any) => {
     const isPublishValue = isPublished ? 1 : 0;
     const formValues = {
@@ -59,7 +59,7 @@ const CreateCourse = () => {
       price: values.price,
       introduce: values.introduce,
       isPublic: isPublishValue,
-      // image: values.image,
+      image: imageUrl,
       teacherId: 13,
     };
     console.log(formValues);
@@ -114,13 +114,8 @@ const CreateCourse = () => {
                   </p>
                 )}
               </div>
-              <div {...form.register("introduce")}>
-                <ImageForm />
-                {/* {form.formState.errors.introduce && (
-                  <p className="text-red-500 ml-4">
-                    {form.formState.errors.introduce.message}
-                  </p>
-                )} */}
+              <div>
+                <ImageForm onImageUpload={handleImageUpload}/>
               </div>
             </div>
             <div className="space-y-6">

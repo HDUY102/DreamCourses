@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
         titleCourse: body.titleCourse,
         price: body.price,
         introduce: body.introduce,
-        // image: body.image,
+        image: body.image,
         isPublic: body.isPublic,
         teacherId: body.teacherId,
       },

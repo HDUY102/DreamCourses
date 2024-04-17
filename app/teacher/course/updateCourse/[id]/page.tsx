@@ -13,23 +13,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import Sidebar from "@/app/teacher/sidebar/TeacherSidebar";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
 import { useParams, useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import prisma from "@/prisma/client";
-import { useCourseStore } from "@/app/lib/hooks/useCourseStore";
-import { motion } from "framer-motion";
-interface PublishedProps {
-  disabled: boolean;
-  isPublished: boolean;
-}
 
 const formSchema = z.object({
   price: z.coerce
@@ -65,13 +51,18 @@ const UpdateCourse = () => {
   const toggleLock = () => {
     setIsLocked(!isPublished);
   };
+  
+  //image form
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const handleImageUpload = (url: string) => {
+    if (url) {
+      setImageUrl(url);
+    }
+  };
 
   // set value and funtion onSubmit
   const router = useRouter();
-  const {
-    setValue,
-    formState: { errors },
-  } = useForm();
+  const { setValue, formState: { errors }} = useForm();
   const { id } = useParams();
   const idCourse = parseInt(id as string);
   const [courseTest, setCourse] = useState<any>(null);
@@ -93,6 +84,7 @@ const UpdateCourse = () => {
           form.setValue("titleCourse", data.titleCourse);
           form.setValue("introduce", data.introduce);
           form.setValue("price", data.price);
+          setImageUrl(data.image);
           setIsLocked(data.isPublic)
         } else {
           console.error("Error fetching course:", response.statusText);
@@ -111,7 +103,7 @@ const UpdateCourse = () => {
       titleCourse: values.titleCourse,
       price: values.price,
       introduce: values.introduce,
-      // image: values.image,
+      image: imageUrl,
       isPublic: isPublishValue,
       teacherId: 13,
     };
@@ -170,7 +162,9 @@ const UpdateCourse = () => {
                   </p>
                 )}
               </div>
-              {/* <ImageForm /> */}
+              <div>
+                <ImageForm onImageUpload={handleImageUpload}/>
+              </div>
             </div>
             <div className="space-y-4 mt-4">
               <div className="flex justify-end mr-4">

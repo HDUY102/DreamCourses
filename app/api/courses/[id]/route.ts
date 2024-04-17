@@ -40,7 +40,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     });
     if (!existingCourseById) {
       return NextResponse.json(
-        { course: null, message: "Course with this id does not exist" },
+        { course: null, message: "Course với id này không tồn tại" },
         { status: 409 }
       );
     }
@@ -52,7 +52,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         titleCourse: body.titleCourse,
         price: body.price,
         introduce: body.introduce,
-        // image: body.image,
+        image: body.image,
         isPublic: body.isPublic,
         teacherId: body.teacherId,
       },
