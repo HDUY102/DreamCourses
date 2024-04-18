@@ -26,7 +26,7 @@ export const PriceForm = () => {
 
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
-      <div className="font-medium flex items-center justify-between"> Course price </div>
+      <div className="font-medium flex items-center justify-between"> Giá khóa học </div>
       <p className={cn("text-sm mt-2 text-slate-500 italic")}></p>
       <Form {...form}>
         <form className="space-y-4 mt-4">

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import * as z from "zod";
 import TitleForm from "./TitleForm";
-import { LuLayoutDashboard, LuBookOpenCheck, LuBookOpen } from "react-icons/lu";
+import { LuLayoutDashboard,LuCircleDollarSign,LuListTodo,LuBookOpenCheck, LuBookOpen } from "react-icons/lu";
 import styles from "@/app/teacher/Teacher.module.css";
 import DescriptionForm from "./DescriptionForm";
 import { ImageForm } from "./ImageForm";
@@ -142,14 +142,14 @@ const CreateCourse = () => {
               </div>
               <div>
                 <div className="flex items-center gap-x-2">
-                  <LuLayoutDashboard className={styles.icon} />
+                  <LuListTodo className={styles.icon} />
                   <h2 className="text-xl">Chương</h2>
                 </div>
                 {/* <ChaptersForm /> */}
               </div>
               <div>
                 <div className="flex items-center gap-x-2">
-                  <LuLayoutDashboard className={styles.icon} />
+                  <LuCircleDollarSign className={styles.icon} />
                   <h2 className="text-xl">Giá</h2>
                 </div>
                 <div {...form.register("price")}>
