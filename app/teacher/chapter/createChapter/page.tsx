@@ -1,13 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import * as z from "zod";
-import TitleForm from "./TitleForm";
-import { LuLayoutDashboard,LuCircleDollarSign,LuListTodo,LuBookOpenCheck, LuBookOpen } from "react-icons/lu";
+import TitleForm from "@/app/teacher/course/createCourse/TitleForm";
+import { LuLayoutDashboard,LuListTodo,LuBookOpenCheck, LuBookOpen } from "react-icons/lu";
 import styles from "@/app/teacher/Teacher.module.css";
-import DescriptionForm from "./DescriptionForm";
-import { ImageForm } from "./ImageForm";
-import ChapterPage from "../../chapter/page";
-import { PriceForm } from "./PriceForm";
+import DescriptionForm from "@/app/teacher/course/createCourse/DescriptionForm";
+import LessonPage from "../../lesson/page";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,10 +15,10 @@ import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 const formSchema = z.object({
-  price: z.coerce.number().refine((val) => val % 1000 === 0, {message: "Giá tiền là số nguyên chia hết cho 1000"}),
-  titleCourse: z.string().min(1, { message: "Tiêu đề không được bỏ trống" }),
-  introduce: z.string().min(1, { message: "Lời giới thiệu không được bỏ trống" }),
+  titleChapter: z.string().min(1, { message: "Tiêu đề chương không được bỏ trống" }),
+  description: z.string().min(1, { message: "Lời giới thiệu về chương không được bỏ trống" }),
 });
 const CreateCourse = () => {
   const router = useRouter();
@@ -44,25 +42,16 @@ const CreateCourse = () => {
     setIsLocked(!isPublished);
   };
 
-  const [imageUrl, setImageUrl] = useState<string>("");
-  const handleImageUpload = (url: string) => {
-    if (url) {
-      setImageUrl(url);
-    }
-  };
-
   const onSubmit = async (values: any) => {
     const isPublishValue = isPublished ? 1 : 0;
     const formValues = {
       titleCourse: values.titleCourse,
-      price: values.price,
-      introduce: values.introduce,
+      description: values.description,
       isPublic: isPublishValue,
-      image: imageUrl,
-      teacherId: 13,
+      courseId: 4,
     };
     console.log(formValues);
-    const respone = await fetch("http://localhost:3000/api/courses", {
+    const respone = await fetch("http://localhost:3000/api/chapter", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -73,11 +62,8 @@ const CreateCourse = () => {
     if (respone.ok) {
       notify();
       setTimeout(() => {
-        router.push("/teacher/course");
-      }, 2000);
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
+        router.push("/teacher/course/createCourse");
+      }, 2000)
     } else {
       console.error("Error during Create:", respone.statusText);
     }
@@ -90,31 +76,28 @@ const CreateCourse = () => {
       </div>
       <div className={styles.contentmenu}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <h1 className="mt-2 ml-4 font-bold text-2xl">Tạo Mới Khóa Học</h1>
+          <h1 className="mt-2 ml-4 font-bold text-2xl">Tạo Mới Chương Học</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
             <div>
               <div className="flex items-center gap-x-2">
                 <LuLayoutDashboard className={styles.icon} />
-                <h2 className="text-xl">Tùy chỉnh khóa học của bạn</h2>
+                <h2 className="text-xl">Tùy chỉnh chương</h2>
               </div>
-              <div {...form.register("titleCourse")}>
+              <div {...form.register("titleChapter")}>
                 <TitleForm />
-                {form.formState.errors.titleCourse && (
+                {form.formState.errors.titleChapter && (
                   <p className="text-red-500 ml-4 mt-2 ">
-                    {form.formState.errors.titleCourse.message}
+                    {form.formState.errors.titleChapter.message}
                   </p>
                 )}
               </div>
-              <div {...form.register("introduce")}>
+              <div {...form.register("description")}>
                 <DescriptionForm />
-                {form.formState.errors.introduce && (
+                {form.formState.errors.description && (
                   <p className="text-red-500 ml-4">
-                    {form.formState.errors.introduce.message}
+                    {form.formState.errors.description.message}
                   </p>
                 )}
-              </div>
-              <div>
-                <ImageForm onImageUpload={handleImageUpload}/>
               </div>
             </div>
             <div className="space-y-6">
@@ -142,24 +125,14 @@ const CreateCourse = () => {
               <div>
                 <div className="flex items-center gap-x-2">
                   <LuListTodo className={styles.icon} />
-                  <h2 className="text-xl">Chương</h2>
+                  <h2 className="text-xl">Bài Học</h2>
                 </div>
-                <ChapterPage />
-              </div>
-              <div>
-                <div className="flex items-center gap-x-2">
-                  <LuCircleDollarSign className={styles.icon} />
-                  <h2 className="text-xl">Giá</h2>
-                </div>
-                <div {...form.register("price")}>
-                  <PriceForm />
-                  {form.formState.errors.price && <p className="text-red-500 ml-4">{form.formState.errors.price.message}</p>}
-                </div>
+                <LessonPage />
               </div>
             </div>
           </div>
           <div className="flex justify-end mb-3">
-            <Link href={"/teacher/course"}>
+            <Link href={"/teacher/course/createCourse"}>
               <button className="bg-sky-800 text-white rounded-lg mr-1 hover:text-white p-2 hover:bg-red-500 ">
                 Hủy
               </button>
@@ -169,7 +142,7 @@ const CreateCourse = () => {
               className="bg-sky-800 text-white rounded-lg mr-3 hover:text-white p-4  hover:bg-red-500 "
               variant="ghost"
             >
-              Tạo
+              Tạo Chương
             </Button>
             <ToastContainer />
           </div>

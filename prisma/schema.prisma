@@ -33,8 +33,8 @@ model chapters {
   idChapter    Int       @id @default(autoincrement())
   titleChapter String?   @db.VarChar(255)
   courseId     Int
-  isFree       Int?
-  order        Int?
+  isPublished  Boolean?
+  orderChapter Int?
   description  String?   @db.VarChar(255)
   courses      courses   @relation(fields: [courseId], references: [idCourse], onDelete: NoAction, onUpdate: NoAction, map: "FK_Course_Chapter")
   lessons      lessons[]
@@ -60,7 +60,7 @@ model courses {
   introduce   String?      @db.VarChar(255)
   image       String?      @db.VarChar(255)
   teacherId   Int
-  isPublic    Int?
+  isPublic    Boolean?
   chapters    chapters[]
   users       users        @relation(fields: [teacherId], references: [idUser], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Course")
   courseuser  courseuser[]
@@ -83,32 +83,33 @@ model courseuser {
 }
 
 model documents {
-  idDocument    Int       @id @default(autoincrement())
-  titleDocument String?   @db.VarChar(255)
-  url           String?   @db.VarChar(255)
-  lessons       lessons[]
+  idDocument    Int     @id @default(autoincrement())
+  titleDocument String? @db.VarChar(255)
+  url           String? @db.VarChar(255)
+  lessonId      Int
+  lessons       lessons @relation(fields: [lessonId], references: [idLessons], onDelete: NoAction, onUpdate: NoAction, map: "FK_Document_Lesson")
+
+  @@index([lessonId], map: "FK_Document_Lesson_idx")
 }
 
 model lessons {
   idLessons    Int          @id @default(autoincrement())
   titleLessons String?      @db.VarChar(255)
   chapterId    Int
-  isFree       Int?
+  isPublished  Boolean?
   order        Int?
   video        String?      @db.VarChar(255)
-  documentId   Int
-  quizzId      Int
-  assignmentId Int
-  assignments  assignments  @relation(fields: [assignmentId], references: [idAssigment], onDelete: NoAction, onUpdate: NoAction, map: "FK_Assignment_Lessons")
+  quizzId      Int?
+  assignmentId Int?
+  documents    documents[]
+  assignments  assignments? @relation(fields: [assignmentId], references: [idAssigment], onDelete: NoAction, onUpdate: NoAction, map: "FK_Assignment_Lessons")
   chapters     chapters     @relation(fields: [chapterId], references: [idChapter], onDelete: NoAction, onUpdate: NoAction, map: "FK_Chapter_Lessons")
-  documents    documents    @relation(fields: [documentId], references: [idDocument], onDelete: NoAction, onUpdate: NoAction, map: "FK_Document_Lessons")
-  quizzs       quizzs       @relation(fields: [quizzId], references: [idQuizz], onDelete: NoAction, onUpdate: NoAction, map: "FK_Quizz_Lessons")
+  quizzs       quizzs?      @relation(fields: [quizzId], references: [idQuizz], onDelete: NoAction, onUpdate: NoAction, map: "FK_Quizz_Lessons")
   lessonuser   lessonuser[]
   notes        notes[]
 
   @@index([assignmentId], map: "FK_Assignment_Lessons_idx")
   @@index([chapterId], map: "FK_Chapter_Lessons_idx")
-  @@index([documentId], map: "FK_Document_Chapter_idx")
   @@index([quizzId], map: "FK_Quizz_Lesson_idx")
 }
 

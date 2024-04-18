@@ -1,13 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import * as z from "zod";
-import TitleForm from "./TitleForm";
-import { LuLayoutDashboard,LuCircleDollarSign,LuListTodo,LuBookOpenCheck, LuBookOpen } from "react-icons/lu";
+import TitleForm from "@/app/teacher/course/createCourse/TitleForm";
+import { LuLayoutDashboard,LuVideo ,LuBookOpenCheck, LuBookOpen } from "react-icons/lu";
 import styles from "@/app/teacher/Teacher.module.css";
-import DescriptionForm from "./DescriptionForm";
-import { ImageForm } from "./ImageForm";
-import ChapterPage from "../../chapter/page";
-import { PriceForm } from "./PriceForm";
+import DescriptionForm from "@/app/teacher/course/createCourse/DescriptionForm";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,13 +13,15 @@ import Sidebar from "@/app/teacher/sidebar/TeacherSidebar";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { VideoLesson } from "./VideoLesson";
+import { AttachmentLesson } from "./Attachment";
+
 
 const formSchema = z.object({
-  price: z.coerce.number().refine((val) => val % 1000 === 0, {message: "Giá tiền là số nguyên chia hết cho 1000"}),
   titleCourse: z.string().min(1, { message: "Tiêu đề không được bỏ trống" }),
   introduce: z.string().min(1, { message: "Lời giới thiệu không được bỏ trống" }),
 });
-const CreateCourse = () => {
+const CreateLesson = () => {
   const router = useRouter();
   const notify: any = () =>toast.success("Thêm mới thành công!", {
       position: "top-right",
@@ -39,16 +38,17 @@ const CreateCourse = () => {
     resolver: zodResolver(formSchema),
   });
 
+  const [attachmentUrl, setAttachmentUrl] = useState<string>("");
+  const handleAttachmentUpload = (url: string) => {
+    if (url) {
+      setAttachmentUrl(url);
+    }
+  };
+  console.log("url: "+ attachmentUrl)
+
   const [isPublished, setIsLocked] = useState(true);
   const toggleLock = () => {
     setIsLocked(!isPublished);
-  };
-
-  const [imageUrl, setImageUrl] = useState<string>("");
-  const handleImageUpload = (url: string) => {
-    if (url) {
-      setImageUrl(url);
-    }
   };
 
   const onSubmit = async (values: any) => {
@@ -58,7 +58,6 @@ const CreateCourse = () => {
       price: values.price,
       introduce: values.introduce,
       isPublic: isPublishValue,
-      image: imageUrl,
       teacherId: 13,
     };
     console.log(formValues);
@@ -90,12 +89,12 @@ const CreateCourse = () => {
       </div>
       <div className={styles.contentmenu}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <h1 className="mt-2 ml-4 font-bold text-2xl">Tạo Mới Khóa Học</h1>
+          <h1 className="mt-2 ml-4 font-bold text-2xl">Tạo Mới Bài Học</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
             <div>
               <div className="flex items-center gap-x-2">
                 <LuLayoutDashboard className={styles.icon} />
-                <h2 className="text-xl">Tùy chỉnh khóa học của bạn</h2>
+                <h2 className="text-xl">Tùy chỉnh bài học của bạn</h2>
               </div>
               <div {...form.register("titleCourse")}>
                 <TitleForm />
@@ -112,9 +111,6 @@ const CreateCourse = () => {
                     {form.formState.errors.introduce.message}
                   </p>
                 )}
-              </div>
-              <div>
-                <ImageForm onImageUpload={handleImageUpload}/>
               </div>
             </div>
             <div className="space-y-6">
@@ -141,25 +137,18 @@ const CreateCourse = () => {
               </div>
               <div>
                 <div className="flex items-center gap-x-2">
-                  <LuListTodo className={styles.icon} />
-                  <h2 className="text-xl">Chương</h2>
+                  <LuVideo className={styles.icon} />
+                  <h2 className="text-xl">Video</h2>
                 </div>
-                <ChapterPage />
+                <VideoLesson/>
               </div>
               <div>
-                <div className="flex items-center gap-x-2">
-                  <LuCircleDollarSign className={styles.icon} />
-                  <h2 className="text-xl">Giá</h2>
-                </div>
-                <div {...form.register("price")}>
-                  <PriceForm />
-                  {form.formState.errors.price && <p className="text-red-500 ml-4">{form.formState.errors.price.message}</p>}
-                </div>
+                <AttachmentLesson onAttachUpload={handleAttachmentUpload}/>
               </div>
             </div>
           </div>
           <div className="flex justify-end mb-3">
-            <Link href={"/teacher/course"}>
+            <Link href={"/teacher/chapter/createChapter"}>
               <button className="bg-sky-800 text-white rounded-lg mr-1 hover:text-white p-2 hover:bg-red-500 ">
                 Hủy
               </button>
@@ -169,7 +158,7 @@ const CreateCourse = () => {
               className="bg-sky-800 text-white rounded-lg mr-3 hover:text-white p-4  hover:bg-red-500 "
               variant="ghost"
             >
-              Tạo
+              Xác Nhận
             </Button>
             <ToastContainer />
           </div>
@@ -179,4 +168,4 @@ const CreateCourse = () => {
   );
 };
 
-export default CreateCourse;
+export default CreateLesson;

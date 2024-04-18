@@ -193,7 +193,7 @@ const UpdateCourse = () => {
                   <LuLayoutDashboard className={styles.icon} />
                   <h2 className="text-xl">Chương</h2>
                 </div>
-                {/* <ChaptersForm /> */}
+                <ChaptersForm />
               </div>
               <div>
                 <div className="flex items-center gap-x-2">
