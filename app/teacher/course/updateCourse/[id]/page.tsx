@@ -6,7 +6,7 @@ import styles from "@/app/teacher/Teacher.module.css";
 import TitleForm from "../../createCourse/TitleForm";
 import DescriptionForm from "../../createCourse/DescriptionForm";
 import { ImageForm } from "../../createCourse/ImageForm";
-import { ChaptersForm } from "../../createCourse/ChapterForm";
+import { ChapterForm } from "@/app/teacher/chapter/createChapter/ChapterForm";
 import { PriceForm } from "../../createCourse/PriceForm";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
@@ -16,6 +16,7 @@ import Sidebar from "@/app/teacher/sidebar/TeacherSidebar";
 import { useParams, useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 
 const formSchema = z.object({
   price: z.coerce
@@ -85,7 +86,7 @@ const UpdateCourse = () => {
           form.setValue("introduce", data.introduce);
           form.setValue("price", data.price);
           setImageUrl(data.image);
-          setIsLocked(data.isPublic)
+          setIsLocked(data.isPublished)
         } else {
           console.error("Error fetching course:", response.statusText);
         }
@@ -98,7 +99,7 @@ const UpdateCourse = () => {
   }, [idCourse, setValue]);
 
   const onSubmit = async (values: any) => {
-    const isPublishValue = isPublished ? 1 : 0;
+    const isPublishValue = isPublished ? true : false;
     const formValues = {
       titleCourse: values.titleCourse,
       price: values.price,
@@ -193,7 +194,7 @@ const UpdateCourse = () => {
                   <LuLayoutDashboard className={styles.icon} />
                   <h2 className="text-xl">Chương</h2>
                 </div>
-                <ChaptersForm />
+                {/* <ChapterForm /> */}
               </div>
               <div>
                 <div className="flex items-center gap-x-2">

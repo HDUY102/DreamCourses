@@ -19,14 +19,22 @@ import { Input } from "@/components/ui/input";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ChapterList from "./ChapterList";
+import {chapters,courses} from "@prisma/client"
 
 const chaptersSchema = z.object({
   titleChapter: z.string().min(1),
 });
 
-export const ChaptersForm = () => {
-  const [isCreating] = useState(false);
-  const [isUpdating] = useState(false);
+interface ChaptersFormProps{
+  initialData: courses & {chapters: chapters[]}
+}
+
+export const ChapterForm = () => {
+  const [isCreating, setIsCreating] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const toggleCreating = ()=> setIsCreating((current)=>!current)
+  const router = useRouter()
+
   const notify: any = () =>toast.success("Thêm mới chapter thành công!", {
     position: "top-right",
     autoClose: 5000,
@@ -41,21 +49,22 @@ export const ChaptersForm = () => {
   const form = useForm<z.infer<typeof chaptersSchema>>({
     resolver: zodResolver(chaptersSchema)
   });
-
   const { isSubmitting, isValid } = form.formState;
+
   const { id } = useParams();
   const idCourse = parseInt(id as string);
   const onSubmit = async (values: any) => {
+    console.log(idCourse)
     // const isPublishValue = isPublished ? 1 : 0;
     const formValues = {
       titleChapter: values.titleChapter,
-      orderChapter: values.orderChapter,
+      // orderChapter: values.orderChapter,
       // description: values.description,
       isPublished: 0,
       courseId: idCourse
     };
     console.log(formValues);
-    const respone = await fetch(`http://localhost:3000/api/chapter/${idCourse}`, {
+    const respone = await fetch(`http://localhost:3000/api/courses/${idCourse}/chapter`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -64,10 +73,11 @@ export const ChaptersForm = () => {
     });
 
     if (respone.ok) {
+      // toggleCreating()
       notify();
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 3000);
     } else {
       console.error("Error during Create:", respone.statusText);
     }
@@ -81,41 +91,36 @@ export const ChaptersForm = () => {
         </div>
       )}
       <div className="font-medium flex items-center justify-between">
-        Course chapters
+        Chương Khóa Học
       </div>
       <Form {...form}>
         <form className="space-y-4 mt-4" onSubmit={form.handleSubmit(onSubmit)}>
-          {/* <FormField
+          <FormField
             control={form.control}
             name="titleChapter"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
+                  <div {...form.register("titleChapter")}>
                   <Input
                     disabled={isSubmitting}
                     placeholder="Nhập tên chapter mới"
                     {...field}
                   />
+                  </div>
+                  
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
-          /> */}
-          {/* <ChapterList onEdit={()=>{}} onReorder={()=>{}} items={initialData.chapters||[]}/> */}
+          />
+          {/* <ChapterList onEdit={()=>{}} onReorder={()=>{}} items={initialData.idChapter ||[]}/> */}
           <Button disabled={!isValid || isSubmitting} type="submit">
             Create
           </Button>
           <ToastContainer />
         </form>
       </Form>
-      {!isCreating && (
-        <div className={cn("text-sm mt-2 text-slate-500 italic")}></div>
-      )}
-      {!isCreating && (
-        <p className="text-xs text-muted-foreground mt-4">
-          Di chuyển chương để thay đổi thứ tự
-        </p>
-      )}
     </div>
   );
 };

@@ -16,6 +16,7 @@ import Sidebar from "@/app/teacher/sidebar/TeacherSidebar";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ChaptersForm } from "./ChapterForm";
 
 const formSchema = z.object({
   price: z.coerce.number().refine((val) => val % 1000 === 0, {message: "Giá tiền là số nguyên chia hết cho 1000"}),
@@ -52,7 +53,7 @@ const CreateCourse = () => {
   };
 
   const onSubmit = async (values: any) => {
-    const isPublishValue = isPublished ? 1 : 0;
+    const isPublishValue = isPublished ? true : false;
     const formValues = {
       titleCourse: values.titleCourse,
       price: values.price,
@@ -144,7 +145,8 @@ const CreateCourse = () => {
                   <LuListTodo className={styles.icon} />
                   <h2 className="text-xl">Chương</h2>
                 </div>
-                <ChapterPage />
+                {/* <ChapterPage /> */}
+                {/* <ChaptersForm/> */}
               </div>
               <div>
                 <div className="flex items-center gap-x-2">

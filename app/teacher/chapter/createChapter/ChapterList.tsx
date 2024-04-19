@@ -20,7 +20,7 @@ const ChapterList = ({items,onReorder,onEdit}:ChapterListProps) => {
   },[])
 
   useEffect(()=>{
-    setIsMounted(true)
+    setchapters(items)
   },[items])
 
   if(!isMounted){
@@ -34,26 +34,30 @@ const ChapterList = ({items,onReorder,onEdit}:ChapterListProps) => {
                 <div {...provided.droppableProps} ref={provided.innerRef}>
                     {chapters.map((chapters,index)=>(
                         <Draggable key={chapters.idChapter}
-                            draggableId={chapters.idChapter}
+                            draggableId={chapters.idChapter.toString()}
                             index={index}
                         >
                             {(provided)=>(
-                                <div className={cn(
-                                    "flex items-center gap-x-2 bg-slate-200",
+                                <div className={cn("flex items-center gap-x-2 bg-slate-200 border-slate-200 border text-slate-700 rounded-md mb-4 text-sm",
                                     chapters.isPublished && "bg-sky-100 border-sky-200 text-sky-700"
                                 )}
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
                                 >
                                     <div className={cn(
-                                        "px-2 py-3 border-r border-r-slate-200 hover: bg-slate-300 rounded-l=md transition",
+                                        "px-2 py-3 border-r border-r-slate-200 hover:bg-slate-300 rounded-l-md transition",
                                         chapters.isPublished && "border-r-sky-200 hover:bg-sky-200"
                                     )}
                                     {...provided.dragHandleProps}
                                     >
-                                        <Grip/>
+                                        <Grip className='h-5 w-5'/>
                                     </div>
                                     {chapters.titleChapter}
+                                    <div className='ml-auto pr-2 flex items-center gap-x-2'>
+                                        <div className={cn("bg-slate-500", chapters.isPublished && "bg-sky-700")}>
+                                            {chapters.isPublished?"Công khai" : "Không công khai"}
+                                        </div>
+                                    </div>
                                 </div>
                             )}
                         </Draggable>

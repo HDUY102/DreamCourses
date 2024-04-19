@@ -60,7 +60,7 @@ model courses {
   introduce   String?      @db.VarChar(255)
   image       String?      @db.VarChar(255)
   teacherId   Int
-  isPublic    Boolean?
+  isPublished Boolean?
   chapters    chapters[]
   users       users        @relation(fields: [teacherId], references: [idUser], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Course")
   courseuser  courseuser[]

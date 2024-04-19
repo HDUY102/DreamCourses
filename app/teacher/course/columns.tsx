@@ -63,7 +63,7 @@ export const columns: ColumnDef<courses>[] = [
     },
   },
   {
-    accessorKey: "isPublic",
+    accessorKey: "isPublished",
     header: ({ column }) => {
       return (
         <Button
@@ -76,7 +76,7 @@ export const columns: ColumnDef<courses>[] = [
       );
     },
     cell: ({ row }) => {
-        const isPub = row.getValue("isPublic") || false;
+        const isPub = row.getValue("isPublished") || false;
         return(
           <div className={cn("bg-slate-500 rounded-lg text-center p-1 w-[60%]", isPub && "bg-green-400")}>
               {isPub ? "Công khai" : "Không công khai"}
