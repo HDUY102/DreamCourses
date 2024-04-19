@@ -10,21 +10,12 @@ import { useCourseStore } from "@/app/lib/hooks/useCourseStore";
 import prisma from "@/prisma/client";
 
 const CourseManage = async () => {
-  // const data = await getData()
   const courses = await prisma.courses.findMany({
-    // where:{
-    //   idCourse,
-    // },
     orderBy:{
       titleCourse: "desc"
     }
   })
-  // const { fetchDataCourses, isLoadingCourses } = useCourseStore();
-  // const { onDelete } = useCourseStore();
-  // useEffect(() => {
-  //   fetchDataCourses();
-  // }, []);
-  
+
   return (
     <div className="flex ">
       <div className={styles.menu}>

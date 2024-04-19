@@ -6,7 +6,7 @@ import styles from "@/app/teacher/Teacher.module.css";
 import TitleForm from "../../createCourse/TitleForm";
 import DescriptionForm from "../../createCourse/DescriptionForm";
 import { ImageForm } from "../../createCourse/ImageForm";
-import { ChapterForm } from "@/app/teacher/chapter/createChapter/ChapterForm";
+import { ChapterForm } from "./ChapterForm";
 import { PriceForm } from "../../createCourse/PriceForm";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
@@ -16,6 +16,7 @@ import Sidebar from "@/app/teacher/sidebar/TeacherSidebar";
 import { useParams, useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import prisma from "@/prisma/client";
 
 
 const formSchema = z.object({
@@ -98,6 +99,39 @@ const UpdateCourse = () => {
     fetchCourse();
   }, [idCourse, setValue]);
 
+  // let idCheck = parseInt(params.id)
+  // const courses = await prisma.courses.findFirst({
+  //   where:{
+  //     idCourse: idCheck
+  //   }
+  // })
+useEffect(() => {
+  const fetchCourse = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/courses/${idCourse}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setCourse(data);
+      } else {
+        console.error("Error fetching course:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error fetching course:", error);
+    }
+  };
+
+  fetchCourse();
+}, [idCourse]);
+
+  //update course
   const onSubmit = async (values: any) => {
     const isPublishValue = isPublished ? true : false;
     const formValues = {
@@ -166,6 +200,20 @@ const UpdateCourse = () => {
               <div>
                 <ImageForm onImageUpload={handleImageUpload}/>
               </div>
+              <div>
+                <div className="flex items-center mt-3 gap-x-2">
+                  <LuLayoutDashboard className={styles.icon} />
+                  <h2 className="text-xl">Giá</h2>
+                </div>
+                <div {...form.register("price")}>
+                  <PriceForm />
+                  {form.formState.errors.price && (
+                    <p className="text-red-500 ml-4">
+                      {form.formState.errors.price.message}
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
             <div className="space-y-4 mt-4">
               <div className="flex justify-end mr-4">
@@ -194,22 +242,9 @@ const UpdateCourse = () => {
                   <LuLayoutDashboard className={styles.icon} />
                   <h2 className="text-xl">Chương</h2>
                 </div>
-                {/* <ChapterForm /> */}
+                <ChapterForm initialData={courseTest} />
               </div>
-              <div>
-                <div className="flex items-center gap-x-2">
-                  <LuLayoutDashboard className={styles.icon} />
-                  <h2 className="text-xl">Giá</h2>
-                </div>
-                <div {...form.register("price")}>
-                  <PriceForm />
-                  {form.formState.errors.price && (
-                    <p className="text-red-500 ml-4">
-                      {form.formState.errors.price.message}
-                    </p>
-                  )}
-                </div>
-              </div>
+              
             </div>
           </div>
           <div className="flex justify-end mb-3">

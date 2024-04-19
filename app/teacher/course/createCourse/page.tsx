@@ -142,14 +142,6 @@ const CreateCourse = () => {
               </div>
               <div>
                 <div className="flex items-center gap-x-2">
-                  <LuListTodo className={styles.icon} />
-                  <h2 className="text-xl">Chương</h2>
-                </div>
-                {/* <ChapterPage /> */}
-                {/* <ChaptersForm/> */}
-              </div>
-              <div>
-                <div className="flex items-center gap-x-2">
                   <LuCircleDollarSign className={styles.icon} />
                   <h2 className="text-xl">Giá</h2>
                 </div>

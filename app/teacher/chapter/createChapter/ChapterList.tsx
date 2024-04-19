@@ -12,7 +12,7 @@ interface ChapterListProps{
     onReorder: (updateData:{id: string, orderChapter: number}[]) => void
     onEdit: (id:string) => void
 }
-const ChapterList = ({items,onReorder,onEdit}:ChapterListProps) => {
+const ChaptersList = ({items,onReorder,onEdit}:ChapterListProps) => {
   const [isMounted,setIsMounted] = useState(false)
   const [chapters,setchapters] = useState(items)
   useEffect(()=>{
@@ -55,7 +55,7 @@ const ChapterList = ({items,onReorder,onEdit}:ChapterListProps) => {
                                     {chapters.titleChapter}
                                     <div className='ml-auto pr-2 flex items-center gap-x-2'>
                                         <div className={cn("bg-slate-500", chapters.isPublished && "bg-sky-700")}>
-                                            {chapters.isPublished?"Công khai" : "Không công khai"}
+                                            {chapters.isPublished? "Công khai" : "Không công khai"}
                                         </div>
                                     </div>
                                 </div>
@@ -69,4 +69,4 @@ const ChapterList = ({items,onReorder,onEdit}:ChapterListProps) => {
   )
 }
 
-export default ChapterList
+export default ChaptersList

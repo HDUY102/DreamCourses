@@ -7,7 +7,7 @@ export async function GET( request: NextRequest, { params }: { params: { id: str
     const course = await prisma.courses.findFirst({
       where: {
         idCourse: idCheck,
-      },
+      }
     });
     return NextResponse.json(course);
   } else {
@@ -53,7 +53,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         price: body.price,
         introduce: body.introduce,
         image: body.image,
-        isPublic: body.isPublic,
+        isPublished: body.isPublished,
         teacherId: body.teacherId,
       },
     });
