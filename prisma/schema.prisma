@@ -31,7 +31,7 @@ model assignmentuser {
 
 model chapters {
   idChapter    Int       @id @default(autoincrement())
-  titleChapter String?   @db.VarChar(255)
+  titleChapter String    @db.VarChar(255)
   courseId     Int
   isPublished  Boolean?
   orderChapter Int?

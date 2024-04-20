@@ -21,12 +21,12 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
       orderBy: {
         orderChapter: 'asc'
       },
-      select: {
-        titleChapter: true
-      }
+      // select: {
+      //   titleChapter: true
+      // }
     })
-    const titleChapters = chapters.map(chapter => chapter.titleChapter)
-    return NextResponse.json(titleChapters)
+    // const titleChapters = chapters.map(chapter => chapter.titleChapter)
+    return NextResponse.json(chapters)
   } catch (error) {
     console.error("Error fetching chapters:", error)
     return NextResponse.error()

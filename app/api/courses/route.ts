@@ -2,7 +2,6 @@ import prisma from "@/prisma/client";
 import { NextRequest,NextResponse } from "next/server";
 
 export async function GET() {
-  console.log('dang o trong get')
   const course = await prisma.courses.findMany();
   return NextResponse.json(course);
 }

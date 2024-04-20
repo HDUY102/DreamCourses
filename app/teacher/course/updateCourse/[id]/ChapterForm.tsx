@@ -151,7 +151,7 @@ export const ChapterForm = ({ initialData }: ChapterFormProps) => {
       </Form>
       )}
       {!isCreating  && (
-        <div className={cn("text-sm mt-2", !chapters?.length && "text-slate-500 italic")}>
+        <div className={cn("text-sm mt-2", !initialData?.chapters?.length && "text-slate-500 italic")}>
           {!chapters?.length && "Chưa có chương nào"}
           <ChapterList onEdit={() => {}} onReorder={() => {}} items={chapters || []}/>
         </div>
