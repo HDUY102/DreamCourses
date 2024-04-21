@@ -46,7 +46,18 @@ export const ChapterForm = ({ initialData }: ChapterFormProps) => {
       draggable: true,
       progress: undefined,
       theme: "light",
-    });
+  });
+  const notifyReOrder: any = () =>
+    toast.success("Thay đổi vị trí chapter thành công!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+  });
 
   const form = useForm<z.infer<typeof chaptersSchema>>({
     resolver: zodResolver(chaptersSchema),
@@ -57,18 +68,18 @@ export const ChapterForm = ({ initialData }: ChapterFormProps) => {
   const { isSubmitting, isValid } = form.formState;
   const { id } = useParams();
   const idCourse = parseInt(id as string);
+  const fetchChapters = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/courses/${idCourse}/chapter`);
+      if (response.ok) {
+        const data = await response.json();
+        setChapters(data);
+      }
+    } catch (error) {
+      console.error("Error fetching chapters:", error);
+    }
+  };
   useEffect(() => {
-      const fetchChapters = async () => {
-        try {
-          const response = await fetch(`http://localhost:3000/api/courses/${idCourse}/chapter`);
-          if (response.ok) {
-            const data = await response.json();
-            setChapters(data);
-          }
-        } catch (error) {
-          console.error("Error fetching chapters:", error);
-        }
-      };
       fetchChapters();
   }, [idCourse]);
 
@@ -90,6 +101,7 @@ export const ChapterForm = ({ initialData }: ChapterFormProps) => {
         body: JSON.stringify(formValues),
       }
     );
+
     const chaptersResponse = await fetch(`http://localhost:3000/api/courses/${idCourse}/chapter`,{
       method: "GET",
       headers: {
@@ -100,6 +112,7 @@ export const ChapterForm = ({ initialData }: ChapterFormProps) => {
       const updatedChaptersData = await chaptersResponse.json();
       setChapters(updatedChaptersData); 
     }
+
     if (respone.ok) {
       notify();
       setTimeout(() => {
@@ -112,6 +125,30 @@ export const ChapterForm = ({ initialData }: ChapterFormProps) => {
       console.error("Error during Create:", respone.statusText);
     }
   }
+
+  const onReorder = async (updateData: {idChapter: number, orderChapter: number}[]) =>{
+    try {
+      setIsUpdating(true)
+      const response = await fetch(`http://localhost:3000/api/courses/${idCourse}/chapter`,{
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updateData) 
+      });
+      if (response.ok) {
+        fetchChapters();
+        notifyReOrder();
+        setIsUpdating(false);
+        setTimeout(() => {
+          router.refresh();
+        }, 3000);
+      }
+    } catch (error) {
+      console.error("Lỗi reOrderChapter:", error);
+    }
+  }
+
   return (
     <div className="relative mt-6 border bg-slate-100 rounded-md p-4">
       {isUpdating && (
@@ -153,7 +190,7 @@ export const ChapterForm = ({ initialData }: ChapterFormProps) => {
       {!isCreating  && (
         <div className={cn("text-sm mt-2", !initialData?.chapters?.length && "text-slate-500 italic")}>
           {!chapters?.length && "Chưa có chương nào"}
-          <ChapterList onEdit={() => {}} onReorder={() => {}} items={chapters || []}/>
+          <ChapterList onEdit={() => {}} onReorder={onReorder} items={chapters || []}/>
         </div>
       )}
 

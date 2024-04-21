@@ -1,4 +1,5 @@
 import prisma from "@/prisma/client";
+import { NodeNextResponse } from "next/dist/server/base-http/node";
 import { NextRequest, NextResponse } from "next/server";
 
 // export async function GET({ params }: { params: { id: string } }) {
@@ -76,5 +77,24 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     return NextResponse.json({ post: chapters, message: "Tạo chương học thành công" },{ status: 201 });
   } catch (error) {
     return NextResponse.json("Error", { status: 500 });
+  }
+}
+
+export async function PUT(request: NextRequest,{ params }: { params: { id: string } }) {
+  let idCheck = parseInt(params.id)
+  try {
+    const body = await request.json();
+
+    for (let item of body){
+      await prisma.chapters.update({
+        where:{ idChapter: item.idChapter},
+        data:{ orderChapter: item.orderChapter}
+      })
+    }
+
+    return new NextResponse("Thành công ", {status: 200})
+  } catch (error) {
+    console.error("Error fetching chapters:", error)
+    return NextResponse.error()
   }
 }
