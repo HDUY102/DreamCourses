@@ -19,59 +19,16 @@ export async function GET() {
 //   return NextResponse.json(chapters);
 }
 
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const lastChapter = await prisma.chapters.findFirst({
-        where:{
-            courseId: body.courseId
-        },
-        orderBy:{
-            orderChapter: "desc"
-        }
-    })
-    const newOrder = lastChapter ? lastChapter.orderChapter +1 :1
-    
-    const chapter = await prisma.create({
-        data:{
-            titleChapter: body.titleChapter,
-            orderChapter: newOrder,
-            // description: body.description,
-            isPublished: body.isPublished,
-            courseId: body.courseId, 
-        }
-    })
-
-    return NextResponse.json({ post: chapter, message: "Tạo chương học thành công" },{ status: 201 });
-  } catch (error) {
-    return NextResponse.json("Error", { status: 500 });
+export async function DELETE( request: NextRequest, { params }: { params: { id: string } }) {
+  let idCheck = parseInt(params.id);
+  if (idCheck !== -1) {
+    const deleteCourse = await prisma.chapters.delete({
+      where: {
+        idChapter: idCheck,
+      },
+    });
+    return NextResponse.json("Xóa chương thành công", {status: 201});
+  } else {
+    return NextResponse.json({ message: "Xóa chương thất bại" });
   }
 }
-// export async function POST(request: NextRequest) {
-//   try {
-//     const body = await request.json();
-//     const {idCourse}=body;
-//     //check if username already exists
-//     const existingCourseById = await prisma.courses.findFirst({
-//         where:{
-//             idCourse : idCourse
-//         }    
-//     });
-//     if(existingCourseById){
-//         return NextResponse.json({user: null, message:"Không có courses tồn tại"})
-//     }
-//     const chapters = await prisma.chapters.create({
-//       data: {
-//         titleChapter: body.titleChapter,
-//         orderChapter: body.orderChapter,
-//         // description: body.description,
-//         isPublished: body.isPublished,
-//         courseId: body.courseId,
-//       },
-//     });
-
-//     return NextResponse.json({ post: chapters, message: "Tạo chương học thành công" },{ status: 201 });
-//   } catch (error) {
-//     return NextResponse.json("Error", { status: 500 });
-//   }
-// }

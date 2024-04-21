@@ -1,5 +1,4 @@
 import prisma from "@/prisma/client";
-import { NodeNextResponse } from "next/dist/server/base-http/node";
 import { NextRequest, NextResponse } from "next/server";
 
 // export async function GET({ params }: { params: { id: string } }) {
@@ -81,7 +80,6 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 }
 
 export async function PUT(request: NextRequest,{ params }: { params: { id: string } }) {
-  let idCheck = parseInt(params.id)
   try {
     const body = await request.json();
 

@@ -1,10 +1,11 @@
 "use client";
 
+import { useState,useEffect } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Loader2, PlusCircle,Pencil } from "lucide-react";
-import { useState,useEffect } from "react";
+import { Loader2, PlusCircle } from "lucide-react";
+import { LuMoveVertical  } from "react-icons/lu";
 import { useParams, useRouter } from "next/navigation";
 import {
   Form,
@@ -48,9 +49,10 @@ export const ChapterForm = ({ initialData }: ChapterFormProps) => {
       theme: "light",
   });
   const notifyReOrder: any = () =>
-    toast.success("Thay đổi vị trí chapter thành công!", {
+    toast("Thứ tự chương đã thay đổi!", {
+      icon: <LuMoveVertical className="text-green-500"/>,
       position: "top-right",
-      autoClose: 5000,
+      autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -84,16 +86,12 @@ export const ChapterForm = ({ initialData }: ChapterFormProps) => {
   }, [idCourse]);
 
   const onSubmit = async (values: any) => {
-    // const isPublishValue = isPublished ? 1 : 0;
     const formValues = {
       titleChapter: values.titleChapter,
-      // description: values.description,
       isPublished: false,
       courseId: idCourse,
     };
-    const respone = await fetch(
-      `http://localhost:3000/api/courses/${idCourse}/chapter`,
-      {
+    const respone = await fetch( `http://localhost:3000/api/courses/${idCourse}/chapter`,{
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -190,7 +188,7 @@ export const ChapterForm = ({ initialData }: ChapterFormProps) => {
       {!isCreating  && (
         <div className={cn("text-sm mt-2", !initialData?.chapters?.length && "text-slate-500 italic")}>
           {!chapters?.length && "Chưa có chương nào"}
-          <ChapterList onEdit={() => {}} onReorder={onReorder} items={chapters || []}/>
+          <ChapterList onReorder={onReorder} items={chapters || []}/>
         </div>
       )}
 

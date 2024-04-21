@@ -1,29 +1,29 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as z from "zod";
-import TitleForm from "./TitleForm";
-import { LuLayoutDashboard,LuCircleDollarSign,LuListTodo,LuBookOpenCheck, LuBookOpen } from "react-icons/lu";
+import { LuLayoutDashboard, LuBookOpenCheck, LuBookOpen } from "react-icons/lu";
 import styles from "@/app/teacher/Teacher.module.css";
-import DescriptionForm from "./DescriptionForm";
-import { ImageForm } from "./ImageForm";
-import { PriceForm } from "./PriceForm";
+import TitleForm from "@/app/teacher/course/createCourse/TitleForm";
+import DescriptionForm from "@/app/teacher/course/createCourse/DescriptionForm";
+import { ChapterForm } from "@/app/teacher/course/updateCourse/[id]/ChapterForm";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import Sidebar from "@/app/teacher/sidebar/TeacherSidebar";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const formSchema = z.object({
-  price: z.coerce.number().refine((val) => val % 1000 === 0, {message: "Giá tiền là số nguyên chia hết cho 1000"}),
   titleCourse: z.string().min(1, { message: "Tiêu đề không được bỏ trống" }),
-  introduce: z.string().min(1, { message: "Lời giới thiệu không được bỏ trống" }),
+  introduce: z
+    .string()
+    .min(1, { message: "Lời giới thiệu không được bỏ trống" }),
 });
-const CreateCourse = () => {
-  const router = useRouter();
-  const notify: any = () =>toast.success("Thêm mới thành công!", {
+
+const UpdateChapter = () => {
+  const notify: any = () =>
+    toast.success("Cập nhật thành công!", {
       position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
@@ -32,24 +32,85 @@ const CreateCourse = () => {
       draggable: true,
       progress: undefined,
       theme: "light",
-  });
+    });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
+  //state button published
   const [isPublished, setIsLocked] = useState(true);
   const toggleLock = () => {
     setIsLocked(!isPublished);
   };
+  
+  //trở về trang updatecouse trước đó
+  const handleCancel = () => {
+    router.back();
+  };
 
-  const [imageUrl, setImageUrl] = useState<string>("");
-  const handleImageUpload = (url: string) => {
-    if (url) {
-      setImageUrl(url);
+  // set value and funtion onSubmit
+  const router = useRouter();
+  const { setValue, formState: { errors }} = useForm();
+  const { id } = useParams();
+  const idCourse = parseInt(id as string);
+  const [courseTest, setCourse] = useState<any>(null);
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/api/courses/${idCourse}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setCourse(data);
+          form.setValue("titleCourse", data.titleCourse);
+          form.setValue("introduce", data.introduce);
+          setIsLocked(data.isPublished)
+        } else {
+          console.error("Error fetching course:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching course:", error);
+      }
+    };
+
+    fetchCourse();
+  }, [idCourse, setValue]);
+  
+useEffect(() => {
+  const fetchCourse = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/courses/${idCourse}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setCourse(data);
+      } else {
+        console.error("Error fetching course:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error fetching course:", error);
     }
   };
 
+  fetchCourse();
+}, [idCourse]);
+
+  //update course
   const onSubmit = async (values: any) => {
     const isPublishValue = isPublished ? true : false;
     const formValues = {
@@ -57,17 +118,19 @@ const CreateCourse = () => {
       price: values.price,
       introduce: values.introduce,
       isPublic: isPublishValue,
-      image: imageUrl,
       teacherId: 13,
     };
     console.log(formValues);
-    const respone = await fetch("http://localhost:3000/api/courses", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formValues),
-    });
+    const respone = await fetch(
+      `http://localhost:3000/api/courses/${idCourse}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formValues),
+      }
+    );
 
     if (respone.ok) {
       notify();
@@ -89,12 +152,12 @@ const CreateCourse = () => {
       </div>
       <div className={styles.contentmenu}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <h1 className="mt-2 ml-4 font-bold text-2xl">Tạo Mới Khóa Học</h1>
+          <h1 className="mt-2 ml-4 font-bold text-2xl">Cập Nhật Chương</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
             <div>
               <div className="flex items-center gap-x-2">
                 <LuLayoutDashboard className={styles.icon} />
-                <h2 className="text-xl">Tùy chỉnh khóa học của bạn</h2>
+                <h2 className="text-xl">Tùy chỉnh chương của học</h2>
               </div>
               <div {...form.register("titleCourse")}>
                 <TitleForm />
@@ -112,12 +175,9 @@ const CreateCourse = () => {
                   </p>
                 )}
               </div>
-              <div>
-                <ImageForm onImageUpload={handleImageUpload}/>
-              </div>
             </div>
-            <div className="space-y-6">
-            <div className="flex justify-end mr-4">
+            <div className="space-y-4 mt-4">
+              <div className="flex justify-end mr-4">
                 {isPublished ? (
                   <button
                     type="button"
@@ -140,28 +200,23 @@ const CreateCourse = () => {
               </div>
               <div>
                 <div className="flex items-center gap-x-2">
-                  <LuCircleDollarSign className={styles.icon} />
-                  <h2 className="text-xl">Giá</h2>
+                  <LuBookOpen className={styles.icon} />
+                  <h2 className="text-xl">Bài học</h2>
                 </div>
-                <div {...form.register("price")}>
-                  <PriceForm />
-                  {form.formState.errors.price && <p className="text-red-500 ml-4">{form.formState.errors.price.message}</p>}
-                </div>
+                <ChapterForm initialData={courseTest} />
               </div>
             </div>
           </div>
           <div className="flex justify-end mb-3">
-            <Link href={"/teacher/course"}>
-              <button className="bg-sky-800 text-white rounded-lg mr-1 hover:text-white p-2 hover:bg-red-500 ">
+            <button className="bg-sky-800 text-white rounded-lg mr-1 hover:text-white p-2 hover:bg-red-500" onClick={handleCancel}>
                 Hủy
-              </button>
-            </Link>
+            </button>
             <Button
               type="submit"
               className="bg-sky-800 text-white rounded-lg mr-3 hover:text-white p-4  hover:bg-red-500 "
               variant="ghost"
             >
-              Tạo
+              Cập nhật
             </Button>
             <ToastContainer />
           </div>
@@ -171,4 +226,4 @@ const CreateCourse = () => {
   );
 };
 
-export default CreateCourse;
+export default UpdateChapter;

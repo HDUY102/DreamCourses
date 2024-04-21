@@ -16,7 +16,6 @@ import Sidebar from "@/app/teacher/sidebar/TeacherSidebar";
 import { useParams, useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import prisma from "@/prisma/client";
 
 
 const formSchema = z.object({
@@ -99,32 +98,24 @@ const UpdateCourse = () => {
     fetchCourse();
   }, [idCourse, setValue]);
 
-  // let idCheck = parseInt(params.id)
-  // const courses = await prisma.courses.findFirst({
-  //   where:{
-  //     idCourse: idCheck
-  //   }
-  // })
-useEffect(() => {
-  const fetchCourse = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/api/courses/${idCourse}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/api/courses/${idCourse}`,{
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setCourse(data);
+        } else {
+          console.error("Error fetching course:", response.statusText);
         }
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setCourse(data);
-      } else {
-        console.error("Error fetching course:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error fetching course:", error);
+      } catch (error) {
+        console.error("Error fetching course:", error);
     }
   };
 
@@ -143,9 +134,7 @@ useEffect(() => {
       teacherId: 13,
     };
     console.log(formValues);
-    const respone = await fetch(
-      `http://localhost:3000/api/courses/${idCourse}`,
-      {
+    const respone = await fetch(`http://localhost:3000/api/courses/${idCourse}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -244,7 +233,6 @@ useEffect(() => {
                 </div>
                 <ChapterForm initialData={courseTest} />
               </div>
-              
             </div>
           </div>
           <div className="flex justify-end mb-3">
