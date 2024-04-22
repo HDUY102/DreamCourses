@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import * as z from "zod";
-import { LuLayoutDashboard, LuBookOpenCheck, LuBookOpen } from "react-icons/lu";
+import { LuLayoutDashboard,LuBadgeDollarSign , LuListTodo,LuFolderOpen , LuFolderLock } from "react-icons/lu";
 import styles from "@/app/teacher/Teacher.module.css";
 import TitleForm from "../../createCourse/TitleForm";
 import DescriptionForm from "../../createCourse/DescriptionForm";
@@ -32,7 +32,7 @@ const UpdateCourse = () => {
   const notify: any = () =>
     toast.success("Cập nhật thành công!", {
       position: "top-right",
-      autoClose: 5000,
+      autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -41,7 +41,7 @@ const UpdateCourse = () => {
       theme: "light",
     });
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const { register,setValue, handleSubmit, formState: { errors } } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
@@ -61,15 +61,13 @@ const UpdateCourse = () => {
 
   // set value and funtion onSubmit
   const router = useRouter();
-  const { setValue, formState: { errors }} = useForm();
   const { id } = useParams();
   const idCourse = parseInt(id as string);
   const [courseTest, setCourse] = useState<any>(null);
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:3000/api/courses/${idCourse}`,{
+        const response = await fetch(`/api/courses/${idCourse}`,{
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -79,9 +77,9 @@ const UpdateCourse = () => {
         if (response.ok) {
           const data = await response.json();
           setCourse(data);
-          form.setValue("titleCourse", data.titleCourse);
-          form.setValue("introduce", data.introduce);
-          form.setValue("price", data.price);
+          setValue("titleCourse", data.titleCourse);
+          setValue("introduce", data.introduce);
+          setValue("price", data.price);
           setImageUrl(data.image);
           setIsLocked(data.isPublished)
         } else {
@@ -94,30 +92,6 @@ const UpdateCourse = () => {
 
     fetchCourse();
   }, [idCourse, setValue]);
-
-  useEffect(() => {
-    const fetchCourse = async () => {
-      try {
-        const response = await fetch(`http://localhost:3000/api/courses/${idCourse}`,{
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setCourse(data);
-        } else {
-          console.error("Error fetching course:", response.statusText);
-        }
-      } catch (error) {
-        console.error("Error fetching course:", error);
-    }
-  };
-
-  fetchCourse();
-}, [idCourse]);
 
   //update course
   const onSubmit = async (values: any) => {
@@ -159,7 +133,7 @@ const UpdateCourse = () => {
         <Sidebar />
       </div>
       <div className={styles.contentmenu}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <h1 className="mt-2 ml-4 font-bold text-2xl">Cập Nhật Khóa Học</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
             <div>
@@ -167,19 +141,19 @@ const UpdateCourse = () => {
                 <LuLayoutDashboard className={styles.icon} />
                 <h2 className="text-xl">Tùy chỉnh khóa học của bạn</h2>
               </div>
-              <div {...form.register("titleCourse")}>
+              <div {...register("titleCourse")}>
                 <TitleForm />
-                {form.formState.errors.titleCourse && (
+                {errors.titleCourse && (
                   <p className="text-red-500 ml-4 mt-2 ">
-                    {form.formState.errors.titleCourse.message}
+                    {errors.titleCourse.message}
                   </p>
                 )}
               </div>
-              <div {...form.register("introduce")}>
+              <div {...register("introduce")}>
                 <DescriptionForm />
-                {form.formState.errors.introduce && (
+                {errors.introduce && (
                   <p className="text-red-500 ml-4">
-                    {form.formState.errors.introduce.message}
+                    {errors.introduce.message}
                   </p>
                 )}
               </div>
@@ -188,14 +162,14 @@ const UpdateCourse = () => {
               </div>
               <div>
                 <div className="flex items-center mt-3 gap-x-2">
-                  <LuLayoutDashboard className={styles.icon} />
+                  <LuBadgeDollarSign  className={styles.icon} />
                   <h2 className="text-xl">Giá</h2>
                 </div>
-                <div {...form.register("price")}>
+                <div {...register("price")}>
                   <PriceForm />
-                  {form.formState.errors.price && (
+                  {errors.price && (
                     <p className="text-red-500 ml-4">
-                      {form.formState.errors.price.message}
+                      {errors.price.message}
                     </p>
                   )}
                 </div>
@@ -209,7 +183,7 @@ const UpdateCourse = () => {
                     onClick={toggleLock}
                     className="bg-green-400 text-white rounded-lg mr-2 text-sm p-2 flex items-center"
                   >
-                    <LuBookOpenCheck className="mr-1 text-base" />
+                    <LuFolderOpen className="mr-1 text-base" />
                     Công khai
                   </button>
                 ) : (
@@ -218,14 +192,14 @@ const UpdateCourse = () => {
                     onClick={toggleLock}
                     className="bg-red-400 text-white rounded-lg mr-2 p-2 text-sm flex items-center"
                   >
-                    <LuBookOpen className="mr-1 text-base" />
+                    <LuFolderLock  className="mr-1 text-base" />
                     Không công khai
                   </button>
                 )}
               </div>
               <div>
                 <div className="flex items-center gap-x-2">
-                  <LuLayoutDashboard className={styles.icon} />
+                  <LuListTodo className={styles.icon} />
                   <h2 className="text-xl">Chương</h2>
                 </div>
                 <ChapterForm initialData={courseTest} />

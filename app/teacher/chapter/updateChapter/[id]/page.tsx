@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import * as z from "zod";
-import { LuLayoutDashboard, LuBookOpenCheck, LuBookOpen } from "react-icons/lu";
+import { LuLayoutDashboard, LuListTodo,LuFolderOpen , LuFolderLock  } from "react-icons/lu";
 import styles from "@/app/teacher/Teacher.module.css";
 import TitleForm from "@/app/teacher/course/createCourse/TitleForm";
 import DescriptionForm from "@/app/teacher/course/createCourse/DescriptionForm";
@@ -11,21 +11,24 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Sidebar from "@/app/teacher/sidebar/TeacherSidebar";
 import { useParams, useRouter } from "next/navigation";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer,toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const formSchema = z.object({
-  titleCourse: z.string().min(1, { message: "Tiêu đề không được bỏ trống" }),
-  introduce: z
-    .string()
-    .min(1, { message: "Lời giới thiệu không được bỏ trống" }),
+  titleChapter: z.string().min(1, { message: "Tiêu đề chapter không được bỏ trống" }),
+  description: z.string().min(1, { message: "Mô tả không được bỏ trống" }),
 });
 
 const UpdateChapter = () => {
+  const router = useRouter();
+  const [titleChapter, setTitleChapter] = useState("");
+const [description, setDescription] = useState("");
+
+  const [chapter, setChapter] = useState<any>(null);
   const notify: any = () =>
-    toast.success("Cập nhật thành công!", {
+    toast.success("Cập nhật chương thành công!", {
       position: "top-right",
-      autoClose: 5000,
+      autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -34,10 +37,9 @@ const UpdateChapter = () => {
       theme: "light",
     });
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const { register,setValue, handleSubmit, formState: { errors } } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
-
   //state button published
   const [isPublished, setIsLocked] = useState(true);
   const toggleLock = () => {
@@ -50,17 +52,12 @@ const UpdateChapter = () => {
   };
 
   // set value and funtion onSubmit
-  const router = useRouter();
-  const { setValue, formState: { errors }} = useForm();
   const { id } = useParams();
-  const idCourse = parseInt(id as string);
-  const [courseTest, setCourse] = useState<any>(null);
+  const idChapter = parseInt(id as string);
   useEffect(() => {
-    const fetchCourse = async () => {
+    const fetchChapter = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:3000/api/courses/${idCourse}`,
-          {
+        const response = await fetch(`/api/chapter/${idChapter}`,{
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -69,81 +66,49 @@ const UpdateChapter = () => {
         );
         if (response.ok) {
           const data = await response.json();
-          setCourse(data);
-          form.setValue("titleCourse", data.titleCourse);
-          form.setValue("introduce", data.introduce);
+          setChapter(data);
+          setValue("titleChapter", data.titleChapter);
+          setValue("description", data.description);
           setIsLocked(data.isPublished)
+          console.log(data)
         } else {
-          console.error("Error fetching course:", response.statusText);
+          console.error("Error fetching chapter:", response.statusText);
         }
       } catch (error) {
-        console.error("Error fetching course:", error);
+        console.error("Error fetching chapter:", error);
       }
     };
 
-    fetchCourse();
-  }, [idCourse, setValue]);
+    fetchChapter();
+  }, [idChapter,setValue]);
   
-useEffect(() => {
-  const fetchCourse = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/api/courses/${idCourse}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setCourse(data);
-      } else {
-        console.error("Error fetching course:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error fetching course:", error);
-    }
-  };
-
-  fetchCourse();
-}, [idCourse]);
-
-  //update course
+  //update chapter
   const onSubmit = async (values: any) => {
+    setTitleChapter("titleChapter")
+
     const isPublishValue = isPublished ? true : false;
     const formValues = {
-      titleCourse: values.titleCourse,
-      price: values.price,
-      introduce: values.introduce,
-      isPublic: isPublishValue,
-      teacherId: 13,
+      titleChapter: values.titleChapter,
+      description: values.description,
+      isPublished: isPublishValue,
     };
     console.log(formValues);
-    const respone = await fetch(
-      `http://localhost:3000/api/courses/${idCourse}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formValues),
-      }
-    );
-
-    if (respone.ok) {
-      notify();
-      setTimeout(() => {
-        router.push("/teacher/course");
-      }, 2000);
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
-    } else {
-      console.error("Error during Create:", respone.statusText);
+    const respone = await fetch(`/api/chapter/${idChapter}`,{
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formValues),
     }
-  };
+  );
+
+  if (respone.ok) {
+    notify();
+    // router.back();
+  } else {
+    console.error("Error during Create:", respone.statusText);
+  }
+};
 
   return (
     <div className="flex">
@@ -151,27 +116,27 @@ useEffect(() => {
         <Sidebar />
       </div>
       <div className={styles.contentmenu}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <h1 className="mt-2 ml-4 font-bold text-2xl">Cập Nhật Chương</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
             <div>
               <div className="flex items-center gap-x-2">
                 <LuLayoutDashboard className={styles.icon} />
-                <h2 className="text-xl">Tùy chỉnh chương của học</h2>
+                <h2 className="text-xl">Tùy chỉnh chương của khóa học</h2>
               </div>
-              <div {...form.register("titleCourse")}>
+              <div {...register("titleChapter")}>
                 <TitleForm />
-                {form.formState.errors.titleCourse && (
+                {errors.titleChapter && (
                   <p className="text-red-500 ml-4 mt-2 ">
-                    {form.formState.errors.titleCourse.message}
+                    {errors.titleChapter.message}
                   </p>
                 )}
               </div>
-              <div {...form.register("introduce")}>
+              <div {...register("description")}>
                 <DescriptionForm />
-                {form.formState.errors.introduce && (
+                {errors.description && (
                   <p className="text-red-500 ml-4">
-                    {form.formState.errors.introduce.message}
+                    {errors.description.message}
                   </p>
                 )}
               </div>
@@ -184,7 +149,7 @@ useEffect(() => {
                     onClick={toggleLock}
                     className="bg-green-400 text-white rounded-lg mr-2 text-sm p-2 flex items-center"
                   >
-                    <LuBookOpenCheck className="mr-1 text-base" />
+                    <LuFolderOpen  className="mr-1 text-base" />
                     Công khai
                   </button>
                 ) : (
@@ -193,23 +158,23 @@ useEffect(() => {
                     onClick={toggleLock}
                     className="bg-red-400 text-white rounded-lg mr-2 p-2 text-sm flex items-center"
                   >
-                    <LuBookOpen className="mr-1 text-base" />
+                    <LuFolderLock  className="mr-1 text-base" />
                     Không công khai
                   </button>
                 )}
               </div>
               <div>
                 <div className="flex items-center gap-x-2">
-                  <LuBookOpen className={styles.icon} />
+                  <LuListTodo className={styles.icon} />
                   <h2 className="text-xl">Bài học</h2>
                 </div>
-                <ChapterForm initialData={courseTest} />
+                {/* <ChapterForm initialData={chapter} /> */}
               </div>
             </div>
           </div>
           <div className="flex justify-end mb-3">
-            <button className="bg-sky-800 text-white rounded-lg mr-1 hover:text-white p-2 hover:bg-red-500" onClick={handleCancel}>
-                Hủy
+            <button type="button" className="bg-sky-800 text-white rounded-lg mr-1 hover:text-white p-2 hover:bg-red-500" onClick={handleCancel}>
+              Hủy
             </button>
             <Button
               type="submit"

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import * as z from "zod";
 import TitleForm from "./TitleForm";
-import { LuLayoutDashboard,LuCircleDollarSign,LuListTodo,LuBookOpenCheck, LuBookOpen } from "react-icons/lu";
+import { LuLayoutDashboard,LuFolderOpen ,LuBadgeDollarSign,LuFolderLock } from "react-icons/lu";
 import styles from "@/app/teacher/Teacher.module.css";
 import DescriptionForm from "./DescriptionForm";
 import { ImageForm } from "./ImageForm";
@@ -23,7 +23,7 @@ const formSchema = z.object({
 });
 const CreateCourse = () => {
   const router = useRouter();
-  const notify: any = () =>toast.success("Thêm mới thành công!", {
+  const notify: any = () =>toast.success("Tạo khóa học mới thành công!", {
       position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
@@ -124,7 +124,7 @@ const CreateCourse = () => {
                     onClick={toggleLock}
                     className="bg-green-400 text-white rounded-lg mr-2 text-sm p-2 flex items-center"
                   >
-                    <LuBookOpenCheck className="mr-1 text-base" />
+                    <LuFolderOpen  className="mr-1 text-base" />
                     Công khai
                   </button>
                 ) : (
@@ -133,14 +133,14 @@ const CreateCourse = () => {
                     onClick={toggleLock}
                     className="bg-red-400 text-white rounded-lg mr-2 p-2 text-sm flex items-center"
                   >
-                    <LuBookOpen className="mr-1 text-base" />
+                    <LuFolderLock  className="mr-1 text-base" />
                     Không công khai
                   </button>
                 )}
               </div>
               <div>
                 <div className="flex items-center gap-x-2">
-                  <LuCircleDollarSign className={styles.icon} />
+                  <LuBadgeDollarSign className={styles.icon} />
                   <h2 className="text-xl">Giá</h2>
                 </div>
                 <div {...form.register("price")}>
