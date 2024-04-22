@@ -22,6 +22,7 @@ const ChapterList = ({items,onReorder}:ChaptersListProps) => {
   const [isLoading, setLoading] = useState(false);
   const [isMounted,setIsMounted] = useState(false)
   const [chapters,setChapters] = useState(items)
+  
   const notifyDelete:any = () => toast("Chương đã bị xóa",{
     icon: <Trash className='text-red-500'/>,
     position: "top-right",
@@ -65,10 +66,10 @@ const ChapterList = ({items,onReorder}:ChaptersListProps) => {
   }
 
   //xóa chapter
-  const onDelete = async (idChapter:any) =>{
+  const onDelete = async ({idChapter,idCourse}:any) =>{
     try{
       setLoading(true)
-      const response = await fetch(`http://localhost:3000/api/chapter/${idChapter}`, {
+      const response = await fetch(`/api/chapter/${idChapter}`, {
         method: 'DELETE',
       });
       if (response.ok) {
@@ -76,6 +77,17 @@ const ChapterList = ({items,onReorder}:ChaptersListProps) => {
       } else {
         toast.error("Lỗi, xin thử lại");
       }
+      // const chaptersResponse = await fetch(`http://localhost:3000/api/courses/${idCourse}/chapter`,{
+      //   method: "GET",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      // });
+      // if (chaptersResponse.ok) {
+      //   const updatedChaptersData = await chaptersResponse.json();
+      //   setChapters(updatedChaptersData); 
+      //   window.location.reload()
+      // }
     }catch{
       setLoading(false)
     }
@@ -114,7 +126,7 @@ const ChapterList = ({items,onReorder}:ChaptersListProps) => {
                                         <Link href={`/teacher/chapter/updateChapter/${chapter.idChapter}`}>
                                             <Pencil className="h-4 w-4 hover:text-green-400 ml-2 cursor-pointer transition" />
                                         </Link>
-                                        <ConfirmDelete onConfirmDel={() => onDelete(chapter.idChapter)}>
+                                        <ConfirmDelete onConfirmDel={() => onDelete({idChapter: chapter.idChapter, idCourse: chapter.courseId})}>
                                             <button disabled={isLoading}>
                                             <Trash className="h-4 w-4 hover:text-red-500 ml-2" />
                                             </button>

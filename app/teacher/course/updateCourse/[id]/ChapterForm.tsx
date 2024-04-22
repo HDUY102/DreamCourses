@@ -40,7 +40,7 @@ export const ChapterForm = ({ initialData }: ChapterFormProps) => {
   const notify: any = () =>
     toast.success("Thêm mới chapter thành công!", {
       position: "top-right",
-      autoClose: 5000,
+      autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -100,25 +100,13 @@ export const ChapterForm = ({ initialData }: ChapterFormProps) => {
       }
     );
 
-    const chaptersResponse = await fetch(`http://localhost:3000/api/courses/${idCourse}/chapter`,{
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (chaptersResponse.ok) {
-      const updatedChaptersData = await chaptersResponse.json();
-      setChapters(updatedChaptersData); 
-    }
+    fetchChapters();
 
     if (respone.ok) {
       notify();
       setTimeout(() => {
         toggleCreating();
       }, 2000);
-      setTimeout(() => {
-        router.refresh();
-      }, 3000);
     } else {
       console.error("Error during Create:", respone.statusText);
     }

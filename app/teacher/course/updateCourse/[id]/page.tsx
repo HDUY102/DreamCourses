@@ -19,9 +19,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 
 const formSchema = z.object({
-  price: z.coerce
-    .number()
-    .refine((val) => val % 1000 === 0, {
+  price: z.coerce.number().refine((val) => val % 1000 === 0, {
       message: "Giá tiền là số nguyên chia hết cho 1000",
     }),
   titleCourse: z.string().min(1, { message: "Tiêu đề không được bỏ trống" }),
@@ -71,8 +69,7 @@ const UpdateCourse = () => {
     const fetchCourse = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/courses/${idCourse}`,
-          {
+          `http://localhost:3000/api/courses/${idCourse}`,{
             method: "GET",
             headers: {
               "Content-Type": "application/json",
