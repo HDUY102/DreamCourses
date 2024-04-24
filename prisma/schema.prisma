@@ -97,7 +97,7 @@ model lessons {
   titleLessons String?      @db.VarChar(255)
   chapterId    Int
   isPublished  Boolean?
-  order        Int?
+  orderLesson  Int?
   video        String?      @db.VarChar(255)
   quizzId      Int?
   assignmentId Int?

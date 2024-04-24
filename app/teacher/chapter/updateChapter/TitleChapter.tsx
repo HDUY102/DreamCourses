@@ -13,9 +13,9 @@ import {
 } from "@/components/ui/form";
 
 const titleSchema = z.object({
-  titleCourse: z.string(),
+  titleChapter: z.string(),
 });
-export const TitleForm = () => {
+export const TitleChapter = () => {
   const form = useForm<z.infer<typeof titleSchema>>({
     resolver: zodResolver(titleSchema),
   });
@@ -29,7 +29,7 @@ export const TitleForm = () => {
         <form className="space-y-4 mt-4">
           <FormField
             control={form.control}
-            name="titleCourse"
+            name="titleChapter"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
@@ -49,4 +49,4 @@ export const TitleForm = () => {
   );
 };
 
-export default TitleForm;
+export default TitleChapter;

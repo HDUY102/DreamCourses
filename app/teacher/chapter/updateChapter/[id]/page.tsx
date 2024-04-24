@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import * as z from "zod";
 import { LuLayoutDashboard, LuListTodo,LuFolderOpen , LuFolderLock  } from "react-icons/lu";
 import styles from "@/app/teacher/Teacher.module.css";
-import TitleForm from "@/app/teacher/course/createCourse/TitleForm";
-import DescriptionForm from "@/app/teacher/course/createCourse/DescriptionForm";
-import { ChapterForm } from "@/app/teacher/course/updateCourse/[id]/ChapterForm";
+import { LessonForm } from "./LessonForm";
+import TitleChapter from "../TitleChapter";
+import DescriptionChapter from "../DescriptionChapter";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,6 +14,7 @@ import { useParams, useRouter } from "next/navigation";
 import { ToastContainer,toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 const formSchema = z.object({
   titleChapter: z.string().min(1, { message: "Tiêu đề chapter không được bỏ trống" }),
   description: z.string().min(1, { message: "Mô tả không được bỏ trống" }),
@@ -21,25 +22,20 @@ const formSchema = z.object({
 
 const UpdateChapter = () => {
   const router = useRouter();
-  const [titleChapter, setTitleChapter] = useState("");
-const [description, setDescription] = useState("");
-
   const [chapter, setChapter] = useState<any>(null);
+  
   const notify: any = () =>
     toast.success("Cập nhật chương thành công!", {
       position: "top-right",
-      autoClose: 2000,
+      autoClose: 2500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
       theme: "light",
-    });
-
-  const { register,setValue, handleSubmit, formState: { errors } } = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
   });
+
   //state button published
   const [isPublished, setIsLocked] = useState(true);
   const toggleLock = () => {
@@ -51,6 +47,10 @@ const [description, setDescription] = useState("");
     router.back();
   };
 
+  
+  const { register,setValue, handleSubmit, formState: { errors } } = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+  });
   // set value and funtion onSubmit
   const { id } = useParams();
   const idChapter = parseInt(id as string);
@@ -66,11 +66,10 @@ const [description, setDescription] = useState("");
         );
         if (response.ok) {
           const data = await response.json();
-          setChapter(data);
           setValue("titleChapter", data.titleChapter);
           setValue("description", data.description);
           setIsLocked(data.isPublished)
-          console.log(data)
+          console.log("Lấy data:",data)
         } else {
           console.error("Error fetching chapter:", response.statusText);
         }
@@ -84,8 +83,6 @@ const [description, setDescription] = useState("");
   
   //update chapter
   const onSubmit = async (values: any) => {
-    setTitleChapter("titleChapter")
-
     const isPublishValue = isPublished ? true : false;
     const formValues = {
       titleChapter: values.titleChapter,
@@ -104,9 +101,11 @@ const [description, setDescription] = useState("");
 
   if (respone.ok) {
     notify();
-    // router.back();
+    setTimeout(()=>{
+      router.back();
+    },3000)
   } else {
-    console.error("Error during Create:", respone.statusText);
+    console.error("Error during updateChapter:", respone.statusText);
   }
 };
 
@@ -125,7 +124,7 @@ const [description, setDescription] = useState("");
                 <h2 className="text-xl">Tùy chỉnh chương của khóa học</h2>
               </div>
               <div {...register("titleChapter")}>
-                <TitleForm />
+                <TitleChapter />
                 {errors.titleChapter && (
                   <p className="text-red-500 ml-4 mt-2 ">
                     {errors.titleChapter.message}
@@ -133,7 +132,7 @@ const [description, setDescription] = useState("");
                 )}
               </div>
               <div {...register("description")}>
-                <DescriptionForm />
+                <DescriptionChapter />
                 {errors.description && (
                   <p className="text-red-500 ml-4">
                     {errors.description.message}
@@ -168,7 +167,7 @@ const [description, setDescription] = useState("");
                   <LuListTodo className={styles.icon} />
                   <h2 className="text-xl">Bài học</h2>
                 </div>
-                {/* <ChapterForm initialData={chapter} /> */}
+                <LessonForm initialData={chapter} />
               </div>
             </div>
           </div>

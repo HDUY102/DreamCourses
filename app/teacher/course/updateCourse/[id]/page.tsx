@@ -123,7 +123,7 @@ const UpdateCourse = () => {
         window.location.reload();
       }, 3000);
     } else {
-      console.error("Error during Create:", respone.statusText);
+      console.error("Error during updateCourse:", respone.statusText);
     }
   };
 

@@ -19,9 +19,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Editor } from "@/components/ui/editor";
 
 const introduceSchema = z.object({
-  introduce: z.string(),
+  description: z.string(),
 });
-const DescriptionForm = () => {
+const DescriptionChapter = () => {
   const form = useForm<z.infer<typeof introduceSchema>>({
     resolver: zodResolver(introduceSchema),
   });
@@ -39,7 +39,7 @@ const DescriptionForm = () => {
         <form className="space-y-4 mt-4">
           <FormField
             control={form.control}
-            name="introduce"
+            name="description"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
@@ -68,4 +68,4 @@ const DescriptionForm = () => {
   );
 };
 
-export default DescriptionForm;
+export default DescriptionChapter;
