@@ -11,8 +11,11 @@ model assignments {
   idAssigment       Int              @id @default(autoincrement())
   titleAssignment   String?          @db.VarChar(255)
   contentAssignment String?          @db.VarChar(255)
+  idLessons         Int
+  lessons           lessons          @relation(fields: [idLessons], references: [idLessons], onDelete: NoAction, onUpdate: NoAction, map: "FK_Lesson_Assignment")
   assignmentuser    assignmentuser[]
-  lessons           lessons[]
+
+  @@index([idLessons], map: "FK_Lesson_Assignment_idx")
 }
 
 model assignmentuser {
@@ -93,24 +96,20 @@ model documents {
 }
 
 model lessons {
-  idLessons    Int          @id @default(autoincrement())
-  titleLessons String?      @db.VarChar(255)
+  idLessons    Int           @id @default(autoincrement())
+  titleLessons String?       @db.VarChar(255)
   chapterId    Int
   isPublished  Boolean?
   orderLesson  Int?
-  video        String?      @db.VarChar(255)
-  quizzId      Int?
-  assignmentId Int?
+  video        String?       @db.VarChar(255)
+  assignments  assignments[]
   documents    documents[]
-  assignments  assignments? @relation(fields: [assignmentId], references: [idAssigment], onDelete: NoAction, onUpdate: NoAction, map: "FK_Assignment_Lessons")
-  chapters     chapters     @relation(fields: [chapterId], references: [idChapter], onDelete: NoAction, onUpdate: NoAction, map: "FK_Chapter_Lessons")
-  quizzs       quizzs?      @relation(fields: [quizzId], references: [idQuizz], onDelete: NoAction, onUpdate: NoAction, map: "FK_Quizz_Lessons")
+  chapters     chapters      @relation(fields: [chapterId], references: [idChapter], onDelete: NoAction, onUpdate: NoAction, map: "FK_Chapter_Lessons")
   lessonuser   lessonuser[]
   notes        notes[]
+  quizzs       quizzs[]
 
-  @@index([assignmentId], map: "FK_Assignment_Lessons_idx")
   @@index([chapterId], map: "FK_Chapter_Lessons_idx")
-  @@index([quizzId], map: "FK_Quizz_Lesson_idx")
 }
 
 model lessonuser {
@@ -176,9 +175,12 @@ model quizzs {
   idQuizz     Int         @id @default(autoincrement())
   nameQuizz   String?     @db.VarChar(255)
   description String?     @db.VarChar(255)
-  lessons     lessons[]
+  idLessons   Int
   questions   questions[]
+  lessons     lessons     @relation(fields: [idLessons], references: [idLessons], onDelete: NoAction, onUpdate: NoAction, map: "FK_Lesson_Quizz")
   quizzuser   quizzuser[]
+
+  @@index([idLessons], map: "FK_Lesson_Quizz_idx")
 }
 
 model quizzuser {

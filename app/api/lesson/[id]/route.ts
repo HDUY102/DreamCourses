@@ -27,3 +27,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json("Error", { status: 500 });
   }
 }
+
+export async function DELETE( request: NextRequest, { params }: { params: { id: string } }) {
+  let idCheck = parseInt(params.id);
+  if (idCheck !== -1) {
+    const deleteLesson = await prisma.lessons.delete({
+      where: {
+        idLessons: idCheck,
+      },
+    });
+    return NextResponse.json("Xóa bài học thành công", {status: 201});
+  } else {
+    return NextResponse.json({ message: "Xóa bài học thất bại" });
+  }
+}

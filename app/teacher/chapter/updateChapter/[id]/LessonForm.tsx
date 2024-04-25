@@ -21,10 +21,9 @@ import { Input } from "@/components/ui/input";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { chapters, lessons } from "@prisma/client";
-import Link from "next/link";
 
 const LessonSchema = z.object({
-  titleChapter: z.string().min(1),
+  titleLessons: z.string().min(1),
 });
 
 interface LessonFormProps {
@@ -53,7 +52,7 @@ export const LessonForm = ({ initialData }: LessonFormProps) => {
     toast("Thứ tự bài đã thay đổi!", {
       icon: <LuMoveVertical className="text-green-500"/>,
       position: "top-right",
-      autoClose: 3000,
+      autoClose: 2500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -63,17 +62,14 @@ export const LessonForm = ({ initialData }: LessonFormProps) => {
   });
 
   const form = useForm<z.infer<typeof LessonSchema>>({
-    resolver: zodResolver(LessonSchema),
-    defaultValues:{
-      titleChapter: ""
-    }
+    resolver: zodResolver(LessonSchema)
   });
   const { isSubmitting, isValid } = form.formState;
   const { id } = useParams();
   const idChapter = parseInt(id as string);
   const fetchLessons = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/chapter/${idChapter}/lesson`);
+      const response = await fetch(`/api/chapter/${idChapter}/lesson`);
       if (response.ok) {
         const data = await response.json();
         setLessons(data);
@@ -92,7 +88,7 @@ export const LessonForm = ({ initialData }: LessonFormProps) => {
       isPublished: false,
       chapterId: idChapter,
     };
-    const respone = await fetch( `http://localhost:3000/api/courses/${idChapter}/chapter`,{
+    const respone = await fetch( `http://localhost:3000/api/chapter/${idChapter}/lesson`,{
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -111,10 +107,10 @@ export const LessonForm = ({ initialData }: LessonFormProps) => {
     }
   }
 
-  const onReorder = async (updateData: {idLesson: number, orderLesson: number}[]) =>{
+  const onReorder = async (updateData: {idLessons: number, orderLesson: number}[]) =>{
     try {
       setIsUpdating(true)
-      const response = await fetch(`http://localhost:3000/api/courses/${idChapter}/chapter`,{
+      const response = await fetch(`http://localhost:3000/api/chapter/${idChapter}/lesson`,{
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -143,19 +139,16 @@ export const LessonForm = ({ initialData }: LessonFormProps) => {
       )}
       <div className="font-medium flex items-center justify-between">
         Danh sách bài học
-        <Link className="justify-around"  href={`/teacher/chapter/updateChapter/${idChapter}/createLesson`}>
-          <button className="flex justify-between hover:text-green-500" onClick={toggleCreating} type="button">
-            <PlusCircle className="w-4 h-6 mr-1"/>Tạo Bài Học
-            {/* {isCreating ? (<>Cancel</>):(<><PlusCircle className="h-4 w-4 mr-2"/>Thêm chương</>)} */}
-          </button>
-        </Link>
+        <button className="flex justify-between hover:text-green-500" onClick={toggleCreating} type="button">
+          {isCreating ? (<>Hủy</>):(<><PlusCircle className="h-6 w-4 mr-1"/>Thêm chương</>)}
+        </button>
       </div>
-      {/* {isCreating && (
+      {isCreating && (
         <Form {...form}>
         <form className="space-y-4 mt-4" onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             control={form.control}
-            name="titleChapter"
+            name="titleLessons"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
@@ -174,7 +167,7 @@ export const LessonForm = ({ initialData }: LessonFormProps) => {
           <ToastContainer />
         </form>
       </Form>
-      )} */}
+      )}
       {!isCreating  && (
         <div className={cn("text-sm mt-2", !initialData?.lessons?.length && "text-slate-500 italic")}>
           {!lessons?.length && "Chưa có bài học"}

@@ -11,8 +11,8 @@ import Sidebar from "@/app/teacher/sidebar/TeacherSidebar";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { VideoLesson } from "./VideoLesson";
-import { AttachmentLesson } from "./Attachment";
+import { VideoLesson } from "../VideoLesson";
+import { AttachmentLesson } from "../Attachment";
 
 const formSchema = z.object({
   titleLessons: z.string().min(1, { message: "Tiêu đề không được bỏ trống" })

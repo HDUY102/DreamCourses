@@ -1,27 +1,27 @@
 "use client";
 import React, { useState } from "react";
 import * as z from "zod";
-import TitleForm from "@/app/teacher/course/createCourse/TitleForm";
 import { LuLayoutDashboard,LuVideo ,LuBookOpenCheck, LuBookOpen } from "react-icons/lu";
 import styles from "@/app/teacher/Teacher.module.css";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Sidebar from "@/app/teacher/sidebar/TeacherSidebar";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
+import { AttachmentLesson } from "@/app/teacher/lesson/Attachment";
+import { VideoLesson } from "@/app/teacher/lesson/VideoLesson";
 import "react-toastify/dist/ReactToastify.css";
-import { AttachmentLesson } from "@/app/teacher/lesson/createLesson/Attachment";
-import { VideoLesson } from "@/app/teacher/lesson/createLesson/VideoLesson";
+import TitleLessons from "../../TitleLesson";
 
 const formSchema = z.object({
-  titleLessons: z.string().min(1, { message: "Tiêu đề không được bỏ trống" })
+  titleLessons: z.string().min(1, { message: "Tiêu đề bài học không được bỏ trống" })
 });
-const CreateLesson = () => {
+const UpdateLesson = () => {
   const router = useRouter();
-  const notify: any = () =>toast.success("Thêm mới thành công!", {
+  const notify: any = () =>toast.success("Tạo mới bài học thành công!", {
       position: "top-right",
-      autoClose: 5000,
+      autoClose: 2500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -52,15 +52,17 @@ const CreateLesson = () => {
     router.back();
   };
 
+  const {id} = useParams()
+  const idChapter = parseInt(id as string);
   const onSubmit = async (values: any) => {
     const isPublishValue = isPublished ? 1 : 0;
     const formValues = {
       titleLessons: values.titleLessons,
       isPublished: isPublishValue,
-      chapterId: 13,
+      chapterId: idChapter,
     };
     console.log(formValues);
-    const respone = await fetch("http://localhost:3000/api/courses", {
+    const respone = await fetch(`http://localhost:3000/api/chapter/${idChapter}/lesson`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -71,11 +73,11 @@ const CreateLesson = () => {
     if (respone.ok) {
       notify();
       setTimeout(() => {
-        router.push("/teacher/course");
-      }, 2000);
+        router.push(`/teacher/chapter/updateChapter/${idChapter}`);
+      }, 3000);
       setTimeout(() => {
         window.location.reload();
-      }, 3000);
+      }, 4000);
     } else {
       console.error("Error during Create:", respone.statusText);
     }
@@ -96,7 +98,7 @@ const CreateLesson = () => {
                 <h2 className="text-xl">Tùy chỉnh bài học của bạn</h2>
               </div>
               <div {...form.register("titleLessons")}>
-                <TitleForm />
+                <TitleLessons />
                 {form.formState.errors.titleLessons && (
                   <p className="text-red-500 ml-4 mt-2 ">
                     {form.formState.errors.titleLessons.message}
@@ -157,4 +159,4 @@ const CreateLesson = () => {
   );
 };
 
-export default CreateLesson;
+export default UpdateLesson;

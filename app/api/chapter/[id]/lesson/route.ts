@@ -10,11 +10,11 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
       },
       orderBy: {
         orderLesson: 'asc'
-      },
+      }
     })
     return NextResponse.json(lessons)
   } catch (error) {
-    console.error("Error fetching lessons:", error)
+    console.error("Error fetching chapters:", error)
     return NextResponse.error()
   }
 }
@@ -25,41 +25,41 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     let idCheck = parseInt(params.id)
 
     //check Course already exists or not
-    const existingCourseById = await prisma.courses.findFirst({
+    const existingChapterById = await prisma.chapters.findFirst({
         where:{
-          idCourse : idCheck
+          idChapter : idCheck
         }    
     });
-    if(!existingCourseById){
-        return NextResponse.json({user: null, message:"Không có courses tồn tại"})
+    if(!existingChapterById){
+        return NextResponse.json({user: null, message:"Không có chapters tồn tại"})
     }
 
-    const lastChapter = await prisma.chapters.findFirst({
+    const lastLesson = await prisma.lessons.findFirst({
       where:{
-          courseId: idCheck
+        chapterId: idCheck
       },
       orderBy:{
-          orderChapter: "desc"
+        orderLesson: "desc"
       }
     })
+
     let newOrder: number;
-    if (lastChapter && lastChapter.orderChapter !== null) {
-      newOrder = lastChapter.orderChapter + 1;
+    if (lastLesson && lastLesson.orderLesson !== null) {
+      newOrder = lastLesson.orderLesson + 1;
     } else {
       newOrder = 1;
     }
 
-    const chapters = await prisma.chapters.create({
+    const lessons = await prisma.lessons.create({
       data: {
-        titleChapter: body.titleChapter,
-        orderChapter: newOrder,
-        description: body.description,
+        titleLessons: body.titleLessons,
+        orderLesson: newOrder,
         isPublished: body.isPublished,
-        courseId: idCheck,
+        chapterId: idCheck,
       },
     });
 
-    return NextResponse.json({ post: chapters, message: "Tạo chương học thành công" },{ status: 201 });
+    return NextResponse.json({ post: lessons, message: "Tạo bài học thành công" },{ status: 201 });
   } catch (error) {
     return NextResponse.json("Error", { status: 500 });
   }
@@ -70,15 +70,14 @@ export async function PUT(request: NextRequest,{ params }: { params: { id: strin
     const body = await request.json();
 
     for (let item of body){
-      await prisma.chapters.update({
-        where:{ idChapter: item.idChapter},
-        data:{ orderChapter: item.orderChapter}
+      await prisma.lessons.update({
+        where:{ idLessons: item.idLessons},
+        data:{ orderLesson: item.orderLesson}
       })
     }
-
     return new NextResponse("Thành công ", {status: 200})
   } catch (error) {
-    console.error("Error fetching chapters:", error)
+    console.error("Error fetching lessons:", error)
     return NextResponse.error()
   }
 }

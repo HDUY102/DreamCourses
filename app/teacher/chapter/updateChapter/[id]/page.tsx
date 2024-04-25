@@ -69,7 +69,6 @@ const UpdateChapter = () => {
           setValue("titleChapter", data.titleChapter);
           setValue("description", data.description);
           setIsLocked(data.isPublished)
-          console.log("Lấy data:",data)
         } else {
           console.error("Error fetching chapter:", response.statusText);
         }

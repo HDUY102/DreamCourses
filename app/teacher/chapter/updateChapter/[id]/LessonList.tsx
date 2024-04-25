@@ -14,7 +14,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 interface LessonListProps{
     items: lessons[],
-    onReorder: (updateData:{idLesson: number, orderLesson: number}[]) => void
+    onReorder: (updateData:{idLessons: number, orderLesson: number}[]) => void
 }
 
 const LessonList = ({items,onReorder}:LessonListProps) => {
@@ -23,7 +23,7 @@ const LessonList = ({items,onReorder}:LessonListProps) => {
   const [isMounted,setIsMounted] = useState(false)
   const [lessons,setLessons] = useState(items)
   
-  const notifyDelete:any = () => toast("Chương đã bị xóa",{
+  const notifyDelete:any = () => toast("Bài đã bị xóa",{
     icon: <Trash className='text-red-500'/>,
     position: "top-right",
     autoClose: 3000,
@@ -54,7 +54,7 @@ const LessonList = ({items,onReorder}:LessonListProps) => {
     setLessons(items)
     
     const updateData = updateLessons.map((lesson) => ({
-        idLesson: lesson.idLessons,
+        idLessons: lesson.idLessons,
         orderLesson: items.findIndex((item) => item.idLessons === lesson.idLessons)
     }))
     setLessons(items)
@@ -69,7 +69,7 @@ const LessonList = ({items,onReorder}:LessonListProps) => {
   const onDelete = async ({idLesson,idChapter}:any) =>{
     try{
       setLoading(true)
-      const response = await fetch(`/api/chapter/${idLesson}`, {
+      const response = await fetch(`/api/lesson/${idLesson}`, {
         method: 'DELETE',
       });
       if (response.ok) {
