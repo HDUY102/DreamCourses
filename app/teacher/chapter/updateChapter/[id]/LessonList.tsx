@@ -123,7 +123,7 @@ const LessonList = ({items,onReorder}:LessonListProps) => {
                                         <div className={cn("bg-slate-400 hover:bg-slate-600 rounded-lg p-1 text-white", lesson.isPublished && "bg-green-400 hover:bg-green-500 ")}>
                                             {lesson.isPublished ?"Công khai" : "Không công khai"}
                                         </div>
-                                        <Link href={`/teacher/chapter/updateChapter/${lesson.idLessons}`}>
+                                        <Link href={`/teacher/lesson/updateLesson/${lesson.idLessons}`}>
                                             <Pencil className="h-4 w-4 hover:text-green-400 ml-2 cursor-pointer transition" />
                                         </Link>
                                         <ConfirmDelete onConfirmDel={() => onDelete({idLesson: lesson.idLessons, idChapter: lesson.chapterId})}>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import * as z from "zod";
 import { LuLayoutDashboard,LuVideo ,LuBookOpenCheck, LuBookOpen } from "react-icons/lu";
 import styles from "@/app/teacher/Teacher.module.css";
@@ -19,7 +19,7 @@ const formSchema = z.object({
 });
 const UpdateLesson = () => {
   const router = useRouter();
-  const notify: any = () =>toast.success("Tạo mới bài học thành công!", {
+  const notify: any = () =>toast.success("Sửa thông tin bài học thành công!", {
       position: "top-right",
       autoClose: 2500,
       hideProgressBar: false,
@@ -40,7 +40,7 @@ const UpdateLesson = () => {
       setAttachmentUrl(url);
     }
   };
-  console.log("url: "+ attachmentUrl)
+  // console.log("url: "+ attachmentUrl)
 
   const [isPublished, setIsLocked] = useState(true);
   const toggleLock = () => {
@@ -52,18 +52,48 @@ const UpdateLesson = () => {
     router.back();
   };
 
-  const {id} = useParams()
+  const { id } = useParams();
+  const idLesson = parseInt(id as string);
+  const [chapter, setChapters] = useState<any>(null);
+  const { register,setValue, handleSubmit, formState: { errors } } = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+  });
+  useEffect(() => {
+    const fetchLesson = async () => {
+      try {
+        const response = await fetch(`/api/lesson/${idLesson}`,{
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setChapters(data);
+          setValue("titleLessons", data.titleLessons);
+          setIsLocked(data.isPublished)
+        } else {
+          console.error("Error fetching course:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching course:", error);
+      }
+    };
+
+    fetchLesson();
+  }, [idLesson, setValue]);
+
   const idChapter = parseInt(id as string);
   const onSubmit = async (values: any) => {
-    const isPublishValue = isPublished ? 1 : 0;
+    const isPublishValue = isPublished ? true : false;
     const formValues = {
       titleLessons: values.titleLessons,
       isPublished: isPublishValue,
-      chapterId: idChapter,
     };
     console.log(formValues);
-    const respone = await fetch(`http://localhost:3000/api/chapter/${idChapter}/lesson`, {
-      method: "POST",
+    const respone = await fetch(`/api/lesson/${idLesson}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -73,13 +103,10 @@ const UpdateLesson = () => {
     if (respone.ok) {
       notify();
       setTimeout(() => {
-        router.push(`/teacher/chapter/updateChapter/${idChapter}`);
+        router.back();
       }, 3000);
-      setTimeout(() => {
-        window.location.reload();
-      }, 4000);
     } else {
-      console.error("Error during Create:", respone.statusText);
+      console.error("Error during update:", respone.statusText);
     }
   };
 
@@ -89,7 +116,7 @@ const UpdateLesson = () => {
         <Sidebar />
       </div>
       <div className={styles.contentmenu}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <h1 className="mt-2 ml-4 font-bold text-2xl">Tạo Mới Bài Học</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
             <div>
@@ -97,11 +124,11 @@ const UpdateLesson = () => {
                 <LuLayoutDashboard className={styles.icon} />
                 <h2 className="text-xl">Tùy chỉnh bài học của bạn</h2>
               </div>
-              <div {...form.register("titleLessons")}>
+              <div {...register("titleLessons")}>
                 <TitleLessons />
-                {form.formState.errors.titleLessons && (
+                {errors.titleLessons && (
                   <p className="text-red-500 ml-4 mt-2 ">
-                    {form.formState.errors.titleLessons.message}
+                    {errors.titleLessons.message}
                   </p>
                 )}
               </div>
