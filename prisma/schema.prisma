@@ -8,12 +8,12 @@ datasource db {
 }
 
 model assignments {
-  idAssigment       Int              @id @default(autoincrement())
-  titleAssignment   String?          @db.VarChar(255)
-  contentAssignment String?          @db.VarChar(255)
-  idLessons         Int
-  lessons           lessons          @relation(fields: [idLessons], references: [idLessons], onDelete: NoAction, onUpdate: NoAction, map: "FK_Lesson_Assignment")
-  assignmentuser    assignmentuser[]
+  idAssigment     Int              @id @default(autoincrement())
+  titleAssignment String?          @db.VarChar(255)
+  urlAssignment   String?          @db.VarChar(255)
+  idLessons       Int
+  lessons         lessons          @relation(fields: [idLessons], references: [idLessons], onDelete: NoAction, onUpdate: NoAction, map: "FK_Lesson_Assignment")
+  assignmentuser  assignmentuser[]
 
   @@index([idLessons], map: "FK_Lesson_Assignment_idx")
 }

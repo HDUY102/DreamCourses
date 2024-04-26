@@ -1,7 +1,7 @@
 "use client";
 import React, { useState,useEffect } from "react";
 import * as z from "zod";
-import { LuLayoutDashboard,LuVideo ,LuBookOpenCheck, LuBookOpen } from "react-icons/lu";
+import { LuLayoutDashboard,LuVideo,LuFile,LuBookOpenCheck, LuBookOpen } from "react-icons/lu";
 import styles from "@/app/teacher/Teacher.module.css";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Sidebar from "@/app/teacher/sidebar/TeacherSidebar";
 import { useParams, useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
-import { AttachmentLesson } from "@/app/teacher/lesson/Attachment";
+import { AttachmentLesson } from "@/app/teacher/lesson/AttachmentForm";
 import { VideoLesson } from "@/app/teacher/lesson/VideoLesson";
 import "react-toastify/dist/ReactToastify.css";
 import TitleLessons from "../../TitleLesson";
@@ -40,7 +40,6 @@ const UpdateLesson = () => {
       setAttachmentUrl(url);
     }
   };
-  // console.log("url: "+ attachmentUrl)
 
   const [isPublished, setIsLocked] = useState(true);
   const toggleLock = () => {
@@ -90,6 +89,7 @@ const UpdateLesson = () => {
     const formValues = {
       titleLessons: values.titleLessons,
       isPublished: isPublishValue,
+      urlAssignment: attachmentUrl,
     };
     console.log(formValues);
     const respone = await fetch(`/api/lesson/${idLesson}`, {
@@ -133,6 +133,10 @@ const UpdateLesson = () => {
                 )}
               </div>
               <div>
+                <div className="flex items-center gap-x-2 mt-3 font-normal">
+                  <LuFile className={styles.icon} />
+                  <h2 className="text-lg">Tệp đính kèm</h2>
+                </div>
                 <AttachmentLesson onAttachUpload={handleAttachmentUpload}/>
               </div>
             </div>

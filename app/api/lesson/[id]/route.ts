@@ -37,7 +37,14 @@ export async function PUT(req: NextRequest,{params}:{params:{id: string}}){
         video: body.video
       }
     });
-    return NextResponse.json({updatelesson: updateLesson,message: "Cập nhật thành công"},{status: 202},)
+    const createAttachment = await prisma.assignments.create({
+      data:{
+        idLessons: idCheck,
+        urlAssignment: body.urlAssignment,
+        titleAssignment: body.urlAssignment.split("/").pop()
+      }
+    })
+    return NextResponse.json({updatelesson: updateLesson,attachment: createAttachment,message: "Cập nhật thành công"},{status: 202},)
   }catch(error){
     return NextResponse.json({message: "Lỗi ",},{status: 500})
   }
