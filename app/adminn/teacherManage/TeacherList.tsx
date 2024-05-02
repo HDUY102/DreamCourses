@@ -1,7 +1,7 @@
 import React from "react";
 import TeacherItem from "./TeacherItem";
 
-const TeacherList = ({teachersToList,onDelete,}: {teachersToList: any;onDelete: (id: number) => void}) => {
+const TeacherList = ({teachersToList}: {teachersToList: any}) => {
   return (
     <div className="ml-3 border-2">
       <table className="border-b-2  w-[100%] table table-fixed">
@@ -14,7 +14,7 @@ const TeacherList = ({teachersToList,onDelete,}: {teachersToList: any;onDelete: 
         </thead>
       </table>
       {teachersToList?.map((teacher: any) => (
-        <TeacherItem key={teacher.idUser} teacher={teacher} onDelete={onDelete} />
+        <TeacherItem key={teacher.idUser} teacher={teacher} />
       ))}
     </div>
   );

@@ -22,15 +22,15 @@ const TeacherManagePage = () => {
       <div className={styles.contentmenu}>
         <div className="ml-8 max-w-[80%] justify-end">
           <div className="flex justify-between mt-8">
-            <h1 className="mt-2 ml-4 font-bold text-xl">QUẢN LÝ GIẢNG VIÊN</h1>
+            <h1 className="mt-2 ml-4 font-bold text-xl">QUẢN LÝ TÀI KHOẢN GIẢNG VIÊN</h1>
             <Link href={"/adminn/teacherManage/addAccountTeacher"}>
-              <button className="bg-sky-800 text-white rounded-lg p-2 mr-3 hover:text-white hover:border hover:bg-red-500 flex items-center ">
+              <button className="bg-sky-800 text-white rounded-lg p-2 mr-3 hover:text-white hover:bg-red-500 flex items-center ">
                 <FaPlusCircle />
                 Tạo tài khoản giảng viên
               </button>
             </Link>
           </div>
-          <div className="flex mt-10 mb-6 justify-between">
+          {/* <div className="flex mt-10 mb-6 justify-between">
             <div className="ml-4">
               <p>Tổng số giảng viên hiện tại</p>
               <div className="flex justify-between text-gray-500">
@@ -51,8 +51,8 @@ const TeacherManagePage = () => {
                 17 bài
               </div>
             </div>
-          </div>
-          <div>
+          </div> */}
+          <div className="mt-4">
             {isLoadingTeachers ? (
               <div className="text-center text-lg">Loading...</div>
             ) : (

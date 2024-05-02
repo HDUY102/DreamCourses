@@ -219,6 +219,7 @@ model users {
   roleId         Int
   password       String           @db.VarChar(255)
   dateCreate     DateTime?        @db.Date
+  isLocked       Boolean?
   assignmentuser assignmentuser[]
   comments       comments[]
   courses        courses[]

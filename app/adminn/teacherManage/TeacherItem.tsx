@@ -1,19 +1,31 @@
-import React, { useState } from 'react'
+// "use client"
+import React, { useEffect, useState } from 'react'
 import { IoIosLock,IoIosUnlock} from "react-icons/io";
-const TeacherItem = ({ teacher, onDelete }: { teacher: any; onDelete: (id: number) => void }) => {
-  const handleDelete = () => {
-    const shouldDelete = window.confirm('Bạn thực sự muốn xóa?');
-    if (shouldDelete) {
-      onDelete(teacher.idUser);
-    }
-  };
-
+const TeacherItem = ({ teacher }: { teacher: any}) => {
   const createDate = new Date(teacher.dateCreate);
   const formattedDate = createDate.toISOString().split('T')[0];
+  const [isLocked, setIsLocked] = useState(teacher.isLocked);
+  
 
-  const [isLocked, setIsLocked] = useState(true);
-  const toggleLock = () => {
-    setIsLocked(!isLocked);
+  const toggleLock = async () => {
+    try {
+      const response = await fetch(`/api/teacher/${teacher.idUser}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ isLocked: !isLocked }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        setIsLocked(!isLocked);
+        console.log('Cập nhật trạng thái mở/khóa tài khoản thành công');
+      } else {
+        console.error('Lỗi cập nhật trạng thái mở/khóa tài khoản:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Lỗi:', error);
+    }
   };
   return (
     <table className="ml-1">

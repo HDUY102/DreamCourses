@@ -45,8 +45,8 @@ const TeacherSidebar = () => {
             </span>
           ),
           submenu: [
-            { title: "Thống kê doanh thu", path: "/teacher/statisticsManage/revenueStatistic",icon: <MdMonetizationOn /> },
-            { title: "Thống kê số học viên", path: "/teacher/statisticsManage/studentStatistic",icon: <MdGroups /> },
+            { title: "Thống kê doanh thu", path: "/teacher/statistics/revenueStatistic",icon: <MdMonetizationOn /> },
+            { title: "Thống kê số học viên", path: "/teacher/statistics/studentStatistic",icon: <MdGroups /> },
           ]
         },
       ],
