@@ -101,13 +101,14 @@ model lessons {
   chapterId    Int
   isPublished  Boolean?
   orderLesson  Int?
-  video        String?       @db.VarChar(255)
+  videoUrl     String?       @db.VarChar(255)
   assignments  assignments[]
   documents    documents[]
   chapters     chapters      @relation(fields: [chapterId], references: [idChapter], onDelete: NoAction, onUpdate: NoAction, map: "FK_Chapter_Lessons")
   lessonuser   lessonuser[]
   notes        notes[]
   quizzs       quizzs[]
+  videolesson  videolesson[]
 
   @@index([chapterId], map: "FK_Chapter_Lessons_idx")
 }
@@ -229,4 +230,14 @@ model users {
   role           role             @relation(fields: [roleId], references: [idRole], onDelete: NoAction, onUpdate: NoAction, map: "FK_Role_User")
 
   @@index([roleId], map: "FK_Role_User_idx")
+}
+
+model videolesson {
+  idVideo    Int     @id @default(autoincrement())
+  idLesson   Int
+  idAsset    String  @db.VarChar(255)
+  idPlayback String? @db.VarChar(255)
+  lessons    lessons @relation(fields: [idLesson], references: [idLessons], onDelete: NoAction, onUpdate: NoAction, map: "FK_Lesson_Video")
+
+  @@index([idLesson], map: "FK_Lesson_Video_idx")
 }

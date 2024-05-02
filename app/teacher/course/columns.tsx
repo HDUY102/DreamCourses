@@ -89,9 +89,10 @@ export const columns: ColumnDef<courses>[] = [
     id: "actions",
     cell: ({ row }  ) => {
       const [isLoading, setLoading] = useState(false);
-      const notify:any = () => toast.success("Xóa khóa học thành công!",{
+      const notify:any = () => toast("Xóa khóa học thành công!",{
+        icon: <Trash className='text-red-500'/>,
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2500,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

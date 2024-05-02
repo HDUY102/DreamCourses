@@ -101,7 +101,7 @@ const UpdateCourse = () => {
       price: values.price,
       introduce: values.introduce,
       image: imageUrl,
-      isPublic: isPublishValue,
+      isPublished: isPublishValue,
       teacherId: 13,
     };
     console.log(formValues);

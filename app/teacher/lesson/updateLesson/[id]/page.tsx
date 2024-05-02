@@ -40,6 +40,12 @@ const UpdateLesson = () => {
       setAttachmentUrl(url);
     }
   };
+  const [videoUrl, setVideoUrl] = useState<string>("");
+  const handleVideoUpload = (url: string) => {
+    if (url) {
+      setVideoUrl(url);
+    }
+  };
 
   const [isPublished, setIsLocked] = useState(true);
   const toggleLock = () => {
@@ -53,7 +59,7 @@ const UpdateLesson = () => {
 
   const { id } = useParams();
   const idLesson = parseInt(id as string);
-  const [chapter, setChapters] = useState<any>(null);
+  const [lesson, setLesson] = useState<any>(null);
   const { register,setValue, handleSubmit, formState: { errors } } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -69,27 +75,28 @@ const UpdateLesson = () => {
         );
         if (response.ok) {
           const data = await response.json();
-          setChapters(data);
-          setValue("titleLessons", data.titleLessons);
+          setLesson(data);
+          setValue("titleLessons", data.lesson.titleLessons);
           setIsLocked(data.isPublished)
+          console.log(data)
         } else {
-          console.error("Error fetching course:", response.statusText);
+          console.error("Error fetching lesson:", response.statusText);
         }
       } catch (error) {
-        console.error("Error fetching course:", error);
+        console.error("Error fetching lesson:", error);
       }
     };
 
     fetchLesson();
   }, [idLesson, setValue]);
 
-  const idChapter = parseInt(id as string);
   const onSubmit = async (values: any) => {
     const isPublishValue = isPublished ? true : false;
     const formValues = {
       titleLessons: values.titleLessons,
       isPublished: isPublishValue,
       urlAssignment: attachmentUrl,
+      videoUrl: videoUrl
     };
     console.log(formValues);
     const respone = await fetch(`/api/lesson/${idLesson}`, {
@@ -167,12 +174,12 @@ const UpdateLesson = () => {
                   <LuVideo className={styles.icon} />
                   <h2 className="text-xl">Video</h2>
                 </div>
-                <VideoLesson/>
+                <VideoLesson initialData={lesson} onVideoUpload={handleVideoUpload}/>
               </div>
             </div>
           </div>
           <div className="flex justify-end mb-3">
-            <button className="bg-sky-800 text-white rounded-lg mr-1 hover:text-white p-2 hover:bg-red-500 " onClick={handleCancel}>
+            <button type="button" className="bg-sky-800 text-white rounded-lg mr-1 hover:text-white p-2 hover:bg-red-500 " onClick={handleCancel}>
               Hủy
             </button>
             <Button

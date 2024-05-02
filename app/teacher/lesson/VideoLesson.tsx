@@ -1,34 +1,26 @@
 "use client";
 
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Loader2, PlusCircle } from "lucide-react";
+import MuxPlayer from "@mux/mux-player-react"; 
+import NextVideo from 'next-video';
+import { Pencil, PlusCircle,Video} from "lucide-react";
 import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
+import {  useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-const chaptersSchema = z.object({
-  titleChapter: z.string().min(1),
-});
-
-export const VideoLesson = () => {
-  const [isCreating] = useState(false);
-  const [isUpdating] = useState(false);
-  const notify: any = () =>toast.success("Thêm mới chapter thành công!", {
+import { lessons, videolesson } from "@prisma/client";
+import { VideoUpload } from "@/components/ui/video-upload";
+interface VideoProps{
+  initialData: lessons & {muxData?: videolesson | null};
+  onVideoUpload: (url: string) => void;
+}
+export const VideoLesson = ({initialData,onVideoUpload}:VideoProps) => {
+  const [isEditing, setIsEditing] = useState(false)
+  const [videoUrl, setVideoUrl] = useState("");
+  const router = useRouter()
+  const  toggleEdit = () => setIsEditing((current) => !current)
+  const notify: any = () =>toast.success("Tải lên video bài học thành công!", {
     position: "top-right",
-    autoClose: 5000,
+    autoClose: 2500,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
@@ -36,82 +28,52 @@ export const VideoLesson = () => {
     progress: undefined,
     theme: "light",
 });
-
-  const form = useForm<z.infer<typeof chaptersSchema>>({
-    resolver: zodResolver(chaptersSchema)
-  });
-
-  const { isSubmitting, isValid } = form.formState;
-  const { id } = useParams();
-  const idCourse = parseInt(id as string);
-  const onSubmit = async (values: any) => {
-    // const isPublishValue = isPublished ? 1 : 0;
-    const formValues = {
-      titleChapter: values.titleChapter,
-      orderChapter: values.orderChapter,
-      // description: values.description,
-      isPublished: 0,
-      courseId: idCourse
-    };
-    console.log(formValues);
-    const respone = await fetch(`http://localhost:3000/api/chapter/${idCourse}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formValues),
-    });
-
-    if (respone.ok) {
-      notify();
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
-    } else {
-      console.error("Error during Create:", respone.statusText);
+  const handleSubmit = (url: any) => {
+    if (url) {
+      setVideoUrl(url);
+      onVideoUpload(url);
     }
   };
 
   return (
-    <div className="relative mt-6 border bg-slate-100 rounded-md p-4">
-      {isUpdating && (
-        <div className="absolute h-full w-full bg-slate-500/20 top-0 right-0 rounded-m flex items-center justify-center">
-          <Loader2 className="animate-spin h-6 w-6 text-sky-700" />
+    <div className="mt-6 border bg-slate-100 rounded-md p-4">
+      <div className="font-medium flex items-center justify-between">
+        Video Bài Học
+        <button type="button" onClick={toggleEdit} className="flex">
+          {isEditing && (<>Cancel</>)}
+          {!isEditing && !initialData?.videoUrl && (
+            <><PlusCircle className="h-6 w-4 mr-1 mb-2"/> Thêm Video</>
+          )}
+          {!isEditing && initialData?.videoUrl && (
+            <><Pencil className="h-4 w-4 mr-2" />Sửa đổi</>
+          )}
+        </button>
+      </div>
+      {!isEditing && (
+        !initialData?.videoUrl ? (
+          <div className="flex items-center justify-center h-60 bg-slate-200 rounded-md">
+            <Video className="h-10 w-10 text-slate-500" />
+          </div>
+        ):(<div className="relative aspect-video mt-2">
+            {/* <MuxPlayer 
+            style={{ height: '100%', maxWidth: '100%' }}
+            streamType="on-demand"
+            playbackId={initialData?.muxData?.idPlayback || ""}/> */}
+            <NextVideo src={videoUrl}/>
+          </div>
+      ))}
+      {isEditing && (
+        <div>
+          <VideoUpload endpoint="chapterVideo" onChange={(url) => handleSubmit(url)}/>
+          <div className="text-xs text-muted-foreground mt-4">Tải lên video tại đây</div>
         </div>
       )}
-      <Form {...form}>
-        <form className="space-y-4 mt-4" onSubmit={form.handleSubmit(onSubmit)}>
-          {/* <FormField
-            control={form.control}
-            name="titleChapter"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    disabled={isSubmitting}
-                    placeholder="Nhập tên chapter mới"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
-          {/* <ChapterList onEdit={()=>{}} onReorder={()=>{}} items={initialData.chapters||[]}/> */}
-          <Button disabled={!isValid || isSubmitting} type="submit">
-            Create
-          </Button>
-          <ToastContainer />
-        </form>
-      </Form>
-      {!isCreating && (
-        <div className={cn("text-sm mt-2 text-slate-500 italic")}></div>
+      {initialData?.videoUrl && !isEditing && (
+        <div className="text-xs text-muted-foreground mt-2">
+          Việc tải video có thể mất vài phút. Vui lòng refresh trang nếu video không xuất hiện
+        </div>
       )}
-      {!isCreating && (
-        <p className="text-xs text-muted-foreground mt-4">
-          Di chuyển chương để thay đổi thứ tự
-        </p>
-      )}
+      <ToastContainer />
     </div>
   );
 };

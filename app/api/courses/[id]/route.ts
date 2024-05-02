@@ -18,12 +18,49 @@ export async function GET( request: NextRequest, { params }: { params: { id: str
 export async function DELETE( request: NextRequest, { params }: { params: { id: string } }) {
   let idCheck = parseInt(params.id);
   if (idCheck !== -1) {
-    const deleteCourse = await prisma.courses.delete({
+    await prisma.assignments.deleteMany({
+      where:{
+        lessons:{
+          chapters:{
+            courses:{
+              idCourse: idCheck
+            }
+          }
+        }
+      }
+    })
+
+    await prisma.videolesson.deleteMany({
+      where:{
+        lessons:{
+          chapters:{
+            courses:{
+              idCourse: idCheck
+            }
+          }
+        }
+      }
+    })
+    
+    await prisma.lessons.deleteMany({
       where: {
-        idCourse: idCheck,
-      },
+        chapters: {
+          courses: {
+            idCourse: idCheck
+          }
+        }
+      }
     });
-    return NextResponse.json(deleteCourse);
+
+    await prisma.chapters.deleteMany({
+      where: {courseId: idCheck}
+    });
+
+    await prisma.courses.delete({
+      where: {idCourse: idCheck},
+    });
+    
+    return NextResponse.json({ message: "Xóa khóa học thành công!" },{ status: 201 });
   } else {
     return NextResponse.json({ message: "Xóa thất bại" });
   }

@@ -20,7 +20,7 @@ export const AssignmentUpload = ({onChange, endpoint }: FileUploadProps) => {
         <div className="flex">
           <a className="flex  items-center p-3 w-full bg-sky-100 border-sky-200 border text-sky-700 rounded-md" target="_blank" href={attachmentUrl}>
             <FileText className="h-4 w-4 mr-2 flex-shrink-0"/>
-            <span>Xem PDF</span>
+            <span>Xem Trước</span>
           </a>
           {/* <button type="button" className="ml-auto hover:opacity-60 transition" onClick={onDelete}>
             <X className="h-4 w-4 ml-2"/>
