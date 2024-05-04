@@ -37,6 +37,7 @@ export async function DELETE( request: NextRequest, { params }: { params: { id: 
         idLessons: idCheck,
       },
     });
+    const Lessons = await prisma.lessons.findMany();
     return NextResponse.json("Xóa bài học thành công", {status: 201});
   } else {
     return NextResponse.json({ message: "Xóa bài học thất bại" });

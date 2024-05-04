@@ -23,6 +23,10 @@ const formSchema = z.object({
 });
 const CreateCourse = () => {
   const router = useRouter();
+  const token = sessionStorage.getItem("token")
+  if (!token) {
+    router.push('/login')
+  }
   const notify: any = () =>toast.success("Tạo khóa học mới thành công!", {
       position: "top-right",
       autoClose: 5000,
@@ -56,14 +60,14 @@ const CreateCourse = () => {
       titleCourse: values.titleCourse,
       price: values.price,
       introduce: values.introduce,
-      isPublic: isPublishValue,
-      image: imageUrl,
-      teacherId: 13,
+      isPublished: isPublishValue,
+      image: imageUrl
     };
     console.log(formValues);
     const respone = await fetch("http://localhost:3000/api/courses", {
       method: "POST",
       headers: {
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(formValues),

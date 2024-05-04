@@ -29,6 +29,11 @@ const formSchema = z.object({
 });
 
 const UpdateCourse = () => {
+  const router = useRouter();
+  const token = sessionStorage.getItem("token")
+  if (!token) {
+    router.push('/login')
+  }
   const notify: any = () =>
     toast.success("Cập nhật thành công!", {
       position: "top-right",
@@ -60,7 +65,6 @@ const UpdateCourse = () => {
   };
 
   // set value and funtion onSubmit
-  const router = useRouter();
   const { id } = useParams();
   const idCourse = parseInt(id as string);
   const [courseTest, setCourse] = useState<any>(null);
@@ -101,13 +105,13 @@ const UpdateCourse = () => {
       price: values.price,
       introduce: values.introduce,
       image: imageUrl,
-      isPublished: isPublishValue,
-      teacherId: 13,
+      isPublished: isPublishValue
     };
     console.log(formValues);
     const respone = await fetch(`http://localhost:3000/api/courses/${idCourse}`, {
         method: "PUT",
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formValues),

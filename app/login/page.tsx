@@ -50,11 +50,15 @@ const Login = () => {
         const data = await res.json();        
         if (data.success) {
           sessionStorage.setItem("token", data.success);
-          if (username === "admin") {
+          if (data.role === 1) {
+            alert("Đăng nhập vào trang admin thành công")
             router.push("/adminn");
-          } else {
-            alert("Đăng nhập thành công")
+          } else if(data.role === 3){
+            alert("Đăng nhập vào trang teacher thành công")
             router.push("/teacher");
+          }else{
+            alert("Đăng nhập vào trang student thành công")
+            router.push("/");
           }
         } else {
           alert("Đăng nhập không thành công");

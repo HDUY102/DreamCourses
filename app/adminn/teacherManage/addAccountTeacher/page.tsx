@@ -16,6 +16,11 @@ const RegisterSchema = z.object({
   }),
 });
 const AddAccountTeacher = () => {
+  const router = useRouter();
+  const token = sessionStorage.getItem("token")
+  if (!token) {
+    router.push('/login')
+  }
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -23,7 +28,6 @@ const AddAccountTeacher = () => {
       password: "", 
     },
   });
-  const router = useRouter();
 
   const onSubmit = async (value: z.infer<typeof RegisterSchema>) => {
     const respone = await fetch("http://localhost:3000/api/teacher", {

@@ -1,14 +1,19 @@
 "use client";
 import { useEffect, useRef,useState } from "react";
 import { Chart } from "chart.js/auto";
+import { useRouter } from 'next/navigation';
 
 export default function ChartStudent() {
   const chartRef = useRef(null);
   const [chartData, setChartData] = useState([])
-
+  const router = useRouter()
+  const token = sessionStorage.getItem("token")
+  if (!token) {
+    router.push('/login')
+  }
   useEffect(() => {
     const fetchData = async () => {
-      const respone = await fetch("http://localhost:3000/api/revenue")
+      const respone = await fetch("http://localhost:3000/api/adminRevenue")
       if(!respone.ok){
         console.error("Error")
       }

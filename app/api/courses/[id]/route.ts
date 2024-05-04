@@ -1,5 +1,6 @@
 import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { verify, JwtPayload } from "jsonwebtoken";
 
 export async function GET( request: NextRequest, { params }: { params: { id: string } }) {
   let idCheck = parseInt(params.id);
@@ -67,7 +68,14 @@ export async function DELETE( request: NextRequest, { params }: { params: { id: 
 }
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+  const token = request.headers.get("Authorization")?.replace("Bearer ", "");
+  if (!token) {
+    return NextResponse.json("Unauthorized", { status: 401 });
+  }
   try {
+    const decodedToken = verify(token, "secret-key");
+    const user = decodedToken as JwtPayload;
+    const idUser = user.idUser;
     const body = await request.json();
     let idCheck = parseInt(params.id);
     const existingCourseById = await prisma.courses.findFirst({
@@ -91,7 +99,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         introduce: body.introduce,
         image: body.image,
         isPublished: body.isPublished,
-        teacherId: body.teacherId,
+        teacherId: idUser,
       },
     });
     return NextResponse.json(

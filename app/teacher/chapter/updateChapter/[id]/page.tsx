@@ -22,6 +22,10 @@ const formSchema = z.object({
 
 const UpdateChapter = () => {
   const router = useRouter();
+  const token = sessionStorage.getItem("token")
+  if (!token) {
+    router.push('/login')
+  }
   const [chapter, setChapter] = useState<any>(null);
   
   const notify: any = () =>

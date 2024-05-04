@@ -1,16 +1,21 @@
 "use client";
 import { useEffect, useRef,useState } from "react";
 import { Chart } from "chart.js/auto";
-import AdminSidebar from "../../sidebar/AdminSidebar";
-import styles from "@/app/adminn/dashboard.module.css";
+import { useRouter } from "next/navigation";
 
 export default function ChartStudent() {
   const chartRef = useRef(null);
   const [chartData, setChartData] = useState([])
-
+  const router = useRouter();
+  const token = sessionStorage.getItem("token")
+  if (!token) {
+    router.push('/login')
+  }
   useEffect(() => {
     const fetchData = async () => {
-      const respone = await fetch("http://localhost:3000/api/student")
+      const respone = await fetch("http://localhost:3000/api/teacherStudent",{
+        headers:{Authorization: `Bearer ${token}`,}
+      })
       if(!respone.ok){
         console.error("Error")
       }

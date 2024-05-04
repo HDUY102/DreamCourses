@@ -45,17 +45,6 @@ model chapters {
   @@index([courseId], map: "FK_Course_Chapter_idx")
 }
 
-model comments {
-  idComments     Int       @id @default(autoincrement())
-  contentComment String?   @db.VarChar(255)
-  userId         Int
-  answerUserId   Int
-  date           DateTime? @db.DateTime(0)
-  users          users     @relation(fields: [userId], references: [idUser], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Comments")
-
-  @@index([userId], map: "FK_User_Comments_idx")
-}
-
 model courses {
   idCourse    Int          @id @default(autoincrement())
   titleCourse String?      @db.VarChar(255)
@@ -67,6 +56,7 @@ model courses {
   chapters    chapters[]
   users       users        @relation(fields: [teacherId], references: [idUser], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Course")
   courseuser  courseuser[]
+  purchase    purchase[]
 
   @@index([teacherId], map: "FK_User_Course_idx")
 }
@@ -85,16 +75,6 @@ model courseuser {
   @@index([userId], map: "FK_User_CourseUser_idx")
 }
 
-model documents {
-  idDocument    Int     @id @default(autoincrement())
-  titleDocument String? @db.VarChar(255)
-  url           String? @db.VarChar(255)
-  lessonId      Int
-  lessons       lessons @relation(fields: [lessonId], references: [idLessons], onDelete: NoAction, onUpdate: NoAction, map: "FK_Document_Lesson")
-
-  @@index([lessonId], map: "FK_Document_Lesson_idx")
-}
-
 model lessons {
   idLessons    Int           @id @default(autoincrement())
   titleLessons String?       @db.VarChar(255)
@@ -103,10 +83,8 @@ model lessons {
   orderLesson  Int?
   videoUrl     String?       @db.VarChar(255)
   assignments  assignments[]
-  documents    documents[]
   chapters     chapters      @relation(fields: [chapterId], references: [idChapter], onDelete: NoAction, onUpdate: NoAction, map: "FK_Chapter_Lessons")
   lessonuser   lessonuser[]
-  notes        notes[]
   quizzs       quizzs[]
   videolesson  videolesson[]
 
@@ -125,28 +103,6 @@ model lessonuser {
   @@index([lessonId], map: "FK_Lesson_LessonUser_idx")
   @@index([statusId], map: "FK_Status_LessonUser_idx")
   @@index([userId], map: "FK_User_LessonUser_idx")
-}
-
-model notes {
-  idNotes     Int     @id @default(autoincrement())
-  contentNote String? @db.VarChar(255)
-  userId      Int
-  lessonId    Int
-  lessons     lessons @relation(fields: [lessonId], references: [idLessons], onDelete: NoAction, onUpdate: NoAction, map: "FK_Lesson_Note")
-  users       users   @relation(fields: [userId], references: [idUser], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Note")
-
-  @@index([lessonId], map: "FK_Lesson_Note_idx")
-  @@index([userId], map: "FK_User_Note_idx")
-}
-
-model notifications {
-  idNotification      Int       @id @default(autoincrement())
-  userId              Int
-  contentNotification String?   @db.VarChar(255)
-  date                DateTime? @db.DateTime(0)
-  users               users     @relation(fields: [userId], references: [idUser], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Notification")
-
-  @@index([userId], map: "FK_User_Notification_idx")
 }
 
 model questions {
@@ -221,12 +177,10 @@ model users {
   dateCreate     DateTime?        @db.Date
   isLocked       Boolean?
   assignmentuser assignmentuser[]
-  comments       comments[]
   courses        courses[]
   courseuser     courseuser[]
   lessonuser     lessonuser[]
-  notes          notes[]
-  notifications  notifications[]
+  purchase       purchase[]
   quizzuser      quizzuser[]
   role           role             @relation(fields: [roleId], references: [idRole], onDelete: NoAction, onUpdate: NoAction, map: "FK_Role_User")
 
@@ -241,4 +195,28 @@ model videolesson {
   lessons    lessons @relation(fields: [idLesson], references: [idLessons], onDelete: NoAction, onUpdate: NoAction, map: "FK_Lesson_Video")
 
   @@index([idLesson], map: "FK_Lesson_Video_idx")
+}
+
+model payment {
+  idPayment     Int       @id @default(autoincrement())
+  idPurchase    Int
+  amount        Int?
+  paymentDate   DateTime? @db.Date
+  paymentMethod String?   @db.VarChar(255)
+  purchase      purchase  @relation(fields: [idPurchase], references: [idPurchase], onDelete: NoAction, onUpdate: NoAction, map: "FK_Purchase_Payment")
+
+  @@index([idPurchase], map: "FK_Purchase_Payment_idx")
+}
+
+model purchase {
+  idPurchase   Int       @id @default(autoincrement())
+  idCourse     Int
+  idUser       Int
+  purchaseDate DateTime? @db.Date
+  payment      payment[]
+  courses      courses   @relation(fields: [idCourse], references: [idCourse], onDelete: NoAction, onUpdate: NoAction, map: "FK_Course_Purchase")
+  users        users     @relation(fields: [idUser], references: [idUser], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Purchase")
+
+  @@index([idCourse], map: "FK_Course_Purchase_idx")
+  @@index([idUser], map: "FK_User_Purchase_idx")
 }

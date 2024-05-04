@@ -19,6 +19,10 @@ const formSchema = z.object({
 });
 const UpdateLesson = () => {
   const router = useRouter();
+  const token = sessionStorage.getItem("token")
+  if (!token) {
+    router.push('/login')
+  }
   const notify: any = () =>toast.success("Sửa thông tin bài học thành công!", {
       position: "top-right",
       autoClose: 2500,

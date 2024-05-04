@@ -6,8 +6,14 @@ import ListTeacher from "./ListTeacher";
 import Sidebar from "@/app/adminn/sidebar/AdminSidebar";
 import styles from "@/app/adminn/dashboard.module.css";
 import { useTeacherStore } from "@/app/lib/hooks/useTeacherStore";
+import { useRouter } from 'next/navigation';
 
 const TeacherManagePage = () => {
+  const router = useRouter()
+  const token = sessionStorage.getItem("token")
+  if (!token) {
+    router.push('/login')
+  }
   const { fetchDataTeacher, isLoadingTeachers } = useTeacherStore();
 
   useEffect(() => {

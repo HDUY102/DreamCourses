@@ -30,7 +30,15 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const token = request.headers.get("Authorization")?.replace("Bearer ", "");
+  if (!token) {
+    return NextResponse.json("Unauthorized", { status: 401 });
+  }
+
   try {
+    const decodedToken = verify(token, "secret-key");
+    const user = decodedToken as JwtPayload;
+    const idUser = user.idUser;
     const body = await request.json();
     
     const courses = await prisma.courses.create({
@@ -40,14 +48,11 @@ export async function POST(request: NextRequest) {
         introduce: body.introduce,
         image: body.image,
         isPublished: body.isPublished,
-        teacherId: body.teacherId,
+        teacherId: idUser,
       },
     });
     
-    return NextResponse.json(
-      { courses: courses, message: "Tạo khóa học thành công" },
-      { status: 201 }
-    );
+    return NextResponse.json({ courses: courses, message: "Tạo khóa học thành công" },{ status: 201 });
   } catch (error) {
     return NextResponse.json("Error", { status: 500 });
   }

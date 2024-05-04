@@ -1,8 +1,6 @@
 "use client";
 import { useEffect, useRef,useState } from "react";
 import { Chart } from "chart.js/auto";
-import AdminSidebar from "../../sidebar/AdminSidebar";
-import styles from "@/app/adminn/dashboard.module.css";
 
 export default function ChartStudent() {
   const chartRef = useRef(null);
@@ -10,7 +8,7 @@ export default function ChartStudent() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const respone = await fetch("http://localhost:3000/api/student")
+      const respone = await fetch("http://localhost:3000/api/adminStudent")
       if(!respone.ok){
         console.error("Error")
       }

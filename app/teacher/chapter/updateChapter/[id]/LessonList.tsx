@@ -77,17 +77,6 @@ const LessonList = ({items,onReorder}:LessonListProps) => {
       } else {
         toast.error("Lỗi, xin thử lại");
       }
-      // const chaptersResponse = await fetch(`http://localhost:3000/api/courses/${idCourse}/chapter`,{
-      //   method: "GET",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      // });
-      // if (chaptersResponse.ok) {
-      //   const updatedChaptersData = await chaptersResponse.json();
-      //   setChapters(updatedChaptersData); 
-      //   window.location.reload()
-      // }
     }catch{
       setLoading(false)
     }

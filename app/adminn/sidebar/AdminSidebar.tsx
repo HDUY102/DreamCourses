@@ -11,16 +11,7 @@ import {
   MdMonetizationOn ,
 } from "react-icons/md";
 import MenuLink from "./menuLink/MenuLink";
-import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
-// import { cookies } from "next/headers";
-
-const handleLogout = () => {
-  // const router = useRouter();
-  Cookies.remove("dctoken");
-  // router.push("/login")
-};
+import { useRouter } from 'next/navigation';
 
 const AdminSidebar = () => {
   const [showStatsDropdown, setShowStatsDropdown] = useState(false);
@@ -29,7 +20,25 @@ const AdminSidebar = () => {
     setShowStatsDropdown(!showStatsDropdown);
     setIsDropdownOpen(!isDropdownOpen); 
   };
-  
+  const router = useRouter();
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/api/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.ok) {
+        sessionStorage.removeItem('token');
+        router.push('/login');
+      } else {
+        throw new Error('Logout failed');
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
   const menuItems = [
     {
       list: [
@@ -56,16 +65,6 @@ const AdminSidebar = () => {
             { title: "Thống kê doanh thu", path: "/adminn/statisticsManage/revenueStatistic",icon: <MdMonetizationOn /> },
             { title: "Thống kê học viên", path: "/adminn/statisticsManage/studentStatistic",icon: <MdGroups /> },
           ]
-        },
-      ],
-    },
-    {
-      list: [
-        {
-          title: "Đăng Xuất",
-          path: "/login",
-          icon: <MdLogout />,
-          onClick: handleLogout(),
         },
       ],
     },
@@ -101,23 +100,10 @@ const AdminSidebar = () => {
           ))}
         </ul>
       </div>
-      {/* <form 
-      action={async () => {
-        "use server";
-        await signOut();
-      }}
-      >
-        <button className={styles.logout}>
-          <MdLogout />
-          Logout
-        </button>
-      </form> */}
-      {/* <form onSubmit={handleLogout}>
-        <button type="submit" className={styles.logout}>
-          <MdLogout />
-          Logout
-        </button>
-      </form> */}
+      <div className={styles.logout} onClick={handleLogout}>
+        <MdLogout />
+        Đăng xuất
+      </div>
     </div>
   );
 };
