@@ -20,12 +20,12 @@ export async function POST(request:NextRequest) {
     const idUser = user.idUser
     const token = sign({ username, role ,idUser}, "secret-key", { expiresIn: "30m" });
     const response = NextResponse.json({id: user.idUser,success: token },{ status: 200, headers: { "content-type": "application/json" }})
-    response.cookies.set({
-      maxAge: 1,
-      name: "token",
-      value: token,
-      path: "/",
-    })
+    // response.cookies.set({
+    //   maxAge: 1,
+    //   name: "token",
+    //   value: token,
+    //   path: "/",
+    // })
 
     return response;
   }
