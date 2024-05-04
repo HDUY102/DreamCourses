@@ -53,11 +53,11 @@ const TeacherSidebar = () => {
     },
     {
       list: [
-        {
-          title: "Cài Đặt",
-          path: "/teacher/settings",
-          icon: <MdOutlineSettings />,
-        },
+        // {
+        //   title: "Cài Đặt",
+        //   path: "/teacher/settings",
+        //   icon: <MdOutlineSettings />,
+        // },
         {
           title: "Đăng Xuất",
           path: "/login",

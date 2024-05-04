@@ -1,20 +1,45 @@
-// "use client";
-import React, { useEffect } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import styles from "@/app/teacher/Teacher.module.css";
 import Sidebar from "@/app/teacher/sidebar/TeacherSidebar";
-import { FaPlusCircle, FaFile } from "react-icons/fa";
+import { FaPlusCircle } from "react-icons/fa";
 import Link from "next/link";
 import { DataTable } from "./datatable";
 import { columns } from "./columns";
-import { useCourseStore } from "@/app/lib/hooks/useCourseStore";
-import prisma from "@/prisma/client";
+import { useRouter } from "next/navigation";
 
-const CourseManage = async () => {
-  const courses = await prisma.courses.findMany({
-    orderBy:{
-      titleCourse: "desc"
+const CourseManage = () => {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
+  const [courses, setCourses] = useState([]);
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+    } else {
+      const fetchCourses = async () => {
+        try {
+          const response = await fetch("/api/courses", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          if (!response.ok) {
+            throw new Error("Failed to fetch courses");
+          }
+          const data = await response.json();
+          setCourses(data.courses);
+          setIsLoading(false);
+        } catch (error) {
+          console.error("Error fetching courses:", error);
+          setIsLoading(false);
+        }
+      };
+
+      fetchCourses();
     }
-  })
+  }, []);
 
   return (
     <div className="flex ">
@@ -32,12 +57,11 @@ const CourseManage = async () => {
           </Link>
         </div>
         <div>
-          <DataTable columns={columns} data={courses}/>
-          {/* {isLoadingCourses ? (
-              <div className="text-center text-lg">Loading...</div>
-            ) : (
-              <DataTable columns={columns} data={courses}/>
-          )} */}
+          {isLoading ? (
+            <div className="text-center text-lg">Loading...</div>
+          ) : (
+            <DataTable columns={columns} data={courses} />
+          )}
         </div>
       </div>
     </div>

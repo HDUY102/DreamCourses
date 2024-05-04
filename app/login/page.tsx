@@ -36,26 +36,31 @@ const Login = () => {
       password: "",
     },
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  };
   const router = useRouter();
 
   const handleSubmit = async (event:any) => {
       event.preventDefault();
-      const formData = new FormData(event.target);
-      const username = formData.get("username");
-      const password = formData.get("password");
-      const res = await fetch("/api/login", {
+      const { username, password } = form.getValues();
+      const formValue = { username, password }
+      const res =await fetch("/api/login",{
         method: "POST",
-        body: JSON.stringify({ username, password }),
-      });
-      const { success } = await res.json();
-      if (success) {
-        router.push("/admin");
-        router.refresh();
+        body: JSON.stringify({username, password})
+      })
+      if (res.ok) {
+        const data = await res.json();        
+        if (data.success) {
+          sessionStorage.setItem("token", data.success);
+          if (username === "admin") {
+            router.push("/adminn");
+          } else {
+            alert("Đn thành công vào teacher")
+            router.push("/teacher");
+          }
+        } else {
+          alert("Đăng nhập không thành công");
+        }
       } else {
-        alert("Đăng Nhập Thất Bại");
+        alert("Đăng nhập không thành công");
       }
   };
 

@@ -1,29 +1,32 @@
-import { SignJWT } from "jose";
 import { NextRequest, NextResponse } from "next/server";
-import {getJwtSecretKey} from "@/app/lib/auth"
-import { redirect } from 'next/navigation'
+import prisma from "@/prisma/client";
+import { compare } from "bcrypt";
+import {sign} from "jsonwebtoken"
+
 export async function POST(request:NextRequest) {
   const body = await request.json();
-  if (body.username === "admin" && body.password === "admin") {
-    const token = await new SignJWT({
-      Username: body.username,
-    })
-      .setProtectedHeader({ alg: "HS256" })
-      .setIssuedAt()
-      // .setExpirationTime("5s") 
-      .sign(getJwtSecretKey());
-    const response = NextResponse.json(
-     { success: true },
-      { status: 200, headers: { "content-type": "application/json" } }
-    );
+  const {username,password} = body
+  if(body.username === "admin" && body.password === "admin"){
+    console.log("admin")
+    return NextResponse.json({message: "Đăng nhập admin thành công"},{status: 200});
+  }else{
+    const user = await prisma.users.findFirst({
+      where: { username }
+    });
+    if (!user || !(await compare(password, user.password))){
+      return NextResponse.json({ message: "Sai tên đăng nhập hoặc mật khẩu" }, { status: 401 });
+    }
+    const role = user.roleId;
+    const idUser = user.idUser
+    const token = sign({ username, role ,idUser}, "secret-key", { expiresIn: "5m" });
+    const response = NextResponse.json({id: user.idUser,success: token },{ status: 200, headers: { "content-type": "application/json" }})
     response.cookies.set({
-      maxAge: 10,
-      name: "dctoken",
+      maxAge: 1,
+      name: "token",
       value: token,
       path: "/",
-    });
-    // response.cookies.delete('dctoken')
+    })
+
     return response;
   }
-  return NextResponse.json({ success: false });
 }
