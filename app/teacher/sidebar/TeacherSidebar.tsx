@@ -12,7 +12,7 @@ import {
   MdMonetizationOn,
 } from "react-icons/md";
 import MenuLink from "./menuLink/MenuLink";
-// import { signOut } from '@/auth';
+import { useRouter } from 'next/navigation';
 
 const TeacherSidebar = () => {
   const [showStatsDropdown, setShowStatsDropdown] = useState(false);
@@ -21,7 +21,26 @@ const TeacherSidebar = () => {
     setShowStatsDropdown(!showStatsDropdown);
     setIsDropdownOpen(!isDropdownOpen); 
   };
+  const router = useRouter();
 
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/api/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.ok) {
+        sessionStorage.removeItem('token');
+        router.push('/login');
+      } else {
+        throw new Error('Logout failed');
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
   const menuItems = [
     {
       list: [
@@ -48,21 +67,6 @@ const TeacherSidebar = () => {
             { title: "Thống kê doanh thu", path: "/teacher/statistics/revenueStatistic",icon: <MdMonetizationOn /> },
             { title: "Thống kê số học viên", path: "/teacher/statistics/studentStatistic",icon: <MdGroups /> },
           ]
-        },
-      ],
-    },
-    {
-      list: [
-        // {
-        //   title: "Cài Đặt",
-        //   path: "/teacher/settings",
-        //   icon: <MdOutlineSettings />,
-        // },
-        {
-          title: "Đăng Xuất",
-          path: "/login",
-          icon: <MdLogout />,
-          // onClick: handleLogout(),
         },
       ],
     },
@@ -99,17 +103,10 @@ const TeacherSidebar = () => {
           ))}
         </ul>
       </div>
-      {/* <form
-      // action={async () => {
-      //   "use server";
-      //   await signOut();
-      // }}
-      >
-        <button className={styles.logout}>
-          <MdLogout />
-          Logout
-        </button>
-      </form> */}
+      <div className={styles.logout} onClick={handleLogout}>
+        <MdLogout />
+        Logout
+      </div>
     </div>
   );
 };

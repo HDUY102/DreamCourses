@@ -53,7 +53,7 @@ const Login = () => {
           if (username === "admin") {
             router.push("/adminn");
           } else {
-            alert("Đn thành công vào teacher")
+            alert("Đăng nhập thành công")
             router.push("/teacher");
           }
         } else {
