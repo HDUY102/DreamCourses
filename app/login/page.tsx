@@ -54,8 +54,12 @@ const Login = () => {
             alert("Đăng nhập vào trang admin thành công")
             router.push("/adminn");
           } else if(data.role === 3){
-            alert("Đăng nhập vào trang teacher thành công")
-            router.push("/teacher");
+            if(!data.isLocked){
+              alert("Đăng nhập vào trang teacher thành công")
+              router.push("/teacher");
+            }else{
+              alert("Tài khoản teacher đã bị khóa")
+            }
           }else{
             alert("Đăng nhập vào trang student thành công")
             router.push("/");

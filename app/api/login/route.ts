@@ -18,8 +18,9 @@ export async function POST(request:NextRequest) {
     }
     const role = user.roleId;
     const idUser = user.idUser
-    const token = sign({ username, role ,idUser}, "secret-key", { expiresIn: "1h" });
-    const response = NextResponse.json({id: user.idUser,role,success: token },{ status: 200, headers: { "content-type": "application/json" }})
+    const isLocked = user.isLocked
+    const token = sign({ username, role ,idUser,isLocked}, "secret-key", { expiresIn: "1h" });
+    const response = NextResponse.json({id: user.idUser,role,isLocked,success: token },{ status: 200, headers: { "content-type": "application/json" }})
     // response.cookies.set({
     //   maxAge: 1,
     //   name: "token",
