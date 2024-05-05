@@ -76,12 +76,11 @@ const Login = () => {
     <div>
       <div>
         {/* Page Header BEGIN */}
-        <header className="flex items-center justify-between bg-emerald-500 h-16">
-          <Link className="w-16" href={"/"}>
+        <header className="flex items-center justify-between bg-emerald-600 h-16">
+          <Link href={"/"}>
             <Image
               src={logo}
-              width={150}
-              height={150}
+              width={76} height={15}
               className="p-2 ml-3 rounded-full"
               alt="LOGO"
             ></Image>
