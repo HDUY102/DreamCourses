@@ -35,7 +35,7 @@ export const useTeacherStore = create<State & Actions>((set, get) => ({
   fetchDataTeacher: async () => {
     try {
       set({ isLoadingTeachers: true });
-      const response = await fetch("http://localhost:3000/api/teacher", {
+      const response = await fetch("http://localhost:3000/api/admin/teacher", {
         cache: "no-store",
       });
       set({

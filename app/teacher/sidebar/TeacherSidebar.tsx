@@ -1,5 +1,5 @@
 "use client"
-import React, {useState} from "react";
+import React, {useEffect,useState} from "react";
 import styles from "@/app/teacher/sidebar/TeacherSidebar.module.css";
 import {
   MdLogout,
@@ -23,6 +23,35 @@ const TeacherSidebar = () => {
   };
   const router = useRouter();
 
+  // Set trạng thái name cho teacher
+  const [teacherName, setTeacherName] = useState("")
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+    } else {
+      const fetchNameTeacher = async () => {
+        try {
+          const response = await fetch("/api/teacher", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          if (!response.ok) {
+            throw new Error("Failed to fetch courses");
+          }
+          const data = await response.json();
+          setTeacherName(data.username);
+        } catch (error) {
+          console.error("Error fetching courses:", error);
+        }
+      };
+
+      fetchNameTeacher();
+    }
+  }, []);
+  
   const handleLogout = async () => {
     try {
       const response = await fetch('/api/logout', {
@@ -76,7 +105,10 @@ const TeacherSidebar = () => {
     <div className={styles.container}>
       <div className={styles.userDetail}>
         <div className="text-center uppercase">
-          <span className={styles.userTitle}>TEACHER</span>
+          <span className={styles.userTitle}>
+            Xin chào<br></br>
+            {teacherName}
+          </span>
         </div>
         <ul className={styles.list}>
           {menuItems.map((cat) => (

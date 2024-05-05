@@ -1,48 +1,24 @@
 import prisma from "@/prisma/client";
 import { NextRequest,NextResponse } from "next/server";
-import { hash } from "bcrypt";
+import { verify, JwtPayload } from "jsonwebtoken";
 
-export async function GET() {
-    const teacher = await prisma.users.findMany({
+export async function GET(request: NextRequest) {
+  const token = request.headers.get("Authorization")?.replace("Bearer ", "");
+  if (!token) {
+    return NextResponse.json("Unauthorized", { status: 401 });
+  }
+  try {
+    const decodedToken = verify(token, "secret-key");
+    const user = decodedToken as JwtPayload;
+    const Username = user.username.toString();
+    const teacher = await prisma.users.findFirst({
         where:{
-            roleId: 3
+          username: Username
         }
     })
     return NextResponse.json(teacher)
-}
-
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { username, password } = body;
-    console.log(typeof body);
-    // check if username already exists
-    const existingUserByUsername = await prisma.users.findFirst({
-      where: {
-        username: username,
-        // roleId: 3
-      },
-    });
-    if (existingUserByUsername) {
-      return NextResponse.json(
-        { user: null, message: "Username giảng viên đã tồn tại" },
-        { status: 409 }
-      );
-    }
-    const hashedPassword = await hash(password, 3);
-    const newUser = await prisma.users.create({
-      data: {
-        username: username,
-        password: hashedPassword,
-        roleId: 3,
-        dateCreate: new Date(),
-      },
-    });
-    return NextResponse.json(
-      { user: newUser, message: "Đăng ký tài khoản giảng viên thành công" },
-      { status: 201 }
-    );
   } catch (error) {
-    return NextResponse.json({ message: "Lỗi!" }, { status: 500 });
+    console.error("Lỗi lấy name teacher:", error);
+    return NextResponse.json("Internal Server Error", { status: 500 });
   }
 }
