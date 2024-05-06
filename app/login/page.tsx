@@ -19,6 +19,7 @@ import Image from "next/image";
 import logo from "@/app/img/logo.png";
 import { useRouter } from "next/navigation";
 import { PasswordInput } from "@/components/ui/password-input";
+import Footer from "../components/Footer";
 const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
@@ -73,10 +74,11 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className="flex flex-col h-screen justify-between bg-gradient-to-br from-blue-400 via-purple-100 to-pink-200">
       <div>
         {/* Page Header BEGIN */}
-        <header className="flex items-center justify-between bg-emerald-600 h-16">
+        <header className="flex items-center justify-between bg-transparent h-16">
+        {/* <header className="flex items-center justify-between bg-emerald-600 h-16"> */}
           <Link href={"/"}>
             <Image
               src={logo}
@@ -88,13 +90,15 @@ const Login = () => {
         </header>
         {/* Page Header END */}
       </div>
-      <p className="text-center mt-20 text-emerald-800"><b>DREAM LEARNING</b></p>
-      <p className="text-center mt-2 text-gray-500">Đăng nhập tài khoản Dream Learning <br></br>để kết nối với Dream Learning</p>
+      <p className="text-center mt-20  text-emerald-800"><span className="text-green-800 italic text-3xl font-serif"> Dream</span> <span className="text-blue-900 text-3xl italic font-serif">Courses</span></p>
+      {/* <p className="text-center mt-20 text-emerald-800"><b>DREAM COURSES</b></p> */}
+      <p className="text-center mt-2 text-gray-500">Đăng nhập tài khoản Dream Courses <br></br>để kết nối với Dream Courses</p>
       <div className="flex justify-center">
-        <div className="flex justify-center mt-8 border border-y-2 border-x-2 w-[400px]">
+        <div className="flex justify-center mt-8 rounded-lg p-4 bg-white bg-opacity-75 border-2 border-blue-400 border-solid relative">
+        {/* <div className="flex justify-center mt-8 border border-y-2 border-x-2 w-[400px]"> */}
           <Form {...form}>
             <form onSubmit={handleSubmit} className="m-4">
-              <FormDescription className="text-center">Đăng nhập tài khoản Dream Learning</FormDescription>
+              <FormDescription className="text-center">Đăng nhập tài khoản Dream Courses</FormDescription>
               <FormField
                 control={form.control}
                 name="username"
@@ -135,12 +139,7 @@ const Login = () => {
       <p className='mt-4 text-center'>
         Bạn chưa có tài khoản? <a className="hover:text-blue-600" href={'/register'}><u>Đăng Ký</u></a>
       </p>
-      <div>
-        <hr className="mb-2 mt-3"></hr>
-        <footer className="p-4 text-center text-gray-400">
-          <i>Dream <span className="text-emerald-500 ">Learning</span></i>{" "} &copy; {new Date().getFullYear()} Accompany your dreams
-        </footer>
-      </div>
+      <Footer/>
     </div>
   )
 };

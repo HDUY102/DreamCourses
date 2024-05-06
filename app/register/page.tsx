@@ -19,6 +19,7 @@ import Image from "next/image";
 import logo from "@/app/img/logo.png";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useRouter } from 'next/navigation';
+import Footer from "../components/Footer";
 
 const RegisterSchema = z.object({
   username: z.string().min(3, {
@@ -59,10 +60,10 @@ const Register = () => {
     } 
   }
   return (
-    <div>
+    <div className="flex flex-col h-screen justify-between bg-gradient-to-br from-blue-400 via-purple-100 to-pink-200">
       <div>
         {/* Page Header BEGIN */}
-        <header className="flex items-center justify-between bg-emerald-600 h-16">
+        <header className="flex items-center justify-between bg-transparent h-16">
           <Link href={"/"}>
             <Image
               src={logo}
@@ -74,10 +75,10 @@ const Register = () => {
         </header>
         {/* Page Header END */}
       </div>
-      <p className="text-center mt-20 text-emerald-800"><b>DREAM LEARNING</b></p>
-      <p className="text-center mt-2 text-gray-500">Đăng ký tài khoản Dream Learning <br></br>để kết nối với Dream Learning</p>
+      <p className="text-center mt-20  text-emerald-800"><span className="text-green-800 italic text-3xl font-serif"> Dream</span> <span className="text-blue-900 italic text-3xl font-serif">Courses</span></p>
+      <p className="text-center mt-2 text-gray-500">Đăng ký tài khoản Dream Courses <br></br>để kết nối với Dream Courses</p>
       <div className="flex justify-center">
-        <div className="flex justify-center mt-8 border border-y-2 border-x-2 rounded-lg w-[400px]">
+        <div className="flex justify-center mt-8 rounded-lg p-4 bg-white bg-opacity-75 border-2 border-blue-400 border-solid relative">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="m-4">
               <FormDescription className="text-center">Đăng ký tài khoản mới</FormDescription>
@@ -121,12 +122,7 @@ const Register = () => {
       <p className='mt-4 text-center'>
         Bạn đã có tài khoản? <a className="hover:text-blue-600" href={'/login'}><u>Đăng Nhập</u></a>
       </p>
-      <div>
-        <hr className="mb-2 mt-3"></hr>
-        <footer className="p-4 text-center text-gray-400">
-          <i>Dream <span className="text-emerald-500 ">Learning</span></i>{" "} &copy; {new Date().getFullYear()} Accompany your dreams
-        </footer>
-      </div>
+      <Footer/>
     </div>
   );
 };
