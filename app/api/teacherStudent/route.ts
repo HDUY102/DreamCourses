@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
       await prisma.$queryRaw`SELECT MONTH(u.dateCreate) as monthCreate, count(u.idUser) as count FROM courseuser cu
       JOIN courses c On cu.courseId = c.idCourse 
       JOIN users u ON cu.userId = u.idUser
-      WHERE u.roleId=2 AND c.teacherId = ${idUser} GROUP BY MONTH(u.dateCreate);`;
+      WHERE c.teacherId = ${idUser} GROUP BY MONTH(u.dateCreate);`;
     result.forEach((studentObject: any) => {
       studentObject.count = Number(studentObject.count);
     });
