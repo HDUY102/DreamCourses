@@ -62,15 +62,14 @@ model courses {
 }
 
 model courseuser {
-  // idCourseUser Int        @id @default(autoincrement())
-  userId       Int        
-  courseId     Int
-  statusId     Int
-  courses      courses    @relation(fields: [courseId], references: [idCourse], onDelete: NoAction, onUpdate: NoAction, map: "FK_Course_CourseUser")
-  statustype   statustype @relation(fields: [statusId], references: [idStatusType], onDelete: NoAction, onUpdate: NoAction, map: "FK_Status_CourseUser")
-  users        users      @relation(fields: [userId], references: [idUser], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_CourseUser")
+  userId     Int
+  courseId   Int
+  statusId   Int
+  courses    courses    @relation(fields: [courseId], references: [idCourse], onDelete: NoAction, onUpdate: NoAction, map: "FK_Course_CourseUser")
+  statustype statustype @relation(fields: [statusId], references: [idStatusType], onDelete: NoAction, onUpdate: NoAction, map: "FK_Status_CourseUser")
+  users      users      @relation(fields: [userId], references: [idUser], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_CourseUser")
 
-  @@id([userId,courseId])
+  @@id([userId, courseId])
   @@index([courseId], map: "FK_Course_CourseUser_idx")
   @@index([statusId], map: "FK_Status_CourseUser_idx")
   @@index([userId], map: "FK_User_CourseUser_idx")
