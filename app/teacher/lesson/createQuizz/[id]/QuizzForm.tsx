@@ -4,6 +4,7 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Form,
   FormControl,
@@ -163,7 +164,7 @@ export const QuizzForm = ({initialData}:QuizzFormProps) => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input
+                  <Textarea
                     disabled={isSubmitting}
                     placeholder="Nhập mô tả cho quizz"
                     {...field}
