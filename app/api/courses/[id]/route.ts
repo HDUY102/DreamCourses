@@ -2,13 +2,13 @@ import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { verify, JwtPayload } from "jsonwebtoken";
 
-export async function GET( request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest,{ params }: { params: { id: string }}) {
   let idCheck = parseInt(params.id);
   if (idCheck !== -1) {
     const course = await prisma.courses.findFirst({
       where: {
         idCourse: idCheck,
-      }
+      },
     });
     return NextResponse.json(course);
   } else {
@@ -16,58 +16,68 @@ export async function GET( request: NextRequest, { params }: { params: { id: str
   }
 }
 
-export async function DELETE( request: NextRequest, { params }: { params: { id: string } }) {
-  let idCheck = parseInt(params.id);
-  if (idCheck !== -1) {
-    await prisma.assignments.deleteMany({
-      where:{
-        lessons:{
-          chapters:{
-            courses:{
-              idCourse: idCheck
+export async function DELETE(request: NextRequest,{ params }: { params: { id: string } }) {
+    let idCheck = parseInt(params.id);
+    if (idCheck !== -1) {
+      const findCourseUser = await prisma.courseuser.count({ where: { courseId: idCheck } })
+
+      if (findCourseUser) {
+          return NextResponse.json({ message: "Đã có người học, không cho xóa!" }, { status: 200 });
+      }else{
+          await prisma.questions.deleteMany({
+            where: {
+              quizzs: {
+                lessons: {
+                  chapters:{courseId: idCheck},
+                }
+              }
             }
+          });
+          
+          const findChapter = await prisma.chapters.findMany({
+            where: { courseId: idCheck }
+          });
+          
+          for (const chapter of findChapter) {
+            await prisma.quizzs.deleteMany({
+              where: { lessons: { chapterId: chapter.idChapter } }
+            });
           }
-        }
-      }
-    })
-
-    await prisma.videolesson.deleteMany({
-      where:{
-        lessons:{
-          chapters:{
-            courses:{
-              idCourse: idCheck
-            }
-          }
-        }
-      }
-    })
+          await prisma.assignments.deleteMany({
+            where: {
+              lessons: {
+                chapters:{courseId: idCheck},
+              },
+            },
+          });
     
-    await prisma.lessons.deleteMany({
-      where: {
-        chapters: {
-          courses: {
-            idCourse: idCheck
-          }
-        }
-      }
-    });
-
-    await prisma.chapters.deleteMany({
-      where: {courseId: idCheck}
-    });
-
-    await prisma.courses.delete({
-      where: {idCourse: idCheck},
-    });
+          await prisma.videolesson.deleteMany({
+            where: {
+              lessons: {
+                chapters: {courseId: idCheck},
+              },
+            },
+          });
+          await prisma.lessons.deleteMany({
+            where: {
+              chapters: {courseId:idCheck},
+            },
+          });
     
-    return NextResponse.json({ message: "Xóa khóa học thành công!" },{ status: 201 });
-  } else {
-    return NextResponse.json({ message: "Xóa thất bại" });
-  }
+          await prisma.chapters.deleteMany({
+            where: { courseId: idCheck },
+          });
+          await prisma.courses.delete({
+            where: { idCourse: idCheck },
+          });
+          return NextResponse.json({ message: "Xóa khóa học thành công!" },{ status: 201 });
+      }
+    } else {
+      return NextResponse.json({ message: "Xóa thất bại" });
+    }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest,{ params }: { params: { id: string } }) {
   const token = request.headers.get("Authorization")?.replace("Bearer ", "");
   if (!token) {
     return NextResponse.json("Unauthorized", { status: 401 });
@@ -84,10 +94,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       },
     });
     if (!existingCourseById) {
-      return NextResponse.json(
-        { course: null, message: "Course với id này không tồn tại" },
-        { status: 409 }
-      );
+      return NextResponse.json({ course: null, message: "Course với id này không tồn tại" },{ status: 409 });
     }
     const updateCourse = await prisma.courses.update({
       where: {
@@ -102,14 +109,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         teacherId: idUser,
       },
     });
-    return NextResponse.json(
-      { user: updateCourse, message: "Course updated successfully" },
-      { status: 202 }
-    );
+    return NextResponse.json({ user: updateCourse, message: "Course updated successfully" },{ status: 202 });
   } catch (error) {
-    return NextResponse.json(
-      { message: "Something went wrong!" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Something went wrong!" },{ status: 500 });
   }
 }

@@ -5,7 +5,7 @@ import {Droppable, DragDropContext,
     Draggable, DropResult
 } from "@hello-pangea/dnd"
 import {cn} from "@/lib/utils"
-import {Grip, Pencil, Trash} from "lucide-react"
+import {Grip, Pencil, PlusCircle, Trash, X} from "lucide-react"
 import { lessons } from '@prisma/client'
 import Link from 'next/link'
 import ConfirmDelete from "@/app/components/ConfirmDelete";
@@ -25,6 +25,17 @@ const LessonList = ({items,onReorder}:LessonListProps) => {
   
   const notifyDelete:any = () => toast("Bài đã bị xóa",{
     icon: <Trash className='text-red-500'/>,
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+  const notifyErrorDel:any = () => toast("Đã có người học, không cho xóa!",{
+    icon: <X className='text-red-500'/>,
     position: "top-right",
     autoClose: 3000,
     hideProgressBar: false,
@@ -65,13 +76,18 @@ const LessonList = ({items,onReorder}:LessonListProps) => {
     return null
   }
 
-  //xóa chapter
+  //xóa lesson
   const onDelete = async ({idLesson,idChapter}:any) =>{
     try{
       setLoading(true)
       const response = await fetch(`/api/lesson/${idLesson}`, {
         method: 'DELETE',
       });
+      const data =await response.json()
+      if(data.message === "Đã có người học, không cho xóa!"){
+        notifyErrorDel();
+        return;
+      }
       if (response.ok) {
         notifyDelete()
       } else {
@@ -112,6 +128,9 @@ const LessonList = ({items,onReorder}:LessonListProps) => {
                                         <div className={cn("bg-slate-400 hover:bg-slate-600 rounded-lg p-1 text-white", lesson.isPublished && "bg-green-400 hover:bg-green-500 ")}>
                                             {lesson.isPublished ?"Công khai" : "Không công khai"}
                                         </div>
+                                        <Link href={`/teacher/lesson/createQuizz/${lesson.idLessons}`}>
+                                            <PlusCircle className="h-4 w-4 hover:text-sky-400 ml-2 cursor-pointer transition" />
+                                        </Link>
                                         <Link href={`/teacher/lesson/updateLesson/${lesson.idLessons}`}>
                                             <Pencil className="h-4 w-4 hover:text-green-400 ml-2 cursor-pointer transition" />
                                         </Link>

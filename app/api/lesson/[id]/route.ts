@@ -22,23 +22,34 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 export async function DELETE( request: NextRequest, { params }: { params: { id: string }}) {
   let idCheck = parseInt(params.id);
   if (idCheck !== -1) {
-    const deleteLesson = await prisma.lessons.delete({
-      where: {
-        idLessons: idCheck,
-      },
-    });
-    const videolessonToDelete = await prisma.videolesson.deleteMany({
-      where: {
-        idLesson: idCheck,
-      },
-    });
-    const assignmentsToDelete = await prisma.assignments.deleteMany({
-      where: {
-        idLessons: idCheck,
-      },
-    });
-    const Lessons = await prisma.lessons.findMany();
-    return NextResponse.json("Xóa bài học thành công", {status: 201});
+    console.log("findLesson ")
+    const findLessonUser = await prisma.lessonuser.count({where: {lessonId: idCheck}})
+    if(findLessonUser){
+      return NextResponse.json({message: "Đã có người học, không cho xóa!"}, {status: 200})
+    }else{
+      await prisma.questions.deleteMany({
+        where:{
+          quizzs:{
+            idLessons: idCheck
+          }
+        }
+      })
+      
+      await prisma.quizzs.deleteMany({
+        where:{idLessons: idCheck}
+      })
+      await prisma.videolesson.deleteMany({
+        where: {idLesson: idCheck,},
+      });
+      await prisma.assignments.deleteMany({
+        where: {idLessons: idCheck,},
+      });
+      await prisma.lessons.delete({
+        where: {idLessons: idCheck,},
+      });
+      const Lessons = await prisma.lessons.findMany();
+      return NextResponse.json("Xóa bài học thành công", {status: 201});
+    }
   } else {
     return NextResponse.json({ message: "Xóa bài học thất bại" });
   }

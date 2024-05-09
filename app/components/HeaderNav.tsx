@@ -4,25 +4,59 @@ import Link from "next/link";
 import Image from "next/image";
 import logo from "@/app/img/logo.png";
 import { FaSearch, FaShoppingCart } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 const HeaderNav = ({}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("");
 
+  // useEffect(() => {
+  //   // Check for token cookie
+  //   const token = document.cookie
+  //     .split(";")
+  //     .find((cookie) => cookie.includes("token="));
+  //   if (token) {
+  //     setIsLoggedIn(true);
+  //     // Extract username from token
+  //     const jwtToken = token.split("=")[1];
+  //     const decodedToken = JSON.parse(atob(jwtToken.split(".")[1]));
+  //     setUserName(decodedToken.Username);
+  //   }
+  // }, []);
+  const [userId, setUserId] = useState("")
   useEffect(() => {
-    // Check for token cookie
-    const token = document.cookie
-      .split(";")
-      .find((cookie) => cookie.includes("token="));
+    // Check for token in session storage
+    const token = sessionStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true);
       // Extract username from token
-      const jwtToken = token.split("=")[1];
-      const decodedToken = JSON.parse(atob(jwtToken.split(".")[1]));
+      const decodedToken = JSON.parse(atob(token.split(".")[1]));
       setUserName(decodedToken.Username);
+      setUserId(decodedToken.idUser);
     }
   }, []);
+
+  //log out
+  const router = useRouter();
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/api/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.ok) {
+        sessionStorage.removeItem('token');
+        router.push('/login');
+      } else {
+        throw new Error('Logout failed');
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
 
   const handleSearchSubmit = (e:any) => {
     e.preventDefault();
@@ -34,26 +68,16 @@ const HeaderNav = ({}) => {
     // onSearch(searchTerm);
   };
 
-  const handleLogout = () => {
-    // Remove token cookie
-    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    setUserName("");
-    setIsLoggedIn(false);
-    alert("Đăng xuất thành công!");
-
-    window.location.href = "/home";
-  };
-
   return (
       <div>
         <header className="flex items-center justify-between bg-emerald-600 h-16 fixed w-full">
           <nav className="flex items-center gap-8 text-white font-semibold">
-            <Link href={"/home"}>
+            <Link href={"/"}>
               <Image src={logo} width={75} height={15} className="p-2 ml-5 rounded-full" alt="LOGO"/>
             </Link>
             <Link
               className="p-2 hover:bg-white hover:text-black rounded-full px-6"
-              href="/home"
+              href="/"
             >
               Trang Chủ
             </Link>

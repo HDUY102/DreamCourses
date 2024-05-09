@@ -1,7 +1,7 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { courses } from "@prisma/client";
-import { ArrowUpDown, Pencil, Trash } from "lucide-react";
+import { ArrowUpDown, Pencil, Trash, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import {cn} from "@/lib/utils"
@@ -100,6 +100,17 @@ export const columns: ColumnDef<courses>[] = [
         progress: undefined,
         theme: "light",
       });
+      const notifyErrorDel:any = () => toast("Đã có người học, không cho xóa!",{
+        icon: <X className='text-red-500'/>,
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
 
       const onDelete = async () =>{
         try{
@@ -108,6 +119,12 @@ export const columns: ColumnDef<courses>[] = [
           const response = await fetch(`http://localhost:3000/api/courses/${courseId}`, {
             method: 'DELETE',
           });
+          const data = await response.json();
+          if (data.message === "Đã có người học, không cho xóa!") {
+            notifyErrorDel();
+            return;
+          }
+
           if (response.ok) {
             notify()
             setTimeout(() => {

@@ -5,7 +5,7 @@ import {Droppable, DragDropContext,
     Draggable, DropResult
 } from "@hello-pangea/dnd"
 import {cn} from "@/lib/utils"
-import {Grip, Pencil, Trash} from "lucide-react"
+import {Grip, Pencil, Trash, X} from "lucide-react"
 import { chapters } from '@prisma/client'
 import Link from 'next/link'
 import ConfirmDelete from "@/app/components/ConfirmDelete";
@@ -26,7 +26,18 @@ const ChapterList = ({items,onReorder}:ChaptersListProps) => {
   const notifyDelete:any = () => toast("Chương đã bị xóa",{
     icon: <Trash className='text-red-500'/>,
     position: "top-right",
-    autoClose: 3000,
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+  const notifyErrorDel:any = () => toast("Đã có người học, không cho xóa!",{
+    icon: <X className='text-red-500'/>,
+    position: "top-right",
+    autoClose: 2000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
@@ -72,6 +83,11 @@ const ChapterList = ({items,onReorder}:ChaptersListProps) => {
       const response = await fetch(`/api/chapter/${idChapter}`, {
         method: 'DELETE',
       });
+      const data =await response.json()
+      if(data.message === "Đã có người học, không cho xóa!"){
+        notifyErrorDel();
+        return;
+      }
       if (response.ok) {
         notifyDelete()
       } else {

@@ -19,16 +19,15 @@ model assignments {
 }
 
 model assignmentuser {
-  idAssignmentUser Int         @id @default(autoincrement())
-  assignmentId     Int
-  userId           Int
-  statusId         Int
-  assignments      assignments @relation(fields: [assignmentId], references: [idAssigment], onDelete: NoAction, onUpdate: NoAction, map: "FK_Assignment_AssignmentUser")
-  statustype       statustype  @relation(fields: [statusId], references: [idStatusType], onDelete: NoAction, onUpdate: NoAction, map: "FK_Status_AssignmentUser")
-  users            users       @relation(fields: [userId], references: [idUser], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_AssignmentUser")
+  assignmentId Int
+  userId       Int
+  isSubmit     Boolean?
+  assignments  assignments @relation(fields: [assignmentId], references: [idAssigment], onDelete: NoAction, onUpdate: NoAction, map: "FK_Assignment_AssignmentUser")
+  users        users       @relation(fields: [userId], references: [idUser], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_AssignmentUser")
 
+  @@id([assignmentId, userId])
   @@index([assignmentId], map: "FK_Assignment_AssignmentUser_idx")
-  @@index([statusId], map: "FK_Status_AssignmentUser_idx")
+  @@index([isSubmit], map: "FK_Status_AssignmentUser_idx")
   @@index([userId], map: "FK_User_AssignmentUser_idx")
 }
 
@@ -64,14 +63,12 @@ model courses {
 model courseuser {
   userId     Int
   courseId   Int
-  statusId   Int
-  courses    courses    @relation(fields: [courseId], references: [idCourse], onDelete: NoAction, onUpdate: NoAction, map: "FK_Course_CourseUser")
-  statustype statustype @relation(fields: [statusId], references: [idStatusType], onDelete: NoAction, onUpdate: NoAction, map: "FK_Status_CourseUser")
-  users      users      @relation(fields: [userId], references: [idUser], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_CourseUser")
+  isFinished Boolean?
+  courses    courses  @relation(fields: [courseId], references: [idCourse], onDelete: NoAction, onUpdate: NoAction, map: "FK_Course_CourseUser")
+  users      users    @relation(fields: [userId], references: [idUser], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_CourseUser")
 
   @@id([userId, courseId])
   @@index([courseId], map: "FK_Course_CourseUser_idx")
-  @@index([statusId], map: "FK_Status_CourseUser_idx")
   @@index([userId], map: "FK_User_CourseUser_idx")
 }
 
@@ -85,54 +82,44 @@ model lessons {
   assignments  assignments[]
   chapters     chapters      @relation(fields: [chapterId], references: [idChapter], onDelete: NoAction, onUpdate: NoAction, map: "FK_Chapter_Lessons")
   lessonuser   lessonuser[]
-  quizzs       quizzs[]
+  quizzs       quizzs?
   videolesson  videolesson[]
 
   @@index([chapterId], map: "FK_Chapter_Lessons_idx")
 }
 
 model lessonuser {
-  idLessonUser Int        @id @default(autoincrement())
-  userId       Int
-  lessonId     Int
-  statusId     Int
-  lessons      lessons    @relation(fields: [lessonId], references: [idLessons], onDelete: NoAction, onUpdate: NoAction, map: "FK_Lesson_LessonUser")
-  statustype   statustype @relation(fields: [statusId], references: [idStatusType], onDelete: NoAction, onUpdate: NoAction, map: "FK_Status_LessonUser")
-  users        users      @relation(fields: [userId], references: [idUser], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_LessonUser")
+  userId     Int
+  lessonId   Int
+  isFinished Boolean?
+  lessons    lessons  @relation(fields: [lessonId], references: [idLessons], onDelete: NoAction, onUpdate: NoAction, map: "FK_Lesson_LessonUser")
+  users      users    @relation(fields: [userId], references: [idUser], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_LessonUser")
 
+  @@id([userId, lessonId])
   @@index([lessonId], map: "FK_Lesson_LessonUser_idx")
-  @@index([statusId], map: "FK_Status_LessonUser_idx")
   @@index([userId], map: "FK_User_LessonUser_idx")
 }
 
 model questions {
-  idQuestion     Int          @id
-  questionTypeId Int
-  content        String?      @db.VarChar(255)
-  Acontent       String?      @db.VarChar(255)
-  Bcontent       String?      @db.VarChar(255)
-  Ccontent       String?      @db.VarChar(255)
-  Dcontent       String?      @db.VarChar(255)
-  answer         String?      @db.VarChar(255)
-  quizzId        Int
-  questiontype   questiontype @relation(fields: [questionTypeId], references: [idQuestionType], onDelete: NoAction, onUpdate: NoAction, map: "FK_QuestionType")
-  quizzs         quizzs       @relation(fields: [quizzId], references: [idQuizz], onDelete: NoAction, onUpdate: NoAction, map: "FK_Quizz_Question")
+  idQuestion   Int            @id @default(autoincrement())
+  content      String?        @db.VarChar(255)
+  Acontent     String?        @db.VarChar(255)
+  Bcontent     String?        @db.VarChar(255)
+  Ccontent     String?        @db.VarChar(255)
+  Dcontent     String?        @db.VarChar(255)
+  answer       String?        @db.VarChar(255)
+  quizzId      Int
+  quizzs       quizzs         @relation(fields: [quizzId], references: [idQuizz], onDelete: NoAction, onUpdate: NoAction, map: "FK_Quizz_Question")
+  questionuser questionuser[]
 
-  @@index([questionTypeId], map: "FK_QuestionType_idx")
   @@index([quizzId], map: "FK_Quizz_Question_idx")
-}
-
-model questiontype {
-  idQuestionType   Int         @id @default(autoincrement())
-  nameQuestionType String?     @db.VarChar(255)
-  questions        questions[]
 }
 
 model quizzs {
   idQuizz     Int         @id @default(autoincrement())
   nameQuizz   String?     @db.VarChar(255)
   description String?     @db.VarChar(255)
-  idLessons   Int
+  idLessons   Int         @unique(map: "idLessons_UNIQUE")
   questions   questions[]
   lessons     lessons     @relation(fields: [idLessons], references: [idLessons], onDelete: NoAction, onUpdate: NoAction, map: "FK_Lesson_Quizz")
   quizzuser   quizzuser[]
@@ -141,16 +128,14 @@ model quizzs {
 }
 
 model quizzuser {
-  idQuizzUser Int        @id @default(autoincrement())
-  quizzId     Int
-  userId      Int
-  statusId    Int
-  quizzs      quizzs     @relation(fields: [quizzId], references: [idQuizz], onDelete: NoAction, onUpdate: NoAction, map: "FK_Quizz_QuizzUser")
-  statustype  statustype @relation(fields: [statusId], references: [idStatusType], onDelete: NoAction, onUpdate: NoAction, map: "FK_Status_QuizzUser")
-  users       users      @relation(fields: [userId], references: [idUser], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_QuizzUser")
+  quizzId Int
+  userId  Int
+  isDone  Boolean?
+  quizzs  quizzs   @relation(fields: [quizzId], references: [idQuizz], onDelete: NoAction, onUpdate: NoAction, map: "FK_Quizz_QuizzUser")
+  users   users    @relation(fields: [userId], references: [idUser], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_QuizzUser")
 
+  @@id([quizzId, userId])
   @@index([quizzId], map: "FK_Quizz_QuizzUser_idx")
-  @@index([statusId], map: "FK_Status_QuizzUser_idx")
   @@index([userId], map: "FK_User_QuizzUser_idx")
 }
 
@@ -158,15 +143,6 @@ model role {
   idRole   Int     @id @default(autoincrement())
   nameRole String? @db.VarChar(255)
   users    users[]
-}
-
-model statustype {
-  idStatusType   Int              @id @default(autoincrement())
-  nameStatusType String?          @db.VarChar(255)
-  assignmentuser assignmentuser[]
-  courseuser     courseuser[]
-  lessonuser     lessonuser[]
-  quizzuser      quizzuser[]
 }
 
 model users {
@@ -181,6 +157,7 @@ model users {
   courseuser     courseuser[]
   lessonuser     lessonuser[]
   purchase       purchase[]
+  questionuser   questionuser[]
   quizzuser      quizzuser[]
   role           role             @relation(fields: [roleId], references: [idRole], onDelete: NoAction, onUpdate: NoAction, map: "FK_Role_User")
 
@@ -219,4 +196,16 @@ model purchase {
 
   @@index([idCourse], map: "FK_Course_Purchase_idx")
   @@index([idUser], map: "FK_User_Purchase_idx")
+}
+
+model questionuser {
+  idQuestion Int
+  idUser     Int
+  choiced    String?   @db.VarChar(1)
+  isCorrect  Boolean?
+  questions  questions @relation(fields: [idQuestion], references: [idQuestion], onDelete: NoAction, onUpdate: NoAction, map: "FK_Question")
+  users      users     @relation(fields: [idUser], references: [idUser], onDelete: NoAction, onUpdate: NoAction, map: "FK_Users")
+
+  @@id([idQuestion, idUser])
+  @@index([idUser], map: "FK_Users_idx")
 }
