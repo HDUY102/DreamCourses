@@ -52,6 +52,7 @@
     "react-quill": "^2.0.0",
     "react-toastify": "^10.0.5",
     "recharts": "^2.12.2",
+    "swr": "^2.2.5",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "universal-cookie": "^6.1.1",

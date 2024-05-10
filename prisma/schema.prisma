@@ -46,8 +46,8 @@ model chapters {
 
 model courses {
   idCourse    Int          @id @default(autoincrement())
-  titleCourse String?      @db.VarChar(255)
-  price       Int?
+  titleCourse String       @db.VarChar(255)
+  price       Int
   introduce   String?      @db.VarChar(255)
   image       String?      @db.VarChar(255)
   teacherId   Int

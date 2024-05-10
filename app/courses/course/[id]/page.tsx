@@ -9,12 +9,23 @@ import { useCoursesStore } from "@/app/lib/hooks/useCoursesStore";
 import { useChapterStore } from "@/app/lib/hooks/useChapterStore";
 import { useLessonsStore } from "@/app/lib/hooks/useLessonsStore";
 import Image from "next/image";
+import { ToastContainer,toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Page = () => {
+  const notify: any = () =>
+    toast.success("Đăng ký khóa học thành công!", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+  });
   const { id } = useParams();
   const idCourse = parseInt(id as string)
-//   const chapters(idCourse:number)=
-  const idLessons = Array.isArray(id) ? parseInt(id[0]) : parseInt(id as string);
   
   const course = useCoursesStore.getState().getCourseById(idCourse)[0];
   const teacherName = course
@@ -33,7 +44,6 @@ const Page = () => {
 
   const [numLessons, setNumLessons] = useState(0);
 
-  const [userId, setUserId] = useState("");
 
   useEffect(() => {
     const token = sessionStorage.getItem("token");
@@ -61,51 +71,65 @@ const Page = () => {
     }
   }, [completedLessons, lessons, selectedLesson]);
 
-  //   const handleRegisterCourse = () => {
-  //     if (!isLoggedIn) {
-  //       alert("Bạn cần phải đăng nhập!");
-  //     } else {
-  //       const selectedCourse = courses.find(
-  //         (course) => course.idCourse === idCourse
-  //       );
-  //       if (selectedCourse && selectedCourse.price > 0) {
-  //         window.location.href = `/payment/${idCourse}`;
-  //       } else {
-  //         const token = sessionStorage.getItem("token");
-  //         if (token) {
-  //           const decodedToken = JSON.parse(atob(token.split(".")[1]));
-  //           const userId = decodedToken.idUser;
-  //           const userCourses = JSON.parse(localStorage.getItem(userId) || "[]");
+    const handleRegisterCourse = () => {
+      if (!isLoggedIn) {
+        alert("Bạn cần phải đăng nhập!");
+      } else {
+        const selectedCourse = courses.find(
+          (course) => course.idCourse === idCourse
+        );
+        if (selectedCourse && selectedCourse.price > 0) {
+          window.location.href = `/payment/${idCourse}`;
+        } else {
+          const token = sessionStorage.getItem("token");
+          if (token) {
+            const decodedToken = JSON.parse(atob(token.split(".")[1]));
+            const userId = decodedToken.idUser;
+            const userCourses = JSON.parse(localStorage.getItem(userId) || "[]");
+            const fetchMyCourse = async () => {
+              const response = await fetch(`/api/students/courses/${idCourse}`,{
+                method:'POST',
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                }
+              })
+              if(response.ok){
+                notify()
+              }else{
+                console.log("Đăng ký thất bại")
+              }
+            }
+            fetchMyCourse()
+            if (!userCourses.includes(idCourse)) {
+              userCourses.push(idCourse);
+              localStorage.setItem(userId, JSON.stringify(userCourses));
+            }
+          } else {
+            console.error("No user token found");
+          }
 
-  //           if (!userCourses.includes(idCourse)) {
-  //             userCourses.push(idCourse);
-  //             localStorage.setItem(userId, JSON.stringify(userCourses));
-  //           }
-  //         } else {
-  //           console.error("No user token found");
-  //         }
+          // Tìm chương đầu tiên và bài học của khóa học
+          const chaptersForCourse = chapters.filter(
+            (chapter) => chapter.courseId === idCourse
+          );
+          const firstChapter = chaptersForCourse[0];
+          const lessonsForChapter = lessons.filter(
+            (lesson) => lesson.chapterId === firstChapter.idChapter
+          );
+          const firstLessonId = lessonsForChapter[0].idLessons;
 
-  //         // Tìm chương đầu tiên và bài học của khóa học
-  //         const chaptersForCourse = chapters.filter(
-  //           (chapter) => chapter.courseId === idCourse
-  //         );
-  //         const firstChapter = chaptersForCourse[0];
-  //         const lessonsForChapter = lessons.filter(
-  //           (lesson) => lesson.chapterId === firstChapter.idChapter
-  //         );
-  //         const firstLessonId = lessonsForChapter[0].idLessons;
+          // Thêm bài học đầu tiên vào mảng CompleteLessons
+          setCompletedLessons((prevCompletedLessons) => [
+            ...prevCompletedLessons,
+            firstLessonId,
+          ]);
 
-  //         // Thêm bài học đầu tiên vào mảng CompleteLessons
-  //         setCompletedLessons((prevCompletedLessons) => [
-  //           ...prevCompletedLessons,
-  //           firstLessonId,
-  //         ]);
-
-  //         const newUrl = `/courses/learning/${idCourse}/${firstLessonId}`;
-  //         window.location.href = newUrl;
-  //       }
-  //     }
-  //   };
+          // const newUrl = `/courses/learning/${idCourse}/${firstLessonId}`;
+          // window.location.href = newUrl;
+        }
+      }
+    };
 
   useEffect(() => {
     // Lọc các chương theo ID khóa học
@@ -152,13 +176,13 @@ const Page = () => {
       }
     }
 
-    return selectedCourse
+    return selectedCourse && selectedCourse.price>0
       ? "Mua khoá học"
       : "Đăng kí học";
   };
 
   return (
-    <>
+    <div>
       <div className="sticky top-0 z-10">
         <HeaderNav />
       </div>
@@ -174,11 +198,12 @@ const Page = () => {
       <div className="md:col-span-1 md:mt-0">
           <div className="float-right mx-2 mt-4">
             <button
-              //   onClick={handleRegisterCourse}
+              onClick={handleRegisterCourse}
               className="bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline mr-10"
             >
-              {/* {buttonText()} */}
+              {buttonText()}
             </button>
+            <ToastContainer />
           </div>
       </div>
       <div className=" ml-3 mb-48">
@@ -272,7 +297,7 @@ const Page = () => {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 };
 
