@@ -5,12 +5,13 @@ import {Droppable, DragDropContext,
     Draggable, DropResult
 } from "@hello-pangea/dnd"
 import {cn} from "@/lib/utils"
-import {Grip, Pencil, PlusCircle, Trash, X} from "lucide-react"
+import {Grip, Pencil, Trash, X} from "lucide-react"
 import { lessons } from '@prisma/client'
 import Link from 'next/link'
 import ConfirmDelete from "@/app/components/ConfirmDelete";
 import { toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaQuestionCircle } from 'react-icons/fa';
 
 interface LessonListProps{
     items: lessons[],
@@ -129,7 +130,7 @@ const LessonList = ({items,onReorder}:LessonListProps) => {
                                             {lesson.isPublished ?"Công khai" : "Không công khai"}
                                         </div>
                                         <Link href={`/teacher/lesson/createQuizz/${lesson.idLessons}`}>
-                                            <PlusCircle className="h-4 w-4 hover:text-sky-400 ml-2 cursor-pointer transition" />
+                                            <FaQuestionCircle className="h-4 w-4 hover:text-sky-400 ml-2 cursor-pointer transition" />
                                         </Link>
                                         <Link href={`/teacher/lesson/updateLesson/${lesson.idLessons}`}>
                                             <Pencil className="h-4 w-4 hover:text-green-400 ml-2 cursor-pointer transition" />
