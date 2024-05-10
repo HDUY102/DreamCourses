@@ -23,73 +23,25 @@ const CreateQuizz = () => {
   if (!token) {
     router.push('/login')
   }
-  const notify: any = () =>toast.success("Tạo Quizz bài học thành công!", {
-      position: "top-right",
-      autoClose: 2500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-  });
-
   const [question, setQuestion] = useState<any>(null);
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-  });
-
-  const [isPublished, setIsLocked] = useState(true);
-  const toggleLock = () => {
-    setIsLocked(!isPublished);
-  };
 
   //Trở về trang trước
   const handleCancel = () => {
     router.back();
   };
 
-  const { id } = useParams();
-  const idLesson = parseInt(id as string);
   const [lesson, setLesson] = useState<any>(null);
   const { register,setValue, handleSubmit, formState: { errors } } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
   
-
-  const onSubmit = async (values: any) => {
-    const isPublishValue = isPublished ? true : false;
-    const formValues = {
-      titleLessons: values.titleLessons,
-      isPublished: isPublishValue
-    };
-    console.log(formValues);
-    const respone = await fetch(`/api/lesson/${idLesson}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formValues),
-    });
-
-    if (respone.ok) {
-      notify();
-      setTimeout(() => {
-        router.back();
-      }, 3000);
-    } else {
-      console.error("Error during update:", respone.statusText);
-    }
-  };
-
   return (
     <div className="flex">
       <div className={styles.menu}>
         <Sidebar />
       </div>
       <div className={styles.contentmenu}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form>
           <h1 className="mt-2 ml-4 font-bold text-2xl">Tạo Quizz</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
             <div>
@@ -107,27 +59,6 @@ const CreateQuizz = () => {
               </div>
             </div>
             <div className="space-y-6">
-                {/* <div className="flex justify-end mr-4">
-                    {isPublished ? (
-                    <button
-                        type="button"
-                        onClick={toggleLock}
-                        className="bg-green-400 text-white rounded-lg mr-2 text-sm p-2 flex items-center"
-                    >
-                        <LuBookOpenCheck className="mr-1 text-base" />
-                        Công khai
-                    </button>
-                    ) : (
-                    <button
-                        type="button"
-                        onClick={toggleLock}
-                        className="bg-red-400 text-white rounded-lg mr-2 p-2 text-sm flex items-center"
-                    >
-                        <LuBookOpen className="mr-1 text-base" />
-                        Không công khai
-                    </button>
-                    )}
-                </div> */}
                 <div className="flex items-center gap-x-2">
                     <FaQuestionCircle className={styles.icon} />
                     <h2 className="text-xl">Danh sách câu hỏi</h2>

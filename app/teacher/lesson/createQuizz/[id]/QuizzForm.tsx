@@ -20,8 +20,9 @@ import { useParams } from "next/navigation";
 import { quizzs, lessons } from "@prisma/client";
 
 const titleSchema = z.object({
-  nameQuizz: z.string(),
-  description: z.string()});
+  nameQuizz: z.string().min(1, { message: "Tên Quizz không được bỏ trống" }),
+  description: z.string().min(1, { message: "Mô tả không được bỏ trống" })
+});
 
 interface QuizzFormProps {initialData: lessons & { quizz: quizzs}}
 

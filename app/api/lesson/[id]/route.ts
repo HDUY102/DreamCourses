@@ -22,7 +22,6 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 export async function DELETE( request: NextRequest, { params }: { params: { id: string }}) {
   let idCheck = parseInt(params.id);
   if (idCheck !== -1) {
-    console.log("findLesson ")
     const findLessonUser = await prisma.lessonuser.count({where: {lessonId: idCheck}})
     if(findLessonUser){
       return NextResponse.json({message: "Đã có người học, không cho xóa!"}, {status: 200})
