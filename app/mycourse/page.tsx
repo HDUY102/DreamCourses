@@ -5,19 +5,20 @@ import Image from "next/image";
 import HeaderNav from "@/app/components/HeaderNav";
 import Footer from "@/app/components/Footer";
 import { useCoursesStore } from "@/app/lib/hooks/useCoursesStore";
-import { courses } from "@prisma/client";
+import { useRouter } from "next/navigation";
+import { useTeacherStore } from "../lib/hooks/useTeacherStore";
 
 const MyCoursePage = () => {
-  const [myCourses, setMyCourses] = useState<courses[]>([]);
-  const [courseDetails, setCourseDetails] = useState([]);
+  const router = useRouter()
+  const [myCourses, setMyCourses] = useState([]);
   const [teacherNames, setTeacherNames] = useState({});
-  const { courses, fetchDataCourses } = useCoursesStore();
   const token = sessionStorage.getItem("token");
-
-  const fetchMyCourses = async () => {
-      const token = sessionStorage.getItem("token");
-      if (!token) return;
-      
+  if (!token){
+    router.push("/login")
+  };
+  
+  useEffect(() => {
+    const fetchMyCourses = async () => {
       try {
           const response = await fetch("/api/students/mycourse", {
               method: "GET",
@@ -29,60 +30,28 @@ const MyCoursePage = () => {
 
           if (response.ok) {
               const data = await response.json();
-              setMyCourses(data.course);
+              setMyCourses(data.courses);
           } else {
               console.error("Failed to fetch courses");
           }
       } catch (error) {
           console.error("Error fetching courses:", error);
       }
-  };
-  useEffect(() => {
-
-    fetchMyCourses();
+    };
+    fetchMyCourses()
   }, []);
 
   useEffect(() => {
-    if (token) {
-      const decodedToken = JSON.parse(atob(token.split(".")[1]));
-      const userId = decodedToken.idUser;
-      const storedCourses = JSON.parse(localStorage.getItem(userId) || "[]");
-      console.log("storedCourses",storedCourses)
-      setMyCourses(storedCourses);
-    }
-
-    fetchDataCourses();
-  }, [fetchDataCourses]);
-
-    useEffect(() => {
-      fetchMyCourses()
-      if (myCourses && myCourses.length > 0 && courses.length > 0) {
-        const filteredCourses = courses.filter((course) =>
-          myCourses.includes(course.idCourse)
-        );
-        setCourseDetails(filteredCourses);
-      }
-    }, [courses, myCourses]);
-
-  
-  useEffect(() => {
     const fetchTeacherNames = async () => {
       const teacherNamesData = {};
-      for (const course of courseDetails) {
-        const teacherName = await useCoursesStore
-          .getState()
-          .getTeacherUsername(course.teacherId);
+      for (const course of myCourses) {
+        const teacherName = course.users.username;
         teacherNamesData[course.idCourse] = teacherName;
       }
       setTeacherNames(teacherNamesData);
     };
-  
     fetchTeacherNames();
-  }, [courseDetails]);
-
-
-  // console.log("courseDetails", courseDetails)
-  // console.log("courseDetails.length", courseDetails.length )
+  }, [myCourses]);
 
   return (
     <>
@@ -94,12 +63,12 @@ const MyCoursePage = () => {
           <h1 className="text-2xl font-bold mb-6">Khoá học của tôi</h1>
           <div className="flex flex-row -mx-3 lg:flex-row lg:flex-wrap ">
             <>
-              {courseDetails.length === 0 ? (
+              {myCourses?.length === 0 ? (
                 <div className="text-center text-lg px-3 h-[468px]">
                   Bạn chưa có bất kì khoá học nào !
                 </div>
               ) : (
-                courseDetails.map((course, index) => (
+                myCourses.map((course, index) => (
                   <div
                     key={index}
                     className="flex-none w-full lg:w-1/3 md:w-1/2 px-3 mb-10"
@@ -120,7 +89,7 @@ const MyCoursePage = () => {
                         {/* ) : null} */}
                         <div className="p-4">
                           <h2 className="text-xl font-semibold mb-2">
-                            {course.titleCourse}
+                            {course.titleCourse} 
                           </h2>
                           <p className="text-gray-700">
                             Bởi :{" "}
