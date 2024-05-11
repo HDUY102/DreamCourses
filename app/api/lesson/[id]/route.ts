@@ -65,6 +65,7 @@ export async function PUT(req: NextRequest,{params}:{params:{id: string}}){
       data:{
         titleLessons: body.titleLessons,
         isPublished: body.isPublished,
+        videoUrl: body.videoUrl
       }
     });
 
@@ -100,35 +101,30 @@ export async function PUT(req: NextRequest,{params}:{params:{id: string}}){
     //   }
     // })
 
-      const lesson = await prisma.lessons.findUnique({
-        where: { idLessons: idCheck },
-        include: { videolesson: true },
-      });
+      // const lesson = await prisma.lessons.findUnique({
+      //   where: { idLessons: idCheck },
+      //   include: { videolesson: true },
+      // });
   
-      if (!lesson) {
-        return NextResponse.json({ message: "Bài học không tồn tại" }, { status: 404 });
-      }
+      // if (!lesson) {
+      //   return NextResponse.json({ message: "Bài học không tồn tại" }, { status: 404 });
+      // }
   
-      if (body.videoUrl) {
-        if (lesson.videolesson && Array.isArray(lesson.videolesson) && lesson.videolesson.length > 0) {
-          const videoId = lesson.videolesson[0].idVideo; // Lấy idVideo từ phần tử đầu tiên
-          await prisma.videolesson.delete({ where: { idVideo: videoId } });
-        }
+      // if (body.videoUrl) {
+      //   if (lesson.videolesson && Array.isArray(lesson.videolesson) && lesson.videolesson.length > 0) {
+      //     const videoId = lesson.videolesson[0].idVideo; // Lấy idVideo từ phần tử đầu tiên
+      //     await prisma.videolesson.delete({ where: { idVideo: videoId } });
+      //   }
   
-        // Tạo video mới
-        const createVideo = await prisma.videolesson.create({
-          data: {
-            idLesson: idCheck,
-            idAsset: body.videoUrl,
-            idPlayback: body.idPlayback
-          },
-        });
-      }
-    // const asset = await Video.Assets.create({
-    //   input: body.videoUrl,
-    //   playback_policy: "public",
-    //   test: false,
-    // })
+      //   // Tạo video mới
+      //   const createVideo = await prisma.videolesson.create({
+      //     data: {
+      //       idLesson: idCheck,
+      //       idAsset: body.videoUrl,
+      //       idPlayback: body.idPlayback
+      //     },
+      //   });
+      // }
     return NextResponse.json({ updatelesson: updateLesson, attachment: createAttachment, message: "Cập nhật thành công", status: 202 })
   }catch(error){
     return NextResponse.json({message: "Lỗi ",},{status: 500})

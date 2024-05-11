@@ -43,10 +43,10 @@ const Page = () => {
 
 
   const [numLessons, setNumLessons] = useState(0);
+  const token = sessionStorage.getItem("token");
 
 
   useEffect(() => {
-    const token = sessionStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true);
       const decodedToken = JSON.parse(atob(token.split(".")[1]));
@@ -81,7 +81,6 @@ const Page = () => {
         if (selectedCourse && selectedCourse.price > 0) {
           window.location.href = `/payment/${idCourse}`;
         } else {
-          const token = sessionStorage.getItem("token");
           if (token) {
             const decodedToken = JSON.parse(atob(token.split(".")[1]));
             const userId = decodedToken.idUser;
@@ -125,8 +124,8 @@ const Page = () => {
             firstLessonId,
           ]);
 
-          // const newUrl = `/courses/learning/${idCourse}/${firstLessonId}`;
-          // window.location.href = newUrl;
+          const newUrl = `/courses/learning/${idCourse}/${firstLessonId}`;
+          window.location.href = newUrl;
         }
       }
     };
@@ -135,7 +134,7 @@ const Page = () => {
     // Lọc các chương theo ID khóa học
     const chaptersForCourse = chapters.filter(
       (chapter) => chapter.courseId === idCourse
-    );
+    );  
 
     // Tính số bài học trong các chương của khóa học
     const totalLessons = chaptersForCourse.reduce((total, chapter) => {
@@ -166,7 +165,6 @@ const Page = () => {
     );
 
     // Check if the course is already registered for the user
-    const token = sessionStorage.getItem("token");
     if (token) {
       const decodedToken = JSON.parse(atob(token.split(".")[1]));
       const userId = decodedToken.idUser;

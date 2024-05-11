@@ -64,8 +64,8 @@ model courseuser {
   userId     Int
   courseId   Int
   isFinished Boolean?
-  courses    courses  @relation(fields: [courseId], references: [idCourse], onDelete: Cascade, onUpdate: Cascade, map: "FK_Course_CourseUser")
-  users      users    @relation(fields: [userId], references: [idUser], onDelete: Cascade, onUpdate: Cascade, map: "FK_User_CourseUser")
+  courses    courses  @relation(fields: [courseId], references: [idCourse], onDelete: NoAction, onUpdate: NoAction, map: "FK_Course_CourseUser")
+  users      users    @relation(fields: [userId], references: [idUser], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_CourseUser")
 
   @@id([userId, courseId])
   @@index([courseId], map: "FK_Course_CourseUser_idx")
@@ -83,7 +83,6 @@ model lessons {
   chapters     chapters      @relation(fields: [chapterId], references: [idChapter], onDelete: NoAction, onUpdate: NoAction, map: "FK_Chapter_Lessons")
   lessonuser   lessonuser[]
   quizzs       quizzs?
-  videolesson  videolesson[]
 
   @@index([chapterId], map: "FK_Chapter_Lessons_idx")
 }
@@ -162,16 +161,6 @@ model users {
   role           role             @relation(fields: [roleId], references: [idRole], onDelete: NoAction, onUpdate: NoAction, map: "FK_Role_User")
 
   @@index([roleId], map: "FK_Role_User_idx")
-}
-
-model videolesson {
-  idVideo    Int     @id @default(autoincrement())
-  idLesson   Int
-  idAsset    String  @db.VarChar(255)
-  idPlayback String? @db.VarChar(255)
-  lessons    lessons @relation(fields: [idLesson], references: [idLessons], onDelete: NoAction, onUpdate: NoAction, map: "FK_Lesson_Video")
-
-  @@index([idLesson], map: "FK_Lesson_Video_idx")
 }
 
 model payment {

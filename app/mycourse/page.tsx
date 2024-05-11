@@ -52,7 +52,7 @@ const MyCoursePage = () => {
     };
     fetchTeacherNames();
   }, [myCourses]);
-
+  console.log("Mycourse ",myCourses)
   return (
     <>
       <div className="sticky top-0 z-10">
@@ -74,7 +74,7 @@ const MyCoursePage = () => {
                     className="flex-none w-full lg:w-1/3 md:w-1/2 px-3 mb-10"
                   >
                     <Link
-                      href={`/courses/course/${course.idCourse}`}
+                      href={`/courses/learning/${course.idCourse}/${course.chapters[0]?.lessons[0]?.idLessons}`}
                       legacyBehavior
                       className="flex flex-col h-full w-full"
                     >
@@ -86,7 +86,6 @@ const MyCoursePage = () => {
                           alt="Hình"
                           className="w-full h-40 object-cover"
                         />
-                        {/* ) : null} */}
                         <div className="p-4">
                           <h2 className="text-xl font-semibold mb-2">
                             {course.titleCourse} 
