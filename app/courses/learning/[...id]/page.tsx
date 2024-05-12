@@ -175,7 +175,7 @@ const Page = () => {
                   videoUrl={selectedLesson.videoUrl}
                 />
               ) : (
-                <div>No video available</div>
+                <div>Chưa có Video</div>
               )}
             </div>
             <div className="flex justify-between">
