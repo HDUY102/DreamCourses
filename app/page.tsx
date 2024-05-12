@@ -18,7 +18,7 @@ export default function Home() {
   useEffect(() => {
     const fetchAllCourses = async () => {
       try {
-          const response = await fetch("/api/students/courses", {
+          const response = await fetch("/api/students/courses/homeCourses", {
               method: "GET",
               headers: {
                   Authorization: `Bearer ${token}`,

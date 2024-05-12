@@ -4,7 +4,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import Footer from "@/app/components/Footer";
 import HeaderNav from "@/app/components/HeaderNav";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useCoursesStore } from "@/app/lib/hooks/useCoursesStore";
 import { useChapterStore } from "@/app/lib/hooks/useChapterStore";
 import { useLessonsStore } from "@/app/lib/hooks/useLessonsStore";
@@ -13,6 +13,7 @@ import { ToastContainer,toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Page = () => {
+  const router = useRouter()
   const notify: any = () =>
     toast.success("Đăng ký khóa học thành công!", {
       position: "top-right",
@@ -24,14 +25,19 @@ const Page = () => {
       progress: undefined,
       theme: "light",
   });
+  const token = sessionStorage.getItem("token");
+  if (!token){
+    router.push("/login")
+  };
+
   const { id } = useParams();
   const idCourse = parseInt(id as string)
-  
+  // const course = courses.find(course => course.idCourse === idCourse);
   const course = useCoursesStore.getState().getCourseById(idCourse)[0];
   const teacherName = course
     ? useCoursesStore.getState().getTeacherUsername(course.teacherId)
     : "";
-  const { isLoadingCourses, courses, fetchDataCourses } = useCoursesStore();
+  const { isLoadingCourses,courses, fetchDataCourses } = useCoursesStore();
   const { isLoadingLessons, lessons, fetchDataLessons,getLessonsByChapterId } = useLessonsStore();
   const { chapters, fetchDataChapters } = useChapterStore();
 
@@ -43,8 +49,6 @@ const Page = () => {
 
 
   const [numLessons, setNumLessons] = useState(0);
-  const token = sessionStorage.getItem("token");
-
 
   useEffect(() => {
     if (token) {
@@ -164,7 +168,6 @@ const Page = () => {
       (course) => course.idCourse === idCourse
     );
 
-    // Check if the course is already registered for the user
     if (token) {
       const decodedToken = JSON.parse(atob(token.split(".")[1]));
       const userId = decodedToken.idUser;
