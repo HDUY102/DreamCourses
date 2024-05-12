@@ -4,9 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import HeaderNav from "@/app/components/HeaderNav";
 import Footer from "@/app/components/Footer";
-import { useCoursesStore } from "@/app/lib/hooks/useCoursesStore";
 import { useRouter } from "next/navigation";
-import { useTeacherStore } from "../lib/hooks/useTeacherStore";
 
 const MyCoursePage = () => {
   const router = useRouter()
@@ -52,7 +50,6 @@ const MyCoursePage = () => {
     };
     fetchTeacherNames();
   }, [myCourses]);
-  console.log("Mycourse ",myCourses)
   return (
     <>
       <div className="sticky top-0 z-10">

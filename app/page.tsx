@@ -5,38 +5,52 @@ import Image from "next/image";
 import { FaShoppingCart } from "react-icons/fa";
 import HeaderNav from "./components/HeaderNav";
 import Footer from "./components/Footer";
-import { useCoursesStore } from "./lib/hooks/useCoursesStore";
-
-interface TeacherData {
-  courseId: number;
-  teacherName: string | null;
-}
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const { isLoadingCourses, courses, fetchDataCourses } = useCoursesStore();
-  const [teacherNames, setTeacherNames] = useState<TeacherData[]>([]);
+  const [coursesAll, setCoursesAll] = useState([])
+  const [teacherNames, setTeacherNames] = useState({});
+  const router = useRouter()
+  const token = sessionStorage.getItem("token");
+  if (!token){
+    router.push("/login")
+  };
+  useEffect(() => {
+    const fetchAllCourses = async () => {
+      try {
+          const response = await fetch("/api/students/courses", {
+              method: "GET",
+              headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+              },
+          });
 
+          if (response.ok) {
+              const data = await response.json();
+              setCoursesAll(data.courses);
+          } else {
+              console.error("Failed to fetch courses");
+          }
+      } catch (error) {
+          console.error("Error fetching courses:", error);
+      }
+    };
+    fetchAllCourses()
+  }, []);
   useEffect(() => {
     const fetchTeacherNames = async () => {
-      const teacherNamesData: TeacherData[] = [];
-      for (const course of courses) {
-        const teacherName = await useCoursesStore
-          .getState()
-          .getTeacherUsername(course.teacherId);
-        teacherNamesData.push({ courseId: course.idCourse, teacherName });
+      const teacherNamesData = {};
+      for (const course of coursesAll) {
+        console.log("courseall: ", coursesAll)
+        console.log("course: ", course)
+        const teacherName = course.users.username;
+        teacherNamesData[course.idCourse] = teacherName;
       }
       setTeacherNames(teacherNamesData);
     };
-
     fetchTeacherNames();
-  }, [courses]);
-
-  useEffect(() => {
-    fetchDataCourses();
-    return () => {
-      // resetSearchResults();
-    };
-  }, [fetchDataCourses]);
+  }, [coursesAll]);
 
   const [cartItems, setCartItems] = useState([]);
 
@@ -58,7 +72,7 @@ export default function Home() {
             Các khoá học tại Dream Courses
           </h1>
           <div className="flex flex-row -mx-3 lg:flex-row lg:flex-wrap ">
-            {courses.map((course, index) => (
+            {coursesAll.map((course, index) => (
               <div
                 key={index}
                 className="flex-none w-full lg:w-1/3 md:w-1/2 px-3 mb-10"
@@ -85,9 +99,7 @@ export default function Home() {
                       <p className="text-gray-700">
                         Bởi :{" "}
                         <span className="font-bold text-lg">
-                          {teacherNames.find(
-                            (item) => item.courseId === course.idCourse
-                          )?.teacherName || ""}
+                          {teacherNames[course.idCourse]}
                         </span>
                       </p>
                     </div>
