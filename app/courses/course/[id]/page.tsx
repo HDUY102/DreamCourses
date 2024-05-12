@@ -242,7 +242,7 @@ const Page = () => {
                   <span className="font-bold">
                     {
                       chapters.filter(
-                        (chapter) => chapter.courseId === idCourse
+                        (chapter) => chapter.courseId === idCourse && chapter.isPublished
                       ).length
                     }{" "}
                   </span>
@@ -256,7 +256,7 @@ const Page = () => {
             </div>
 
             <ul>
-              {chapters.filter((chapter) => chapter.courseId === idCourse).map((chapter) => (
+              {chapters.filter((chapter) => chapter.courseId === idCourse && chapter.isPublished).map((chapter) => (
                   <li key={chapter.idChapter}>
                     <button
                         onClick={() => toggleShowLessons(chapter.idChapter)}
@@ -277,7 +277,7 @@ const Page = () => {
                       <ul>
                         {lessons
                           .filter(
-                            (lesson) => lesson.chapterId === chapter.idChapter
+                            (lesson) => lesson.chapterId === chapter.idChapter && lesson.isPublished
                           )
                           .map((lesson, lessonIndex) => (
                             <li

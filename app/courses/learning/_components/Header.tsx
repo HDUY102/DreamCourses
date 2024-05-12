@@ -16,10 +16,10 @@ const Header = ({ completedPercentage }:any) => {
       </span>
       <div className="p-2 flex">
         <Link
-          href={`/courses/course/${course?.idCourse}`}
+          href={`/mycourse`}
           className="flex absolute right-0 top-[15px] mr-14 hover:bg-accent hover:text-accent-foreground text-sm font-medium py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline mb-2"
         >
-          Trở lại khoá học
+          Khóa học của tôi
           <span>
             <IoIosArrowRoundForward className="ml-2" size={22} />
           </span>

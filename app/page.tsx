@@ -6,22 +6,20 @@ import { FaShoppingCart } from "react-icons/fa";
 import HeaderNav from "./components/HeaderNav";
 import Footer from "./components/Footer";
 import { useRouter } from "next/navigation";
+import { PurchaseButton } from "./payment/PurchaseButton";
 
 export default function Home() {
   const [coursesAll, setCoursesAll] = useState([])
   const [teacherNames, setTeacherNames] = useState({});
   const router = useRouter()
   const token = sessionStorage.getItem("token");
-  if (!token){
-    router.push("/login")
-  };
   useEffect(() => {
     const fetchAllCourses = async () => {
       try {
           const response = await fetch("/api/students/courses/homeCourses", {
               method: "GET",
               headers: {
-                  Authorization: `Bearer ${token}`,
+                  Authorization:  token ? `Bearer ${token}`:'',
                   "Content-Type": "application/json",
               },
           });
@@ -42,8 +40,6 @@ export default function Home() {
     const fetchTeacherNames = async () => {
       const teacherNamesData = {};
       for (const course of coursesAll) {
-        console.log("courseall: ", coursesAll)
-        console.log("course: ", course)
         const teacherName = course.users.username;
         teacherNamesData[course.idCourse] = teacherName;
       }
@@ -53,12 +49,6 @@ export default function Home() {
   }, [coursesAll]);
 
   const [cartItems, setCartItems] = useState([]);
-
-  // const addItemToCart = (course:any) => {
-  //   setCartItems([...cartItems, course]);
-  //   // setCartItems([...cartItems, course]);
-  //   console.log("Item added to cart:", course);
-  // };
 
   return (
     <>
@@ -71,7 +61,7 @@ export default function Home() {
           <h1 className="text-2xl font-bold mb-6 mt-4">
             Các khoá học tại Dream Courses
           </h1>
-          <div className="flex flex-row -mx-3 lg:flex-row lg:flex-wrap ">
+          <div className="flex flex-row -mx-3 lg:flex-row lg:flex-wrap">
             {coursesAll.map((course, index) => (
               <div
                 key={index}
@@ -82,7 +72,7 @@ export default function Home() {
                   legacyBehavior
                   className="flex flex-col h-full w-full"
                 >
-                  <div className="flex flex-col bg-white shadow-md hover:shadow-lg rounded-lg overflow-hidden">
+                  <div className="flex flex-col bg-white shadow-md hover:shadow-lg rounded-xl overflow-hidden hover:cursor-pointer hover:bg-white hover:shadow-black/75 transition-all">
                     {course.image ? (
                       <Image
                         width={279}
@@ -107,15 +97,14 @@ export default function Home() {
                 </Link>
                 <div className="p-4">
                   <div className="flex justify-between">
-                    <span className="text-gray-700 font-bold">
+                    <span className="text-gray-700 font-bold mt-2">
                       {course.price == 0 ? "Miễn phí" : `${course.price}₫`}
                     </span>
                     {course.price !== 0 && (
                       <button
-                        className="text-black font-bold py-2 px-4 rounded"
-                        // onClick={() => onAddToCart(course)}
+                        className="text-black font-bold px-4 rounded"
                       >
-                        <FaShoppingCart size={22} />
+                        <PurchaseButton courseId={course.idCourse}/>
                       </button>
                     )}
                   </div>

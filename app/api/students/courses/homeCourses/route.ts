@@ -4,30 +4,41 @@ import { verify, JwtPayload } from "jsonwebtoken";
 
 export async function GET(req: NextRequest) {
   const token = req.headers.get("Authorization")?.replace("Bearer ", "");
-  if (!token) {
-    return NextResponse.json("Unauthorized", { status: 401 });
-  }
   try {
-    const decodedToken = verify(token, "secret-key");
-    const user = decodedToken as JwtPayload;
-    const idUser = user.idUser;
+    let courses
+    if(token){
+      const decodedToken = verify(token, "secret-key");
+      const user = decodedToken as JwtPayload;
+      const idUser = user.idUser;
 
-    const courseuser = await prisma.courseuser.findMany({
-        where: { userId: idUser }
-    });
-    const courseIds = courseuser.map(course => course.courseId);
+      const courseuser = await prisma.courseuser.findMany({
+          where: { userId: idUser }
+      });
+      const courseIds = courseuser.map(course => course.courseId);
 
-    const courses = await prisma.courses.findMany({
+      courses = await prisma.courses.findMany({
+          where: {
+              isPublished: true,
+              idCourse: { notIn: courseIds }
+          },
+          include: {
+              users: {
+                  select: { username: true }
+              }
+          }
+      });
+    }else{
+      courses = await prisma.courses.findMany({
         where: {
-            isPublished: true,
-            idCourse: { notIn: courseIds }
-        },
-        include: {
-            users: {
-                select: { username: true }
-            }
-        }
-    });
+          isPublished: true
+      },
+      include: {
+          users: {
+              select: { username: true }
+          }
+      }
+      })
+    }
 
     return NextResponse.json({ courses: courses }, { status: 200 });
   } catch (error) {
