@@ -10,13 +10,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   const lessons = await prisma.lessons.findUnique({
     where:{idLessons: idCheck}
   });
-  const assignments = await prisma.assignments.findFirst({
-    where:{idLessons: idCheck}
-  })
-  const videolesson = await prisma.videolesson.findFirst({
-    where:{idLesson: idCheck}
-  })
-  return NextResponse.json({lesson: lessons, video: videolesson, assignment: assignments});
+  return NextResponse.json({lesson: lessons});
 }
 
 export async function DELETE( request: NextRequest, { params }: { params: { id: string }}) {

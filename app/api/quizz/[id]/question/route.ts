@@ -9,7 +9,7 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
         quizzs:{idLessons:idCheck}
       },
       orderBy: {
-        content: 'asc'
+        idQuestion: 'asc'
       }
     })
     return NextResponse.json(questions)

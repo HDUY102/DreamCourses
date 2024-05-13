@@ -2,18 +2,16 @@ import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { PlusCircle, Trash, Pencil } from "lucide-react";
 import { questions } from "@prisma/client";
-import Link from "next/link";
 import ConfirmDelete from "@/app/components/ConfirmDelete";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import QuestionPopup from "./QuestionPopup";
-import { useParams } from "next/navigation";
 
 interface QuestionProp {
-  items: questions[];
+  initialData: questions[];
 }
 
-const QuestionList = ({ items }: QuestionProp) => {
+const QuestionList = ({ initialData }: QuestionProp) => {
   const [isLoading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false)
   const [selectedQuestion, setSelectedQuestion] = useState<questions | null>(null);
@@ -76,30 +74,10 @@ const QuestionList = ({ items }: QuestionProp) => {
       setLoading(false);
     }
   };
-  //load lại list các question 
-  // const { id } = useParams();
-  // const idLesson = parseInt(id as string);
-  // const [question, setQuestion] = useState<questions[]>([]);
-  // const fetchQuestions = async () => {
-  //   try {
-  //     const response = await fetch(`/api/quizz/${idLesson}/question`);
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       setQuestion(data);
-  //       console.log("data ", data)
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching questions:", error);
-  //   }
-  // };
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     fetchQuestions();
-  //   }
-  // }, [isSuccess]);
+  console.log("initialData:", initialData);
   return (
     <div>
-      {items.map((question) => (
+      {initialData.map((question) => (
         <div
           key={question.idQuestion}
           className={cn(

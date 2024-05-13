@@ -14,7 +14,7 @@ interface QuestionFormProps {
 export const QuestionForm = ({ initialData }: QuestionFormProps) => {
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [question, setQuestion] = useState<questions[]>(initialData?.questions || []);
+  const [questions, setQuestions] = useState([]);
   const toggleCreating = () => setIsCreating((current) => !current);
   const [showPopup, setShowPopup] = useState(false)
 
@@ -25,8 +25,8 @@ export const QuestionForm = ({ initialData }: QuestionFormProps) => {
       const response = await fetch(`/api/quizz/${idLesson}/question`);
       if (response.ok) {
         const data = await response.json();
-        setQuestion(data);
-        console.log("data ", data)
+        setQuestions(data);
+        // console.log("data ", data)
       }
     } catch (error) {
       console.error("Error fetching questions:", error);
@@ -61,8 +61,8 @@ export const QuestionForm = ({ initialData }: QuestionFormProps) => {
         )}
         {!isCreating  && (
           <div className={cn("text-sm mt-2", !initialData?.questions?.length && "text-slate-500 italic")}>
-            {!question?.length && "Chưa có câu hỏi nào"}
-            <QuestionList items={question || []}/>
+            {!questions?.length && "Chưa có câu hỏi nào"}
+            <QuestionList initialData={questions || []}/>
           </div>
         )}
       </div>

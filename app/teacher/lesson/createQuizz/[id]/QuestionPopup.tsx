@@ -22,7 +22,12 @@ const QuestionSchema = z.object({
   Bcontent: z.string().min(1),
   Ccontent: z.string().min(1),
   Dcontent: z.string().min(1),
-  answer: z.string().min(1),
+  answer: z.string().min(1).max(1).refine((value) => {
+    return ['A', 'B', 'C', 'D'].includes(value.toUpperCase());
+  }, {
+    message: "Đáp án chỉ có thể là A, B, C hoặc D",
+    path: ['answer'],
+  }),
 });
 
 const QuestionPopup = ({isVisible,onClose, selectedQuestion}:any) => {
@@ -123,11 +128,6 @@ const QuestionPopup = ({isVisible,onClose, selectedQuestion}:any) => {
       }
     }
   }
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     onClose();
-  //   }
-  // }, [isSuccess]);
   return (
     <div id="wrapper" onClick={handleClose} className='flex justify-center items-center fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm'>
       <div className='w-[600px] flex flex-col'>
@@ -222,7 +222,7 @@ const QuestionPopup = ({isVisible,onClose, selectedQuestion}:any) => {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage>{form.errors.answer?.message}</FormMessage>
                   </FormItem>
               )}/>
               <Button disabled={!isValid || isSubmitting} type="button" onClick={form.handleSubmit(onSubmit)}>
