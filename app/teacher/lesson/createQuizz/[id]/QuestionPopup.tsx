@@ -222,7 +222,7 @@ const QuestionPopup = ({isVisible,onClose, selectedQuestion}:any) => {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage>{form.errors.answer?.message}</FormMessage>
+                    <FormMessage/>
                   </FormItem>
               )}/>
               <Button disabled={!isValid || isSubmitting} type="button" onClick={form.handleSubmit(onSubmit)}>
