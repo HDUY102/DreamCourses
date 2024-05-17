@@ -17,7 +17,8 @@ export async function POST(req: NextRequest, {params}:{params:{id: string}}){
             data:{
                 courseId: idCheck,
                 userId: idUser,
-                isFinished: false
+                isFinished: false,
+                dateRegistered: new Date()
             }
         })
     

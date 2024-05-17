@@ -11,12 +11,12 @@ export async function GET(request: NextRequest) {const token = request.headers.g
     const user = decodedToken as JwtPayload;
     const idUser = user.idUser;
     const result =
-      await prisma.$queryRaw`SELECT MONTH(u.dateCreate) as monthCreate, count(u.idUser) as count FROM courseuser cu
+      await prisma.$queryRaw`SELECT MONTH(cu.dateRegistered) as monthRegistered, count(u.idUser) as count FROM courseuser cu
       JOIN courses c On cu.courseId = c.idCourse 
       JOIN users u ON cu.userId = u.idUser
-      WHERE u.roleId=2 AND c.teacherId = ${idUser} GROUP BY MONTH(u.dateCreate);`;
+      WHERE u.roleId=2 AND c.teacherId = ${idUser} GROUP BY MONTH(cu.dateRegistered);`;
     result.forEach((revenueObject: any) => {
-      revenueObject.count = Number(revenueObject.count)*20000;
+      revenueObject.count = Number(revenueObject.count)*50000;
     });
     return NextResponse.json(result);
   } catch (error) {
