@@ -81,8 +81,7 @@ const UpdateLesson = () => {
           const data = await response.json();
           setLesson(data);
           setValue("titleLessons", data.lesson.titleLessons);
-          setIsLocked(data.isPublished)
-          console.log(data)
+          setIsLocked(data.lesson.isPublished)
         } else {
           console.error("Error fetching lesson:", response.statusText);
         }

@@ -36,6 +36,7 @@ export async function POST(request: NextRequest) {
         password: hashedPassword,
         roleId: 3,
         dateCreate: new Date(),
+        isLocked: false
       },
     });
     return NextResponse.json(

@@ -28,7 +28,7 @@ export default function ChartStudent() {
 
       const dataToShow = [0,0,0,0,0,0,0,0,0,0,0,0]
 
-      chartData.map(item => dataToShow[item.monthRegistered-1] = item.count);
+      chartData.map(item => dataToShow[item.monthCreated-1] = item.count);
 
       const newChart = new Chart(context, {
         type: "bar",

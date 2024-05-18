@@ -50,14 +50,6 @@ export async function DELETE(request: NextRequest,{ params }: { params: { id: st
               },
             },
           });
-    
-          await prisma.videolesson.deleteMany({
-            where: {
-              lessons: {
-                chapters: {courseId: idCheck},
-              },
-            },
-          });
           await prisma.lessons.deleteMany({
             where: {
               chapters: {courseId:idCheck},

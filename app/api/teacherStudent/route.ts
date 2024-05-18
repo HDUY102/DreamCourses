@@ -16,9 +16,11 @@ export async function GET(request: NextRequest) {
       JOIN courses c On cu.courseId = c.idCourse 
       JOIN users u ON cu.userId = u.idUser
       WHERE c.teacherId = ${idUser} GROUP BY MONTH(cu.dateRegistered);`;
-    result.forEach((studentObject: any) => {
-      studentObject.count = Number(studentObject.count);
-    });
+    if(Array.isArray(result)){
+      result.forEach((studentObject: any) => {
+        studentObject.count = Number(studentObject.count);
+      });
+    }
     return NextResponse.json(result);
   } catch (error) {
     console.error("Lỗi lấy courses:", error);

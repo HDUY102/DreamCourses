@@ -31,9 +31,6 @@ export async function DELETE( request: NextRequest, { params }: { params: { id: 
       await prisma.quizzs.deleteMany({
         where:{idLessons: idCheck}
       })
-      await prisma.videolesson.deleteMany({
-        where: {idLesson: idCheck,},
-      });
       await prisma.assignments.deleteMany({
         where: {idLessons: idCheck,},
       });

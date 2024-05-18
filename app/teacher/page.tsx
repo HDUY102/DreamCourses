@@ -2,10 +2,10 @@
 import React from "react";
 import styles from "@/app/teacher/Teacher.module.css";
 import Search from "@/app/layOut/search/Search";
-import LayoutCard from "@/app/layOut/layoutCard/LayoutCard";
-import Chart from "@/app/layOut/chart/Chart";
 import TeacherSidebar from "./sidebar/TeacherSidebar";
 import{useRouter} from "next/navigation"
+import LayoutCardTeacher from "../layOut/layoutCardTeacher/LayoutCardTeacher";
+import ChartTeacher from "../layOut/chartTeacher/ChartTeacher";
 const HomeTeacher = () => {
   const router = useRouter()
   const token = sessionStorage.getItem("token")
@@ -19,11 +19,11 @@ const HomeTeacher = () => {
         <TeacherSidebar />
       </div>
       <div className={styles.content}>
-        <Search />
+        {/* <Search /> */}
         <div className={styles.cards}>
-          <LayoutCard />
+          <LayoutCardTeacher />
         </div>
-        <Chart />
+        <ChartTeacher />
       </div>
     </div>
   );

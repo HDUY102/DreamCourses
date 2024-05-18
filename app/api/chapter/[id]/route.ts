@@ -46,16 +46,6 @@ export async function DELETE( request: NextRequest, { params }: { params: { id: 
           }
         }
       })
-
-      await prisma.videolesson.deleteMany({
-        where:{
-          lessons:{
-            chapters:{
-              idChapter: idCheck
-            }
-          }
-        }
-      })
       const deleteLesson = await prisma.lessons.deleteMany({
         where: {chapterId: idCheck},
       });

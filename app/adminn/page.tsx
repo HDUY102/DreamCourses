@@ -21,7 +21,7 @@ const AdminHome = () => {
         <Sidebar />
       </div>
       <div className={styles.content}>
-        <Search />
+        {/* <Search /> */}
         <div className={styles.cards}>
           <LayoutCard />
         </div>

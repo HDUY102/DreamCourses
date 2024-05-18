@@ -11,24 +11,30 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const Chart = () => {
+const ChartTeacher = () => {
   const [chartData, setChartData] = useState<{ count: number }[]>([]);
+  const token = sessionStorage.getItem("token");
   useEffect(()=>{
     const fetchTotalRevenue = async () => {
-      const response = await fetch(`/api/admin/homeAdmin`,{
-        method: "GET"
+      const response = await fetch(`/api/teacher/homeTeacher`,{
+        method: "GET",
+        headers:{
+          Authorization: `Bearer ${token}`,
+        }
       })
       if(response.ok){
         const data = await response.json()
         const revenueChart = data["Biểu đồ doanh thu: "];
 
         const formattedData = Array.from({ length: 12 }, (_, i) => ({
+          month: i + 1,
           count: 0,
+          revenue: 0
         }));
 
         revenueChart.forEach((item:any) => {
-          formattedData[item.monthCreate - 1].count = item.count;
-          console.log("item.monthCreate ",item.monthCreate-1)
+          formattedData[item.month - 1].count = item.count;
+          formattedData[item.month - 1].revenue = item.revenue;
         });
         setChartData(formattedData);
       }
@@ -51,12 +57,20 @@ const Chart = () => {
           }}
         >
           <XAxis dataKey="month" />
-          <YAxis />
+          <YAxis dataKey="revenue" />
           <Tooltip contentStyle={{ background: "#151c2c", border: "none" }} />
           <Legend />
           <Line
             type="monotone"
             dataKey="count"
+            name="Lượt đăng ký"
+            stroke="#8884d8"
+            strokeDasharray="5 5"
+          />
+          <Line
+            type="monotone"
+            dataKey="revenue"
+            name="Doanh thu"
             stroke="#8884d8"
             strokeDasharray="5 5"
           />
@@ -66,4 +80,4 @@ const Chart = () => {
   );
 };
 
-export default Chart;
+export default ChartTeacher;

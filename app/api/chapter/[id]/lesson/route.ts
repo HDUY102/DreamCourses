@@ -56,6 +56,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
         orderLesson: newOrder,
         isPublished: body.isPublished,
         chapterId: idCheck,
+        videoUrl: body.videoUrl
       },
     });
 
