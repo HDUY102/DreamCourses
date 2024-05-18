@@ -23,6 +23,7 @@ const cards = [
   },
 ];
 const LayoutCard = () => {
+  // const [totalStudents, setTotal]
   return (
     <div className={styles.container}>
       {cards.map((cat) => (
@@ -40,9 +41,6 @@ const LayoutCard = () => {
         </div>
       ))}
     </div>
-    // Quy định các phần tử nằm ngang
-    // Duyệt qua danh sách, ứng với mỗi phần tử tạo ra một div
-    // Trong mỗi div tạo ra item con tương ứng với title, number, change
   );
 };
 

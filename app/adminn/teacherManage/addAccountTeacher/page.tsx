@@ -56,7 +56,7 @@ const AddAccountTeacher = () => {
 
         <div className={styles.contentmenu}>
           <p className="text-center mt-20 text-emerald-800">
-            <b>DREAM LEARNING</b>
+            <b>DREAM COURSES</b>
           </p>
           <p className="text-center mt-2 text-gray-500">
             Tạo tài khoản Dream Courses cho giảng viên <br></br>để kết nối với hệ thống
@@ -69,7 +69,7 @@ const AddAccountTeacher = () => {
                   <input type="text" className='w-full p-2' placeholder="Username" {...form.register("username")}/>
                   <h5 className='mb-2'>Password</h5>
                   <input type="password" className='w-full p-2' placeholder="Password" {...form.register("password")}/>
-                  <button className="mt-4 mb-4 p-2 bg-emerald-500 rounded-lg w-full hover:bg-emerald-400 hover:text-primary" type="submit">ĐĂNG KÝ</button>
+                  <button className="mt-4 mb-4 p-2 bg-emerald-500 rounded-lg w-full hover:bg-emerald-400 hover:text-primary" type="submit">TẠO TÀI KHOẢN</button>
                 </form>
             </div>
           </div>
