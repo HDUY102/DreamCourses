@@ -38,7 +38,8 @@ const Page = () => {
     ? useCoursesStore.getState().getTeacherUsername(course.teacherId)
     : "";
   const { isLoadingCourses,courses, fetchDataCourses } = useCoursesStore();
-  const { isLoadingLessons, lessons, fetchDataLessons,getLessonsByChapterId } = useLessonsStore();
+  const { isLoadingLessons,lessons,  fetchDataLessons,getLessonsByChapterId } = useLessonsStore();
+  const [firstLessons,setFirstLessons] = useState<number | null>(null)
   const { chapters, fetchDataChapters } = useChapterStore();
 
   const [completedLessons, setCompletedLessons] = useState<number[]>([]);
@@ -63,6 +64,27 @@ const Page = () => {
     fetchDataChapters();
     fetchDataLessons();
   }, []);
+  const pushFirstLesson = async () => {
+      try {
+        const response = await fetch(`api/students/courses/${idCourse}`, {
+          method: "GET",
+          headers: {
+            // Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        console.log("response",response)
+        if(response.ok){
+          const data = await response.json()
+          setFirstLessons(data.checkLesson.idLessons)
+          console.log("data",data)
+          console.log("data.checkLesson.idLessons",data.checkLesson.idLessons)
+          console.log("firstLessons",firstLessons)
+        }
+      } catch (error) {
+        console.error("Error saving quiz to the database:", error);
+      }
+  };
 
   useEffect(() => {
     if (completedLessons.length > 0 && !selectedLesson) {
@@ -98,7 +120,8 @@ const Page = () => {
                 }
               })
               if(response.ok){
-                notify()
+                notify(),
+                await pushFirstLesson();
               }else{
                 console.log("Đăng ký thất bại")
               }
@@ -111,25 +134,17 @@ const Page = () => {
           } else {
             console.error("No user token found");
           }
-
-          // Tìm chương đầu tiên và bài học của khóa học
-          const chaptersForCourse = chapters.filter(
-            (chapter) => chapter.courseId === idCourse
-          );
-          const firstChapter = chaptersForCourse[0];
-          const lessonsForChapter = lessons.filter(
-            (lesson) => lesson.chapterId === firstChapter.idChapter
-          );
-          const firstLessonId = lessonsForChapter[0].idLessons;
-
+          // const firstLessonId = firstLessons?.idLessons;
+          // console.log(firstLessonId)
+          console.log("firstLessons",firstLessons)
           // Thêm bài học đầu tiên vào mảng CompleteLessons
-          setCompletedLessons((prevCompletedLessons) => [
-            ...prevCompletedLessons,
-            firstLessonId,
-          ]);
+          // setCompletedLessons((prevCompletedLessons) => [
+          //   ...prevCompletedLessons,
+          //   firstLessonId,
+          // ]);
 
-          const newUrl = `/courses/learning/${idCourse}/${firstLessonId}`;
-          window.location.href = newUrl;
+          // const newUrl = `/courses/learning/${idCourse}/${firstLessons}`;
+          // window.location.href = newUrl;
         }
       }
     };
