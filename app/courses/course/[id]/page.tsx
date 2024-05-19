@@ -32,14 +32,13 @@ const Page = () => {
 
   const { id } = useParams();
   const idCourse = parseInt(id as string)
-  // const course = courses.find(course => course.idCourse === idCourse);
   const course = useCoursesStore.getState().getCourseById(idCourse)[0];
   const teacherName = course
     ? useCoursesStore.getState().getTeacherUsername(course.teacherId)
     : "";
   const { isLoadingCourses,courses, fetchDataCourses } = useCoursesStore();
   const { isLoadingLessons,lessons,  fetchDataLessons,getLessonsByChapterId } = useLessonsStore();
-  const [firstLessons,setFirstLessons] = useState<number | null>(null)
+  const [firstLessons,setFirstLessons] = useState<any>(null);
   const { chapters, fetchDataChapters } = useChapterStore();
 
   const [completedLessons, setCompletedLessons] = useState<number[]>([]);
@@ -66,10 +65,9 @@ const Page = () => {
   }, []);
   const pushFirstLesson = async () => {
       try {
-        const response = await fetch(`api/students/courses/${idCourse}`, {
+        const response = await fetch(`/api/students/courses/${idCourse}`, {
           method: "GET",
           headers: {
-            // Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
@@ -77,14 +75,18 @@ const Page = () => {
         if(response.ok){
           const data = await response.json()
           setFirstLessons(data.checkLesson.idLessons)
-          console.log("data",data)
-          console.log("data.checkLesson.idLessons",data.checkLesson.idLessons)
-          console.log("firstLessons",firstLessons)
         }
       } catch (error) {
         console.error("Error saving quiz to the database:", error);
       }
   };
+
+  useEffect(() => {
+    if (firstLessons !== null) {
+      const newUrl = `/courses/learning/${idCourse}/${firstLessons}`;
+      window.location.href = newUrl;
+    }
+  }, [firstLessons, idCourse]);
 
   useEffect(() => {
     if (completedLessons.length > 0 && !selectedLesson) {
@@ -134,17 +136,6 @@ const Page = () => {
           } else {
             console.error("No user token found");
           }
-          // const firstLessonId = firstLessons?.idLessons;
-          // console.log(firstLessonId)
-          console.log("firstLessons",firstLessons)
-          // Thêm bài học đầu tiên vào mảng CompleteLessons
-          // setCompletedLessons((prevCompletedLessons) => [
-          //   ...prevCompletedLessons,
-          //   firstLessonId,
-          // ]);
-
-          // const newUrl = `/courses/learning/${idCourse}/${firstLessons}`;
-          // window.location.href = newUrl;
         }
       }
     };
