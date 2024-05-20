@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import * as z from "zod";
 import TitleForm from "./TitleForm";
-import { LuLayoutDashboard,LuFolderOpen ,LuBadgeDollarSign,LuFolderLock } from "react-icons/lu";
+import { LuLayoutDashboard,LuFolderOpen ,LuBadgeDollarSign,LuFolderLock, LuListTodo } from "react-icons/lu";
 import styles from "@/app/teacher/Teacher.module.css";
 import DescriptionForm from "./DescriptionForm";
 import { ImageForm } from "./ImageForm";
@@ -15,6 +15,7 @@ import Sidebar from "@/app/teacher/sidebar/TeacherSidebar";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ChapterCourse } from "./ChapterCourse";
 
 const formSchema = z.object({
   price: z.coerce.number().refine((val) => val % 1000 === 0, {message: "Giá tiền là số nguyên chia hết cho 1000"}),
@@ -22,6 +23,8 @@ const formSchema = z.object({
   introduce: z.string().min(1, { message: "Lời giới thiệu không được bỏ trống" }),
 });
 const CreateCourse = () => {
+  const [courseTest, setCourse] = useState<any>(null);
+  const [idCourse, setIdCourse] = useState<number | null>(null);
   const router = useRouter();
   const token = sessionStorage.getItem("token")
   if (!token) {
@@ -74,13 +77,9 @@ const CreateCourse = () => {
     });
 
     if (respone.ok) {
+      const data = await respone.json();
+      setIdCourse(data.courses.idCourse);
       notify();
-      setTimeout(() => {
-        router.push("/teacher/course");
-      }, 2000);
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
     } else {
       console.error("Error during Create:", respone.statusText);
     }
@@ -151,13 +150,20 @@ const CreateCourse = () => {
                   <PriceForm />
                   {form.formState.errors.price && <p className="text-red-500 ml-4">{form.formState.errors.price.message}</p>}
                 </div>
+                <div>
+                <div className="flex items-center gap-x-2">
+                  <LuListTodo className={styles.icon} />
+                  <h2 className="text-xl">Chương</h2>
+                </div>
+                <ChapterCourse initialData={courseTest} idCourse={idCourse} />
+              </div>
               </div>
             </div>
           </div>
           <div className="flex justify-end mb-3">
             <Link href={"/teacher/course"}>
               <button className="bg-sky-800 text-white rounded-lg mr-1 hover:text-white p-2 hover:bg-red-500 ">
-                Hủy
+                Trở lại
               </button>
             </Link>
             <Button

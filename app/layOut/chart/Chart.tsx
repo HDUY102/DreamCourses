@@ -37,7 +37,7 @@ const Chart = () => {
   },[])
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Doanh Thu</h2>
+      <h1 className="text-center text-2xl mb-10">Biểu Đồ Tổng Doanh Thu</h1>
       <ResponsiveContainer width="100%" height="90%">
         <LineChart
           width={500}
@@ -47,18 +47,19 @@ const Chart = () => {
             top: 5,
             right: 30,
             left: 20,
-            bottom: 5,
+            bottom: 10,
           }}
         >
           <XAxis dataKey="month" />
           <YAxis />
-          <Tooltip contentStyle={{ background: "#151c2c", border: "none" }} />
+          <Tooltip contentStyle={{ background: "#151c2c", border: "none" , content: "none"}} />
           <Legend />
           <Line
             type="monotone"
             dataKey="count"
-            stroke="#8884d8"
-            strokeDasharray="5 5"
+            name="Doanh thu"
+            stroke="#ff00ff"
+            // strokeDasharray="5 5"
           />
         </LineChart>
       </ResponsiveContainer>

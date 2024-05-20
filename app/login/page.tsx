@@ -52,17 +52,17 @@ const Login = () => {
         if (data.success) {
           sessionStorage.setItem("token", data.success);
           if (data.role === 1) {
-            alert("Đăng nhập vào trang admin thành công")
+            // alert("Đăng nhập vào trang admin thành công")
             router.push("/adminn");
           } else if(data.role === 3){
             if(!data.isLocked){
-              alert("Đăng nhập vào trang teacher thành công")
+              // alert("Đăng nhập vào trang teacher thành công")
               router.push("/teacher");
             }else{
               alert("Tài khoản teacher đã bị khóa")
             }
           }else{
-            alert("Đăng nhập vào trang student thành công")
+            // alert("Đăng nhập vào trang student thành công")
             router.push("/");
           }
         } else {

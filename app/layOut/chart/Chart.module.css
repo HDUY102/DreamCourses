@@ -1,6 +1,8 @@
 .container {
     height: 450px;
-    background-color: var(--bgSoft);
+    /* background-color: var(--bgSoft); */
+    background: linear-gradient(145deg, #60f3d8, #91f791);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15), 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 20px;
     border-radius: 10px;
   }

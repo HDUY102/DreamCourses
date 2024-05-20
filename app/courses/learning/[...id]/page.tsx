@@ -19,7 +19,6 @@ const Page = () => {
   const [loading, setLoading] = useState(true);
   const [completedLessons, setCompletedLessons] = useState<number[]>([]);
   const [hasQuiz, setHasQuiz] = useState(true);
-
   const [courseCompleted, setCourseCompleted] = useState(false);
 
   const token = sessionStorage.getItem("token");
@@ -33,23 +32,13 @@ const Page = () => {
       if(response.ok){
         const data = await response.json();  
         setLessons(data.lessons);
-        console.log(data.lessons),
-        console.log("lesson", lessons)
       }    
     };
-    fetchLessons();
-  }, [idCourse]);
-
-  useEffect(() => {
     const fetchQuizzes = async () => {
       const response = await fetch(`/api/students/lessons/quiz/${lessonId}`);
       const hasQuiz = await response.json();      
       setHasQuiz(hasQuiz);
     };
-    fetchQuizzes();
-  }, []);
-
-  useEffect(() => {
     const fetchCompletedLessons = async () => {
       try {
         const response = await fetch(`/api/students/lessons/completed_lesson/${idCourse}`, {
@@ -58,20 +47,57 @@ const Page = () => {
             "Content-Type": "application/json",
           },
         });
-        const data = await response.json();
-        
-        setCompletedLessons(data.map((lesson: any) => lesson.lessonId));
+        if (response.ok) {
+          const data = await response.json();
+          setCompletedLessons(data.map((lesson: any) => lesson.lessonId));
+        }
       } catch (error) {
         console.error("Error fetching completed lessons:", error);
       } finally {
         setLoading(false);
       }
     };
-  
     if (idCourse) {
+      fetchLessons();
       fetchCompletedLessons();
     }
-  }, [idCourse]);
+    // fetchLessons();
+    fetchQuizzes();
+
+  }, [idCourse, lessonId]);
+
+  // useEffect(() => {
+  //   const fetchQuizzes = async () => {
+  //     const response = await fetch(`/api/students/lessons/quiz/${lessonId}`);
+  //     const hasQuiz = await response.json();      
+  //     setHasQuiz(hasQuiz);
+  //   };
+  //   fetchQuizzes();
+  // }, []);
+
+  // useEffect(() => {
+  //   const fetchCompletedLessons = async () => {
+  //     try {
+  //       const response = await fetch(`/api/students/lessons/completed_lesson/${idCourse}`, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //           "Content-Type": "application/json",
+  //         },
+  //       });
+  //       const data = await response.json();
+        
+  //       setCompletedLessons(data.map((lesson: any) => lesson.lessonId));
+  //     } catch (error) {
+  //       console.error("Error fetching completed lessons:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  
+  //   if (idCourse) {
+  //     fetchCompletedLessons();
+  //   }
+  // }, [idCourse]);
 
   useEffect(() => {
     const selectedLesson = lessons.find((lesson: any) => lesson.idLessons.toString() === lessonId);
@@ -186,7 +212,7 @@ const Page = () => {
   );
 
   const totalLessons = chaptersForCourse.reduce((total, chapter) => {
-    return total + lessons.filter((lesson) => lesson.chapterId === chapter.idChapter).length;
+    return total + lessons.filter((lesson) => lesson.chapterId === chapter.idChapter && lesson.isPublished && chapter.isPublished).length;
   }, 0);
 
   const handleQuiz = () => {

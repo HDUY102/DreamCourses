@@ -28,7 +28,8 @@ export async function POST(request:NextRequest) {
                 data: {
                     username: username,
                     password: hashedPassword,
-                    roleId: 2
+                    roleId: 2,
+                    dateCreate: new Date()
                 }
             })
             return NextResponse.json({user: newUser, message:"Đăng ký thành công"},{status: 201});

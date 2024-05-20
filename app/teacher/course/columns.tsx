@@ -78,7 +78,7 @@ export const columns: ColumnDef<courses>[] = [
     cell: ({ row }) => {
         const isPub = row.getValue("isPublished") || false;
         return(
-          <div className={cn("bg-slate-500 rounded-lg text-center p-1 w-[60%]", isPub && "bg-green-400")}>
+          <div className={cn("bg-black rounded-lg text-center text-white p-1 w-[60%]", isPub && "bg-green-400 text-black")}>
               {isPub ? "Công khai" : "Không công khai"}
           </div>
         )

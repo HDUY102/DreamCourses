@@ -10,25 +10,28 @@ const SidebarChapter = ({ completedLessons }:any) => {
   const { id } = useParams();
   const idCourse = Array.isArray(id) ? parseInt(id[0]) : parseInt(id as string);
 
-  const { isLoadingChapters, chapters, fetchDataChapters } = useChapterStore();
+  const { isLoadingChapters, chapters,fetchDataChapters } = useChapterStore();
   const { isLoadingLessons, lessons, fetchDataLessons } = useLessonsStore();
   const { isLoadingCourses, courses, fetchDataCourses } = useCoursesStore();
   const courseChapters = chapters.filter(
-    (chapter) => chapter.courseId === idCourse
+    (chapter) => chapter.courseId === idCourse && chapter.isPublished
   );
-
+  // const [lessons, setLessons] = useState([]);
   const course = useCoursesStore.getState().getCourseById(idCourse)[0];
   const [showLessons, setShowLessons] = useState({});
 
   useEffect(() => {
-    fetchDataChapters(idCourse);
-    fetchDataCourses(idCourse);
-  }, [idCourse, fetchDataChapters, fetchDataCourses]);
+    fetchDataChapters();
+    fetchDataCourses();
+  }, [idCourse, fetchDataChapters,fetchDataCourses]);
 
   useEffect(() => {
-    chapters.forEach((chapter) => {
-      fetchDataLessons(chapter.idChapter);
-    });
+    // chapters.forEach((chapter) => {
+    //   fetchDataLessons(chapter.idChapter);
+    // });
+    if (chapters.length > 0) {
+      fetchDataLessons();
+    }
   }, [chapters, fetchDataLessons]);
 
   const toggleShowLessons = (chapterId) => {
