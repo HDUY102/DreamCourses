@@ -26,18 +26,18 @@ const LayoutCardTeacher = () => {
   const cards = [
     {
       id: 1,
-      title: "Tổng số học viên",
-      number: totalStudents + " học viên",
+      title: "Học Viên",
+      number: totalStudents
     },
     {
       id: 2,
-      title: "Tổng số khóa học",
-      number: totalCourses+ " khóa học",
+      title: "Khóa Học",
+      number: totalCourses
       // change: 18,
     },
     {
       id: 3,
-      title: "Tổng doanh thu",
+      title: "Doanh Thu",
       number: totalRevenue+ " vnđ",
     },
   ];

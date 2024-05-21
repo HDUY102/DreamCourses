@@ -37,7 +37,7 @@ const UpdateCourse = () => {
   const notify: any = () =>
     toast.success("Cập nhật thành công!", {
       position: "top-right",
-      autoClose: 3000,
+      autoClose: 500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -122,10 +122,10 @@ const UpdateCourse = () => {
       notify();
       setTimeout(() => {
         router.push("/teacher/course");
-      }, 2000);
+      }, 1000);
       setTimeout(() => {
         window.location.reload();
-      }, 3000);
+      }, 1500);
     } else {
       console.error("Error during updateCourse:", respone.statusText);
     }

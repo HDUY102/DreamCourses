@@ -22,18 +22,6 @@ const ChapterList = ({items,onReorder}:ChaptersListProps) => {
   const [isLoading, setLoading] = useState(false);
   const [isMounted,setIsMounted] = useState(false)
   const [chapters,setChapters] = useState(items)
-  
-  const notifyDelete:any = () => toast("Chương đã bị xóa",{
-    icon: <Trash className='text-red-500'/>,
-    position: "top-right",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
-  });
   const notifyErrorDel:any = () => toast("Đã có người học, không cho xóa!",{
     icon: <X className='text-red-500'/>,
     position: "top-right",
@@ -87,9 +75,6 @@ const ChapterList = ({items,onReorder}:ChaptersListProps) => {
       if(data.message === "Đã có người học, không cho xóa!"){
         notifyErrorDel();
         return;
-      }
-      if (response.ok) {
-        notifyDelete()
       } else {
         toast.error("Lỗi, xin thử lại");
       }
@@ -125,7 +110,7 @@ const ChapterList = ({items,onReorder}:ChaptersListProps) => {
                                     </div>
                                     {chapter.titleChapter}
                                     <div className='ml-auto flex items-center gap-x-2'>
-                                        <div className={cn("bg-slate-400 hover:bg-slate-600 rounded-lg p-1 text-white", chapter.isPublished && "bg-green-400 hover:bg-green-500 ")}>
+                                        <div className={cn("bg-black rounded-lg p-1 text-white", chapter.isPublished && "bg-green-400 hover:bg-green-500 ")}>
                                             {chapter.isPublished ?"Công khai" : "Không công khai"}
                                         </div>
                                         <Link href={`/teacher/chapter/updateChapter/${chapter.idChapter}`}>

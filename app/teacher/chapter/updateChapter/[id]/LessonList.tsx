@@ -24,17 +24,6 @@ const LessonList = ({items,onReorder}:LessonListProps) => {
   const [isMounted,setIsMounted] = useState(false)
   const [lessons,setLessons] = useState(items)
   
-  const notifyDelete:any = () => toast("Bài đã bị xóa",{
-    icon: <Trash className='text-red-500'/>,
-    position: "top-right",
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
-  });
   const notifyErrorDel:any = () => toast("Đã có người học, không cho xóa!",{
     icon: <X className='text-red-500'/>,
     position: "top-right",
@@ -88,10 +77,7 @@ const LessonList = ({items,onReorder}:LessonListProps) => {
       if(data.message === "Đã có người học, không cho xóa!"){
         notifyErrorDel();
         return;
-      }
-      if (response.ok) {
-        notifyDelete()
-      } else {
+      }else {
         toast.error("Lỗi, xin thử lại");
       }
     }catch{
@@ -126,7 +112,7 @@ const LessonList = ({items,onReorder}:LessonListProps) => {
                                     </div>
                                     {lesson.titleLessons}
                                     <div className='ml-auto flex items-center gap-x-2'>
-                                        <div className={cn("bg-slate-400 hover:bg-slate-600 rounded-lg p-1 text-white", lesson.isPublished && "bg-green-400 hover:bg-green-500 ")}>
+                                        <div className={cn("bg-black rounded-lg p-1 text-white", lesson.isPublished && "bg-green-400 hover:bg-green-500 ")}>
                                             {lesson.isPublished ?"Công khai" : "Không công khai"}
                                         </div>
                                         <Link href={`/teacher/lesson/createQuizz/${lesson.idLessons}`}>

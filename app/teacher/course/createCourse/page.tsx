@@ -30,16 +30,6 @@ const CreateCourse = () => {
   if (!token) {
     router.push('/login')
   }
-  const notify: any = () =>toast.success("Tạo khóa học mới thành công!", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -79,7 +69,6 @@ const CreateCourse = () => {
     if (respone.ok) {
       const data = await respone.json();
       setIdCourse(data.courses.idCourse);
-      notify();
     } else {
       console.error("Error during Create:", respone.statusText);
     }

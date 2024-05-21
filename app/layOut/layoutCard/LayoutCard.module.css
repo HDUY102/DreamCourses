@@ -7,24 +7,27 @@
     justify-content: space-between;
     gap: 90px;
     width: 100%;
+    text-align: center;
   }
   
-  .list:hover {
+  /* .list:hover {
     background-color: rgb(249, 224, 191);
     border: 2px solid #8d9bbb;
-  }
+  } */
   
   .list {
-    background-color: 8d9bbb;
+    background-color: #04568A;
     padding: 25px;
     border-radius: 10px;
-    border: 2px dotted;
+    border: 2px;
+    color: white;
   }
   
   .texts {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    color: white;
   }
   
   .number {

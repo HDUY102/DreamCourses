@@ -37,30 +37,6 @@ export const LessonForm = ({ initialData }: LessonFormProps) => {
   const toggleCreating = () => setIsCreating((current) => !current);
   const router = useRouter();
 
-  const notify: any = () =>
-    toast.success("Thêm mới bài học thành công!", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-  });
-  const notifyReOrder: any = () =>
-    toast("Thứ tự bài đã thay đổi!", {
-      icon: <LuMoveVertical className="text-green-500"/>,
-      position: "top-right",
-      autoClose: 2500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-  });
-
   const form = useForm<z.infer<typeof LessonSchema>>({
     resolver: zodResolver(LessonSchema)
   });
@@ -98,10 +74,9 @@ export const LessonForm = ({ initialData }: LessonFormProps) => {
     );
     fetchLessons();
     if (respone.ok) {
-      notify();
       setTimeout(() => {
         toggleCreating();
-      }, 2000);
+      }, 500);
     } else {
       console.error("Error during Create:", respone.statusText);
     }
@@ -119,7 +94,6 @@ export const LessonForm = ({ initialData }: LessonFormProps) => {
       });
       if (response.ok) {
         fetchLessons();
-        notifyReOrder();
         setIsUpdating(false);
         setTimeout(() => {
           router.refresh();
@@ -168,13 +142,10 @@ export const LessonForm = ({ initialData }: LessonFormProps) => {
         </form>
       </Form>
       )}
-      {!isCreating  && (
-        <div className={cn("text-sm mt-2", !initialData?.lessons?.length && "text-slate-500 italic")}>
-          {!lessons?.length && "Chưa có bài học"}
-          <LessonList onReorder={onReorder} items={lessons || []}/>
-        </div>
-      )}
-
+      <div className={cn("text-sm mt-2", !initialData?.lessons?.length && "text-slate-500 italic")}>
+        {!lessons?.length && "Chưa có bài học"}
+        <LessonList onReorder={onReorder} items={lessons || []}/>
+      </div>
       {!isCreating &&(
         <p className="text-xs text-muted-foreground mt-2">
           Kéo thả để thay đổi thứ tự bài học

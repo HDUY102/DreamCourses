@@ -38,30 +38,6 @@ export const ChapterCourse = ({ initialData,idCourse }: ChapterCourseProps) => {
   const toggleCreating = () => setIsCreating((current) => !current);
   const router = useRouter();
 
-  const notify: any = () =>
-    toast.success("Thêm mới chapter thành công!", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-  });
-  const notifyReOrder: any = () =>
-    toast("Thứ tự chương đã thay đổi!", {
-      icon: <LuMoveVertical className="text-green-500"/>,
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-  });
-
   const form = useForm<z.infer<typeof chaptersSchema>>({
     resolver: zodResolver(chaptersSchema),
     defaultValues:{
@@ -109,10 +85,9 @@ export const ChapterCourse = ({ initialData,idCourse }: ChapterCourseProps) => {
     fetchChapters();
 
     if (respone.ok) {
-      notify();
       setTimeout(() => {
         toggleCreating();
-      }, 2000);
+      }, 1000);
     } else {
       console.error("Error during Create:", respone.statusText);
     }
@@ -130,11 +105,10 @@ export const ChapterCourse = ({ initialData,idCourse }: ChapterCourseProps) => {
       });
       if (response.ok) {
         fetchChapters();
-        notifyReOrder();
         setIsUpdating(false);
         setTimeout(() => {
           router.refresh();
-        }, 3000);
+        }, 500);
       }
     } catch (error) {
       console.error("Lỗi reOrderChapter:", error);
@@ -179,13 +153,10 @@ export const ChapterCourse = ({ initialData,idCourse }: ChapterCourseProps) => {
         </form>
       </Form>
       )}
-      {!isCreating  && (
-        <div className={cn("text-sm mt-2", !initialData?.chapters?.length && "text-slate-500 italic")}>
-          {!chapters?.length && "Chưa có chương nào"}
-          <ChapterList onReorder={onReorder} items={chapters || []}/>
-        </div>
-      )}
-
+      <div className={cn("text-sm mt-2", !initialData?.chapters?.length && "text-slate-500 italic")}>
+        {!chapters?.length && "Chưa có chương nào"}
+        <ChapterList onReorder={onReorder} items={chapters || []}/>
+      </div>
       {!isCreating &&(
         <p className="text-xs text-muted-foreground mt-2">
           Kéo thả để thay đổi thứ tự chương

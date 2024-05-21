@@ -47,7 +47,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     if (lastLesson && lastLesson.orderLesson !== null) {
       newOrder = lastLesson.orderLesson + 1;
     } else {
-      newOrder = 1;
+      newOrder = 0;
     }
 
     const lessons = await prisma.lessons.create({

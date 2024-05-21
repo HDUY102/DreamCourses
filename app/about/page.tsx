@@ -1,32 +1,6 @@
-// import React from 'react'
-// import styles from "@/app/adminn/about.module.css";
-// import HeaderNav from '../components/HeaderNav';
-
-
-// const AboutPage = () => {
-//   return (
-//     <div>
-//         <HeaderNav/>
-//         <div className={styles.textContainer}>
-//             <h2>About we</h2>
-//             <h1>Chúng tôi tạo ra một nền tảng học tập online lớn</h1>
-//             <p>Trong dòng chảy cuộc sống hiện đại nhiều hành vi, nhiều quan điểm mới được hình thành. 
-//                 Nhưng có những giá trị sẽ mãi mãi là nền tảng vững chãi cho cuộc sống hạnh phúc và thịnh vượng. 
-//                 Một trong những giá trị tốt đẹp ấy chính là tình yêu. Đó là tình yêu với chính bản thân mình và với xã hội</p>
-//         </div>
-//         <div className={styles.imgContainer}></div>
-//     </div>
-//   )
-// }
-
-// export default AboutPage
 import React from "react";
 import HeaderNav from "@/app/components/HeaderNav";
 import Footer from "@/app/components/Footer";
-import Link from "next/link";
-import Image from "next/image";
-import ScrumMasterIMG from "/public/img/scrum-master.png";
-import styles from "@/app/about/about.module.css";
 
 const page = () => {
   return (
@@ -46,7 +20,6 @@ const page = () => {
           của riêng mình.
         </p>
         <div className="flex flex-wrap -mx-4" style={{ display: 'flex', alignItems: 'stretch' }}>
-        {/* <div className="flex flex-wrap -mx-4"> */}
           <div className="w-full md:w-1/3 px-4 mb-7">
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h2 className="text-xl font-bold mb-1 text-center">Học linh hoạt</h2>
@@ -104,11 +77,6 @@ const page = () => {
         <div className="flex flex-wrap -mx-4">
           <div className="w-full md:w-1/3 px-4 mb-8">
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <img
-                src="instructor1.jpg"
-                alt="Instructor 1"
-                className="w-full rounded-lg mb-4"
-              />
               <h2 className="text-xl font-bold mb-2">Giảng viên 1</h2>
               <p className="text-gray-700 mb-4">
                 Giảng viên 1 là một giảng viên có kinh nghiệm với niềm đam mê
@@ -124,11 +92,6 @@ const page = () => {
           </div>
           <div className="w-full md:w-1/3 px-4 mb-8">
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <img
-                src="instructor2.jpg"
-                alt="Instructor 2"
-                className="w-full rounded-lg mb-4"
-              />
               <h2 className="text-xl font-bold mb-2">Giảng viên 2</h2>
               <p className="text-gray-700 mb-4">
                 Giảng viên 2 là một giảng viên có kinh nghiệm với niềm đam mê
@@ -144,11 +107,6 @@ const page = () => {
           </div>
           <div className="w-full md:w-1/3 px-4 mb-8">
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <img
-                src="instructor3.jpg"
-                alt="Instructor 3"
-                className="w-full rounded-lg mb-4"
-              />
               <h2 className="text-xl font-bold mb-2">Giảng viên 3</h2>
               <p className="text-gray-700 mb-4">
                 Giảng viên 3 là một giảng viên có kinh nghiệm với niềm đam mê

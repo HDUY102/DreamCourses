@@ -52,7 +52,6 @@ const Register = () => {
       })
     })
     if(respone.ok){
-      alert("Đăng ký thành công")
       router.push('/login')
     }
     else {

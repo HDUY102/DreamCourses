@@ -58,23 +58,6 @@ const QuestionList = ({ initialData }: QuestionProp) => {
       setLoading(false);
     }
   };
-  //update question
-  const onUpdate = async ({ idQuestion }: any) => {
-    try {
-      setLoading(true);
-      const response = await fetch(`/api/question/${idQuestion}`, {
-        method: "PUT",
-      });
-      if (response.ok) {
-        notifyUpdate();
-      } else {
-        toast.error("Lỗi, xin thử lại");
-      }
-    } catch {
-      setLoading(false);
-    }
-  };
-  console.log("initialData:", initialData);
   return (
     <div>
       {initialData.map((question) => (

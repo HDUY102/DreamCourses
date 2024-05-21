@@ -14,13 +14,13 @@
 .content {
   flex: 4;
   padding: 20px;
-  background-color: rgb(222, 254, 254);
+  background-color: rgb(238, 240, 240);
 }
 
 .contentmenu {
   padding: 20px;
   flex: 4;
-  background-color: rgb(242, 242, 242);
+  background-color: rgb(238, 240, 240);
 }
 
 .wrapper {

@@ -26,7 +26,6 @@ export const QuestionForm = ({ initialData }: QuestionFormProps) => {
       if (response.ok) {
         const data = await response.json();
         setQuestions(data);
-        // console.log("data ", data)
       }
     } catch (error) {
       console.error("Error fetching questions:", error);

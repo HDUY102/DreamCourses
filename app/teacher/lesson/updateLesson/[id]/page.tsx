@@ -25,7 +25,7 @@ const UpdateLesson = () => {
   }
   const notify: any = () =>toast.success("Sửa thông tin bài học thành công!", {
       position: "top-right",
-      autoClose: 2500,
+      autoClose: 500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -114,7 +114,7 @@ const UpdateLesson = () => {
       notify();
       setTimeout(() => {
         router.back();
-      }, 3000);
+      }, 1000);
     } else {
       console.error("Error during update:", respone.statusText);
     }

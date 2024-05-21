@@ -22,12 +22,7 @@ const QuestionSchema = z.object({
   Bcontent: z.string().min(1),
   Ccontent: z.string().min(1),
   Dcontent: z.string().min(1),
-  answer: z.string().min(1).max(1).refine((value) => {
-    return ['A', 'B', 'C', 'D'].includes(value.toUpperCase());
-  }, {
-    message: "Đáp án chỉ có thể là A, B, C hoặc D",
-    path: ['answer'],
-  }),
+  answer: z.string().min(1).max(1)
 });
 
 const QuestionPopup = ({isVisible,onClose, selectedQuestion}:any) => {
@@ -210,24 +205,64 @@ const QuestionPopup = ({isVisible,onClose, selectedQuestion}:any) => {
                     <FormMessage />
                   </FormItem>
               )}/>
+              <h4>Đáp Án:</h4>
               <FormField
                 control={form.control}
                 name="answer"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Textarea
-                        disabled={isSubmitting}
-                        placeholder="Câu trả lời"
-                        {...field}
-                      />
+                      <div className="flex justify-evenly">
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            disabled={isSubmitting}
+                            {...field}
+                            checked={field.value === "A"}
+                            onChange={() => field.onChange("A")}
+                          />
+                          <span className="ml-2">A</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            disabled={isSubmitting}
+                            {...field}
+                            checked={field.value === "B"}
+                            onChange={() => field.onChange("B")}
+                          />
+                          <span className="ml-2">B</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            disabled={isSubmitting}
+                            {...field}
+                            checked={field.value === "C"}
+                            onChange={() => field.onChange("C")}
+                          />
+                          <span className="ml-2">C</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            disabled={isSubmitting}
+                            {...field}
+                            checked={field.value === "D"}
+                            onChange={() => field.onChange("D")}
+                          />
+                          <span className="ml-2">D</span>
+                        </label>
+                      </div>
                     </FormControl>
-                    <FormMessage/>
+                    <FormMessage />
                   </FormItem>
               )}/>
-              <Button disabled={!isValid || isSubmitting} type="button" onClick={form.handleSubmit(onSubmit)}>
-                Lưu
-              </Button>
+              <div className="flex justify-end">
+                <Button disabled={!isValid || isSubmitting} type="button" onClick={form.handleSubmit(onSubmit)}>
+                  Lưu
+                </Button>
+              </div>
               <ToastContainer />
             </form>
           </Form>

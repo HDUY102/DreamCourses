@@ -17,7 +17,18 @@ const Page = () => {
   const notify: any = () =>
     toast.success("Đăng ký khóa học thành công!", {
       position: "top-right",
-      autoClose: 2000,
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+  });
+  const notifyLogin: any = () =>
+    toast.warning("Bạn cần phải đăng nhập!", {
+      position: "top-right",
+      autoClose: 1000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -26,9 +37,6 @@ const Page = () => {
       theme: "light",
   });
   const token = sessionStorage.getItem("token");
-  if (!token){
-    router.push("/login")
-  };
 
   const { id } = useParams();
   const idCourse = parseInt(id as string)
@@ -101,7 +109,8 @@ const Page = () => {
 
     const handleRegisterCourse = () => {
       if (!isLoggedIn) {
-        alert("Bạn cần phải đăng nhập!");
+        // alert("Bạn cần phải đăng nhập!");
+        notifyLogin()
       } else {
         const selectedCourse = courses.find(
           (course) => course.idCourse === idCourse
@@ -228,7 +237,8 @@ const Page = () => {
                         />
                         ) : null}
               </div>
-              <p className="text-gray-600 mb-4 mt-2">Mô tả: <br></br>{course?.introduce}</p>
+              <p className="text-gray-600 mb-4 mt-2 font-bold">Mô tả: </p>
+              <p className="text-gray-600 mb-4">{course?.introduce}</p>
               <p className="text-gray-600 mb-4">
                 Được tạo bởi :{" "}
                 <span className="text-gray-600 mb-4 font-bold">
@@ -262,14 +272,14 @@ const Page = () => {
             </div>
 
             <ul>
-              {chapters.filter((chapter) => chapter.courseId === idCourse && chapter.isPublished).map((chapter) => (
+              {chapters.filter((chapter) => chapter.courseId === idCourse && chapter.isPublished).map((chapter,index) => (
                   <li key={chapter.idChapter}>
                     <button
                         onClick={() => toggleShowLessons(chapter.idChapter)}
                       className="flex justify-between items-center w-full hover:bg-gray-100"
                     >
                       <span className="font-bold text-base py-2">
-                        {chapter.titleChapter}
+                        Chương {index+1}: {chapter.titleChapter}
                       </span>
                       <span>
                         {showLessons[chapter.idChapter] ? (
@@ -303,6 +313,7 @@ const Page = () => {
           </div>
         </div>
       </div>
+      <ToastContainer />
       <Footer />
     </div>
   );

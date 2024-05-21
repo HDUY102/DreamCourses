@@ -31,7 +31,7 @@ const UpdateChapter = () => {
   const notify: any = () =>
     toast.success("Cập nhật chương thành công!", {
       position: "top-right",
-      autoClose: 2500,
+      autoClose: 500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -106,7 +106,7 @@ const UpdateChapter = () => {
     notify();
     setTimeout(()=>{
       router.back();
-    },3000)
+    },1000)
   } else {
     console.error("Error during updateChapter:", respone.statusText);
   }

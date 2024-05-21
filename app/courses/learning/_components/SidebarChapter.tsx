@@ -16,7 +16,6 @@ const SidebarChapter = ({ completedLessons }:any) => {
   const courseChapters = chapters.filter(
     (chapter) => chapter.courseId === idCourse && chapter.isPublished
   );
-  // const [lessons, setLessons] = useState([]);
   const course = useCoursesStore.getState().getCourseById(idCourse)[0];
   const [showLessons, setShowLessons] = useState({});
 
@@ -34,7 +33,7 @@ const SidebarChapter = ({ completedLessons }:any) => {
     }
   }, [chapters, fetchDataLessons]);
 
-  const toggleShowLessons = (chapterId) => {
+  const toggleShowLessons = (chapterId:any) => {
     setShowLessons((prevState) => ({
       ...prevState,
       [chapterId]: !prevState[chapterId],
@@ -48,10 +47,10 @@ const SidebarChapter = ({ completedLessons }:any) => {
           <li key={index} className="border-b py-2 px-4">
             <button
               onClick={() => toggleShowLessons(chapter.idChapter)}
-              className="flex justify-between items-center w-full hover:bg-gray-100"
+              className="flex justify-between items-center w-full "
             >
               <span className="font-bold text-base py-2">
-                {index + 1}. {chapter.titleChapter}
+                Chương {index + 1}. {chapter.titleChapter}
               </span>
               <span>
                 {showLessons[chapter.idChapter] ? (

@@ -228,7 +228,7 @@ const Page = () => {
         totalLessons={totalLessons}
       />
       <div className="flex flex-1 mt-24">
-        <div className="w-1/4 p-4 border-r">
+        <div className="w-1/3 p-4 border-r">
           <SidebarChapter
             selectedLesson={selectedLesson}
             completedLessons={completedLessons}

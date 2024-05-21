@@ -1,11 +1,11 @@
 "use client";
 
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Loader2, PlusCircle } from "lucide-react";
-import { LuMoveVertical  } from "react-icons/lu";
+import { LuMoveVertical } from "react-icons/lu";
 import { useParams, useRouter } from "next/navigation";
 import {
   Form,
@@ -33,46 +33,25 @@ interface ChapterFormProps {
 export const ChapterForm = ({ initialData }: ChapterFormProps) => {
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [chapters, setChapters] = useState<chapters[]>(initialData?.chapters || []);
+  const [chapters, setChapters] = useState<chapters[]>(
+    initialData?.chapters || []
+  );
   const toggleCreating = () => setIsCreating((current) => !current);
   const router = useRouter();
-
-  const notify: any = () =>
-    toast.success("Thêm mới chapter thành công!", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-  });
-  const notifyReOrder: any = () =>
-    toast("Thứ tự chương đã thay đổi!", {
-      icon: <LuMoveVertical className="text-green-500"/>,
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-  });
-
   const form = useForm<z.infer<typeof chaptersSchema>>({
     resolver: zodResolver(chaptersSchema),
-    defaultValues:{
-      titleChapter: ""
-    }
+    defaultValues: {
+      titleChapter: "",
+    },
   });
   const { isSubmitting, isValid } = form.formState;
   const { id } = useParams();
   const idCourse = parseInt(id as string);
   const fetchChapters = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/courses/${idCourse}/chapter`);
+      const response = await fetch(
+        `http://localhost:3000/api/courses/${idCourse}/chapter`
+      );
       if (response.ok) {
         const data = await response.json();
         setChapters(data);
@@ -82,7 +61,7 @@ export const ChapterForm = ({ initialData }: ChapterFormProps) => {
     }
   };
   useEffect(() => {
-      fetchChapters();
+    fetchChapters();
   }, [idCourse]);
 
   const onSubmit = async (values: any) => {
@@ -91,7 +70,9 @@ export const ChapterForm = ({ initialData }: ChapterFormProps) => {
       isPublished: false,
       courseId: idCourse,
     };
-    const respone = await fetch( `http://localhost:3000/api/courses/${idCourse}/chapter`,{
+    const respone = await fetch(
+      `http://localhost:3000/api/courses/${idCourse}/chapter`,
+      {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -103,28 +84,31 @@ export const ChapterForm = ({ initialData }: ChapterFormProps) => {
     fetchChapters();
 
     if (respone.ok) {
-      notify();
       setTimeout(() => {
         toggleCreating();
-      }, 2000);
+      }, 500);
     } else {
       console.error("Error during Create:", respone.statusText);
     }
-  }
+  };
 
-  const onReorder = async (updateData: {idChapter: number, orderChapter: number}[]) =>{
+  const onReorder = async (
+    updateData: { idChapter: number; orderChapter: number }[]
+  ) => {
     try {
-      setIsUpdating(true)
-      const response = await fetch(`http://localhost:3000/api/courses/${idCourse}/chapter`,{
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updateData) 
-      });
+      setIsUpdating(true);
+      const response = await fetch(
+        `http://localhost:3000/api/courses/${idCourse}/chapter`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updateData),
+        }
+      );
       if (response.ok) {
         fetchChapters();
-        notifyReOrder();
         setIsUpdating(false);
         setTimeout(() => {
           router.refresh();
@@ -133,7 +117,7 @@ export const ChapterForm = ({ initialData }: ChapterFormProps) => {
     } catch (error) {
       console.error("Lỗi reOrderChapter:", error);
     }
-  }
+  };
 
   return (
     <div className="relative mt-6 border bg-slate-100 rounded-md p-4">
@@ -145,42 +129,54 @@ export const ChapterForm = ({ initialData }: ChapterFormProps) => {
       <div className="font-medium flex items-center justify-between">
         Chương Khóa Học
         <Button onClick={toggleCreating} type="button" variant="ghost">
-          {isCreating ? (<>Cancel</>):(<><PlusCircle className="h-4 w-4 mr-2"/>Thêm chương</>)}
+          {isCreating ? (
+            <>Cancel</>
+          ) : (
+            <>
+              <PlusCircle className="h-4 w-4 mr-2" />
+              Thêm chương
+            </>
+          )}
         </Button>
       </div>
       {isCreating && (
         <Form {...form}>
-        <form className="space-y-4 mt-4" onSubmit={form.handleSubmit(onSubmit)}>
-          <FormField
-            control={form.control}
-            name="titleChapter"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    disabled={isSubmitting}
-                    placeholder="Nhập tên chapter mới"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-          )}/>
-          <Button disabled={!isValid || isSubmitting} type="button" onClick={form.handleSubmit(onSubmit)}>
-            Lưu
-          </Button>
-          <ToastContainer />
-        </form>
-      </Form>
+          <form
+            className="space-y-4 mt-4"
+            onSubmit={form.handleSubmit(onSubmit)}
+          >
+            <FormField
+              control={form.control}
+              name="titleChapter"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      disabled={isSubmitting}
+                      placeholder="Nhập tên chapter mới"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button
+              disabled={!isValid || isSubmitting}
+              type="button"
+              onClick={form.handleSubmit(onSubmit)}
+            >
+              Lưu
+            </Button>
+            <ToastContainer />
+          </form>
+        </Form>
       )}
-      {!isCreating  && (
-        <div className={cn("text-sm mt-2", !initialData?.chapters?.length && "text-slate-500 italic")}>
-          {!chapters?.length && "Chưa có chương nào"}
-          <ChapterList onReorder={onReorder} items={chapters || []}/>
-        </div>
-      )}
-
-      {!isCreating &&(
+      <div className={cn( "text-sm mt-2", !initialData?.chapters?.length && "text-slate-500 italic" )} >
+        {!chapters?.length && "Chưa có chương nào"}
+        <ChapterList onReorder={onReorder} items={chapters || []} />
+      </div>
+      {!isCreating && (
         <p className="text-xs text-muted-foreground mt-2">
           Kéo thả để thay đổi thứ tự chương
         </p>

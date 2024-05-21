@@ -58,21 +58,21 @@ const ChartTeacher = () => {
         >
           <XAxis dataKey="month" />
           <YAxis dataKey="revenue" />
-          <Tooltip contentStyle={{ background: "#151c2c", border: "none" }} labelStyle={{ background: "#151c2c", border: "none" }}/>
+          <Tooltip contentStyle={{ background: "#fff9c4", border: "none" }} />
           <Legend />
           <Line
             type="monotone"
             dataKey="count"
             name="Lượt đăng ký"
-            stroke="#FFFF00"
-            strokeDasharray="5 5"
+            stroke="black"
+            strokeDasharray="5 10"
           />
           <Line
             type="monotone"
             dataKey="revenue"
             name="Doanh thu"
-            stroke="#ff00ff"
-            strokeDasharray="5 5"
+            stroke="black"
+            // strokeDasharray="5 5"
           />
         </LineChart>
       </ResponsiveContainer>

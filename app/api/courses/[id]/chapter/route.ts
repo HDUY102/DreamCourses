@@ -60,7 +60,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     if (lastChapter && lastChapter.orderChapter !== null) {
       newOrder = lastChapter.orderChapter + 1;
     } else {
-      newOrder = 1;
+      newOrder = 0;
     }
 
     const chapters = await prisma.chapters.create({
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 export async function PUT(request: NextRequest,{ params }: { params: { id: string } }) {
   try {
     const body = await request.json();
-
+    console.log("body",body)
     for (let item of body){
       await prisma.chapters.update({
         where:{ idChapter: item.idChapter},
