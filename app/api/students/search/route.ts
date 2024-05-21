@@ -12,10 +12,8 @@ export async function GET(request:NextRequest) {
       );
     }
 
-    // Chia từ khóa tìm kiếm thành các từ riêng biệt
     const searchWords = decodeURIComponent(searchQuery).split(" ");
 
-    // Loại bỏ từ rỗng hoặc chỉ chứa dấu cách
     const validSearchWords = searchWords.filter((word) => word.trim() !== "");
 
     if (validSearchWords.length === 0) {
@@ -27,10 +25,8 @@ export async function GET(request:NextRequest) {
 
     const allCourses = await prisma.courses.findMany({where:{isPublished:true}});
 
-    // Tạo một biểu thức chính quy cho mỗi từ tìm kiếm
     const regexes = validSearchWords.map((word) => new RegExp(word, "i"));
 
-    // Lọc danh sách khóa học bằng biểu thức chính quy
     const searchResults = allCourses.filter((course) =>
       regexes.every((regex) => regex.test(course.titleCourse))
     );
