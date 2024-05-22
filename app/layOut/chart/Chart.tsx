@@ -24,11 +24,11 @@ const Chart = () => {
 
         const formattedData = Array.from({ length: 12 }, (_, i) => ({
           count: 0,
+          month: i + 1,
         }));
 
         revenueChart.forEach((item:any) => {
           formattedData[item.monthCreate - 1].count = item.count;
-          console.log("item.monthCreate ",item.monthCreate-1)
         });
         setChartData(formattedData);
       }

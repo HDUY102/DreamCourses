@@ -100,9 +100,9 @@ const HeaderNav = () => {
               >
                 Khoá học của tôi
               </Link>
-              <Link className="px-2" href="/cart">
+              {/* <Link className="px-2" href="/cart">
                 <FaShoppingCart className="text-white" size={21} />
-              </Link>
+              </Link> */}
               <button
                 className="p-2 text-black bg-orange-500 rounded-full px-6 mr-3 hover:opacity-95 hover:text-white"
                 onClick={handleLogout}
@@ -112,9 +112,9 @@ const HeaderNav = () => {
             </>
           ) : (
             <>
-              <Link className="px-2" href="/cart">
+              {/* <Link className="px-2" href="/cart">
                 <FaShoppingCart className="text-white" size={21} />
-              </Link>
+              </Link> */}
               <Link
                 className="p-2 text-white hover:text-black rounded-full px-6"
                 href="/login"

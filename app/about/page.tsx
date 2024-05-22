@@ -77,7 +77,7 @@ const page = () => {
         <div className="flex flex-wrap -mx-4">
           <div className="w-full md:w-1/3 px-4 mb-8">
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-xl font-bold mb-2">Giảng viên 1</h2>
+              <h2 className="text-xl font-bold mb-2 text-center">Giảng viên 1</h2>
               <p className="text-gray-700 mb-4">
                 Giảng viên 1 là một giảng viên có kinh nghiệm với niềm đam mê
                 dạy học. Họ mang đến kinh nghiệm thực tế và chuyên môn của mình
@@ -92,7 +92,7 @@ const page = () => {
           </div>
           <div className="w-full md:w-1/3 px-4 mb-8">
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-xl font-bold mb-2">Giảng viên 2</h2>
+              <h2 className="text-xl font-bold mb-2 text-center">Giảng viên 2</h2>
               <p className="text-gray-700 mb-4">
                 Giảng viên 2 là một giảng viên có kinh nghiệm với niềm đam mê
                 dạy học. Họ mang đến kinh nghiệm thực tế và chuyên môn của mình
@@ -107,7 +107,7 @@ const page = () => {
           </div>
           <div className="w-full md:w-1/3 px-4 mb-8">
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-xl font-bold mb-2">Giảng viên 3</h2>
+              <h2 className="text-xl font-bold mb-2 text-center">Giảng viên 3</h2>
               <p className="text-gray-700 mb-4">
                 Giảng viên 3 là một giảng viên có kinh nghiệm với niềm đam mê
                 dạy học. Họ mang đến kinh nghiệm thực tế và chuyên môn của mình

@@ -86,7 +86,7 @@ const SearchPage = () => {
                 legacyBehavior
               >
                 <div className="w-full lg:w-1/3 md:w-1/2 px-3 mb-10">
-                  <div className="flex flex-col bg-white shadow-md hover:shadow-lg rounded-lg overflow-hidden">
+                  <div className="flex flex-col bg-white shadow-md hover:shadow-lg rounded-lg overflow-hidden hover:cursor-pointer hover:bg-white hover:shadow-black/75 transition-all">
                     <Image
                         width={279}
                         height={157}

@@ -92,7 +92,6 @@ const UpdateChapter = () => {
       description: values.description,
       isPublished: isPublishValue,
     };
-    console.log(formValues);
     const respone = await fetch(`/api/chapter/${idChapter}`,{
       method: "PUT",
       headers: {

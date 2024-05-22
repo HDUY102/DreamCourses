@@ -67,7 +67,6 @@ const AddAccountTeacher = () => {
         <div className={styles.menu}>
           <Sidebar />
         </div>
-
         <div className={styles.contentmenu}>
           <p className="text-center mt-20 text-emerald-800">
             <b>DREAM COURSES</b>
@@ -77,7 +76,7 @@ const AddAccountTeacher = () => {
           </p>
           <div className="flex justify-center">
             <div className="m-8 border-[5px] shadow-lg rounded-xl w-[500px] h-70">
-                <h1 className='text-center mb-2 mt-3'>ĐĂNG KÝ TÀI KHOẢN GIẢNG VIÊN</h1>
+                <h1 className='text-center mb-2 mt-3'>TẠO TÀI KHOẢN GIẢNG VIÊN</h1>
                 <form className='max-w-xl m-3' onSubmit={form.handleSubmit(onSubmit)}>
                   <h5 className='mb-2'>Username</h5>
                   <input type="text" className='w-full p-2' placeholder="Username" {...form.register("username")}/>
