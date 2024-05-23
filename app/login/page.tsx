@@ -21,7 +21,7 @@ import { useRouter } from "next/navigation";
 import { PasswordInput } from "@/components/ui/password-input";
 import Footer from "../components/Footer";
 const formSchema = z.object({
-  username: z.string().min(2, {
+  username: z.string().min(3, {
     message: "Username must be at least 2 characters.",
   }),
   password: z.string().min(3, {
