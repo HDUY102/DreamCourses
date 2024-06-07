@@ -18,7 +18,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ChapterCourse } from "./ChapterCourse";
 
 const formSchema = z.object({
-  price: z.coerce.number().refine((val) => val % 1000 === 0 && val>0, {message: "Giá tiền là số nguyên không âm và chia hết cho 1000"}),
+  price: z.coerce.number().refine((val) => val % 1000 === 0 && val>=0, {message: "Giá tiền là số nguyên không âm và chia hết cho 1000"}),
   titleCourse: z.string().min(1, { message: "Tiêu đề không được bỏ trống" }),
   introduce: z.string().min(1, { message: "Lời giới thiệu không được bỏ trống" }),
 });
